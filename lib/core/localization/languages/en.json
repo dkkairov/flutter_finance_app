@@ -1,0 +1,13 @@
+{
+  "login": "Login",
+  "email": "Email",
+  "password": "Password",
+  "register": "Register",
+  "transactions": "Transactions",
+  "categories": "Categories",
+  "projects": "Projects",
+  "reports": "Reports",
+  "plans": "Plans",
+  "settings": "Settings",
+  "logout": "Logout"
+}

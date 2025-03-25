@@ -1,0 +1,13 @@
+{
+  "login": "Кіру",
+  "email": "Электрондық пошта",
+  "password": "Құпия сөз",
+  "register": "Тіркелу",
+  "transactions": "Транзакциялар",
+  "categories": "Санаттар",
+  "projects": "Жобалар",
+  "reports": "Есептер",
+  "plans": "Жоспарлар",
+  "settings": "Параметрлер",
+  "logout": "Шығу"
+}

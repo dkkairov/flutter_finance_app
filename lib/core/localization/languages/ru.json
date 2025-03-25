@@ -1,0 +1,13 @@
+{
+  "login": "Вход",
+  "email": "Электронная почта",
+  "password": "Пароль",
+  "register": "Регистрация",
+  "transactions": "Транзакции",
+  "categories": "Категории",
+  "projects": "Проекты",
+  "reports": "Отчёты",
+  "plans": "Планы",
+  "settings": "Настройки",
+  "logout": "Выйти"
+}
