@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/add/presentation/add_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../features/reports/data/report_provider.dart';
-import '../../../features/plans/data/plan_provider.dart';
 import '../../../common/widgets/theme_toggle_button.dart';
 import '../../../main.dart';
-import '../../plans/presentation/plans_screen.dart';
-import '../../reports/presentation/reports_screen.dart';
+import '../../accounts/presentation/accounts_list_screen.dart';
+import '../../budget/presentation/budget_screen.dart';
 import '../../settings/presentation/settings_screen.dart';
-
-
 
 class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reportData = ref.watch(reportProvider);
-    final planData = ref.watch(plansProvider);
     final currentScreenIndex = ref.watch(bottomNavProvider);
     final List<Widget> screens = [
       AddScreen(),
-      PlansScreen(),
+      AccountsListScreen(),
+      BudgetScreen(),
+      BudgetScreen(),
       const SettingsScreen(),
     ];
     return SafeArea(
@@ -32,6 +30,9 @@ class MainScreen extends ConsumerWidget {
         body: screens[currentScreenIndex],
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.black54,
+          selectedItemColor: Colors.greenAccent,
+          unselectedItemColor: Colors.grey,
           showSelectedLabels: false,
           elevation: 1.5,
           currentIndex: currentScreenIndex,
@@ -43,19 +44,47 @@ class MainScreen extends ConsumerWidget {
             BottomNavigationBarItem(
                 label: '',
                 icon: Icon(
-                    (currentScreenIndex == 0) ? Icons.home : Icons.home_outlined),
-                backgroundColor: Colors.white),
-            BottomNavigationBarItem(
-              label: '',
-              icon: Icon((currentScreenIndex == 1)
-                  ? Icons.shopping_cart
-                  : Icons.shopping_cart_outlined),
+                    Icons.add,
+                    // color: (currentScreenIndex == 0)
+                    //     ? Colors.amber
+                    //     : Colors.white
+                )
             ),
             BottomNavigationBarItem(
-              label: '',
-              icon: Icon((currentScreenIndex == 2)
-                  ? Icons.account_circle
-                  : Icons.account_circle_outlined),
+                label: '',
+                icon: Icon(
+                  Icons.wallet,
+                  // color: (currentScreenIndex == 1)
+                  //   ? Colors.amber
+                  //   : Colors.white
+                )
+            ),
+            BottomNavigationBarItem(
+                label: '',
+                icon: Icon(
+                    Icons.circle,
+                    // color: (currentScreenIndex == 2)
+                    //     ? Colors.amber
+                    //     : Colors.white
+                )
+            ),
+            BottomNavigationBarItem(
+                label: '',
+                icon: Icon(
+                    Icons.analytics,
+                    // color: (currentScreenIndex == 3)
+                    //     ? Colors.amber
+                    //     : Colors.white
+                )
+            ),
+            BottomNavigationBarItem(
+                label: '',
+                icon: Icon(
+                    Icons.settings,
+                    // color: (currentScreenIndex == 4)
+                    //     ? Colors.amber
+                    //     : Colors.white
+                )
             ),
           ],
         ),

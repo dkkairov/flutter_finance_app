@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_app_1/features/budget/presentation/budget_screen.dart';
 import '../../features/main/presentation/main_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/categories/presentation/categories_screen.dart';
 import '../../features/categories/presentation/category_form_screen.dart';
-import '../../features/plans/presentation/plans_screen.dart';
 import '../../features/projects/presentation/project_form_screen.dart';
 import '../../features/projects/presentation/projects_screen.dart';
 import '../../features/reports/presentation/reports_screen.dart';
@@ -36,8 +35,8 @@ class MainRouter {
         return MaterialPageRoute(builder: (_) => ProjectsScreen());
       case '/reports':
         return MaterialPageRoute(builder: (_) => ReportsScreen());
-      case '/plans':
-        return MaterialPageRoute(builder: (_) => PlansScreen());
+      case '/budget':
+        return MaterialPageRoute(builder: (_) => BudgetScreen());
       case '/settings':
         return MaterialPageRoute(builder: (_) => SettingsScreen());
       case '/main-project':
@@ -82,8 +81,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       return FadeRoute(page: ProjectsScreen());
     case '/reports':
       return FadeRoute(page: ReportsScreen());
-    case '/plans':
-      return FadeRoute(page: PlansScreen());
+    case '/budget':
+      return FadeRoute(page: BudgetScreen());
     case '/settings':
       return FadeRoute(page: SettingsScreen());
     default:
