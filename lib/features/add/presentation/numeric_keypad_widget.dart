@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NumericKeypadWidget extends StatelessWidget {
@@ -11,7 +12,7 @@ class NumericKeypadWidget extends StatelessWidget {
       '1', '2', '3',
       '4', '5', '6',
       '7', '8', '9',
-      '←', '0', '✓'
+      ',', '0', 'comment_icon'
     ];
 
     return GridView.builder(
@@ -23,19 +24,29 @@ class NumericKeypadWidget extends StatelessWidget {
       ),
       itemCount: keys.length,
       itemBuilder: (context, index) {
-        return ElevatedButton(
-          onPressed: () => onKeyPressed(keys[index]),
-          child: Text(
-              keys[index],
-              style: const TextStyle(
-                fontSize: 24,
-              )
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
+        return keys[index] == 'comment_icon'
+            ? ElevatedButton.icon(
+              onPressed: () => onKeyPressed(keys[index]),
+              icon: Icon(CupertinoIcons.ellipses_bubble),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+              ), label: Text(''),
+            )
+            : ElevatedButton(
+            onPressed: () => onKeyPressed(keys[index]),
+            child: Text(
+                keys[index],
+                style: const TextStyle(
+                  fontSize: 24,
+                )
             ),
-          ),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+            ),
         );
       },
     );

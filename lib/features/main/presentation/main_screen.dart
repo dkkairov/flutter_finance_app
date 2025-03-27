@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/add/presentation/add_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,20 +63,14 @@ class MainScreen extends ConsumerWidget {
             BottomNavigationBarItem(
                 label: '',
                 icon: Icon(
-                    Icons.circle,
-                    // color: (currentScreenIndex == 2)
-                    //     ? Colors.amber
-                    //     : Colors.white
-                )
+                  CupertinoIcons.chart_pie_fill,
+                ),
             ),
             BottomNavigationBarItem(
                 label: '',
                 icon: Icon(
-                    Icons.analytics,
-                    // color: (currentScreenIndex == 3)
-                    //     ? Colors.amber
-                    //     : Colors.white
-                )
+                  CupertinoIcons.chart_bar_fill,
+                ),
             ),
             BottomNavigationBarItem(
                 label: '',

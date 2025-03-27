@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BudgetScreen extends StatefulWidget {
   @override
@@ -37,6 +38,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
         return AlertDialog(
           title: Text('Set Budget for $category'),
           content: TextField(
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly
+            ],
             keyboardType: TextInputType.number,
             onChanged: (value) {
               newLimit = double.tryParse(value) ?? newLimit;
@@ -68,44 +72,38 @@ class _BudgetScreenState extends State<BudgetScreen> {
     double totalBudget = categoryLimits.values.reduce((a, b) => a + b);
     double progress = totalSpent / totalBudget;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Budget', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [IconButton(icon: Icon(Icons.settings), onPressed: () {})],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('March 2025', style: TextStyle(fontSize: 16, color: Colors.grey)),
-              SizedBox(height: 8),
-              Text('${totalSpent.toInt()} ₸', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              LinearProgressIndicator(value: progress, minHeight: 10),
-              Text('Total budget for a month: ${totalBudget.toInt()} ₸', style: TextStyle(color: Colors.grey)),
-              SizedBox(height: 16),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
-                itemCount: categoryBudgets.length,
-                itemBuilder: (context, index) {
-                  String category = categoryBudgets.keys.elementAt(index);
-                  double spent = categoryBudgets[category] ?? 0;
-                  double limit = categoryLimits[category] ?? 1;
-                  double progress = spent / limit;
-                  return CategoryWidget(
-                    category: category,
-                    spent: spent,
-                    limit: limit,
-                    progress: progress,
-                    onSetBudget: () => _setBudget(category),
-                  );
-                },
-              ),
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('March 2025', style: TextStyle(fontSize: 16, color: Colors.grey)),
+            SizedBox(height: 8),
+            Text('${totalSpent.toInt()} ₸', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            LinearProgressIndicator(value: progress, minHeight: 10),
+            Text('Total budget for a month: ${totalBudget.toInt()} ₸', style: TextStyle(color: Colors.grey)),
+            SizedBox(height: 16),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.8),
+              itemCount: categoryBudgets.length,
+              itemBuilder: (context, index) {
+                String category = categoryBudgets.keys.elementAt(index);
+                double spent = categoryBudgets[category] ?? 0;
+                double limit = categoryLimits[category] ?? 1;
+                double progress = spent / limit;
+                return CategoryWidget(
+                  category: category,
+                  spent: spent,
+                  limit: limit,
+                  progress: progress,
+                  onSetBudget: () => _setBudget(category),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
