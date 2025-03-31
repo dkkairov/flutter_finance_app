@@ -1,0 +1,1517 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'app_database.dart';
+
+// ignore_for_file: type=lint
+class $TransactionsTable extends Transactions
+    with TableInfo<$TransactionsTable, TransactionDb> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TransactionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _transactionTypeMeta = const VerificationMeta(
+    'transactionType',
+  );
+  @override
+  late final GeneratedColumn<String> transactionType = GeneratedColumn<String>(
+    'transaction_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _transactionCategoryIdMeta =
+      const VerificationMeta('transactionCategoryId');
+  @override
+  late final GeneratedColumn<int> transactionCategoryId = GeneratedColumn<int>(
+    'transaction_category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<int> accountId = GeneratedColumn<int>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
+  @override
+  late final GeneratedColumn<int> projectId = GeneratedColumn<int>(
+    'project_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    transactionType,
+    transactionCategoryId,
+    amount,
+    accountId,
+    projectId,
+    description,
+    date,
+    isActive,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transactions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TransactionDb> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('transaction_type')) {
+      context.handle(
+        _transactionTypeMeta,
+        transactionType.isAcceptableOrUnknown(
+          data['transaction_type']!,
+          _transactionTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_transactionTypeMeta);
+    }
+    if (data.containsKey('transaction_category_id')) {
+      context.handle(
+        _transactionCategoryIdMeta,
+        transactionCategoryId.isAcceptableOrUnknown(
+          data['transaction_category_id']!,
+          _transactionCategoryIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_transactionCategoryIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TransactionDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TransactionDb(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      userId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}user_id'],
+          )!,
+      transactionType:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}transaction_type'],
+          )!,
+      transactionCategoryId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}transaction_category_id'],
+          )!,
+      amount:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.double,
+            data['${effectivePrefix}amount'],
+          )!,
+      accountId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}account_id'],
+          )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}project_id'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      date:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}date'],
+          )!,
+      isActive:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}is_active'],
+          )!,
+    );
+  }
+
+  @override
+  $TransactionsTable createAlias(String alias) {
+    return $TransactionsTable(attachedDatabase, alias);
+  }
+}
+
+class TransactionDb extends DataClass implements Insertable<TransactionDb> {
+  final int id;
+  final int userId;
+  final String transactionType;
+  final int transactionCategoryId;
+  final double amount;
+  final int accountId;
+  final int? projectId;
+  final String? description;
+  final DateTime date;
+  final bool isActive;
+  const TransactionDb({
+    required this.id,
+    required this.userId,
+    required this.transactionType,
+    required this.transactionCategoryId,
+    required this.amount,
+    required this.accountId,
+    this.projectId,
+    this.description,
+    required this.date,
+    required this.isActive,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['transaction_type'] = Variable<String>(transactionType);
+    map['transaction_category_id'] = Variable<int>(transactionCategoryId);
+    map['amount'] = Variable<double>(amount);
+    map['account_id'] = Variable<int>(accountId);
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<int>(projectId);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['date'] = Variable<DateTime>(date);
+    map['is_active'] = Variable<bool>(isActive);
+    return map;
+  }
+
+  TransactionsCompanion toCompanion(bool nullToAbsent) {
+    return TransactionsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      transactionType: Value(transactionType),
+      transactionCategoryId: Value(transactionCategoryId),
+      amount: Value(amount),
+      accountId: Value(accountId),
+      projectId:
+          projectId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(projectId),
+      description:
+          description == null && nullToAbsent
+              ? const Value.absent()
+              : Value(description),
+      date: Value(date),
+      isActive: Value(isActive),
+    );
+  }
+
+  factory TransactionDb.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TransactionDb(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      transactionType: serializer.fromJson<String>(json['transactionType']),
+      transactionCategoryId: serializer.fromJson<int>(
+        json['transactionCategoryId'],
+      ),
+      amount: serializer.fromJson<double>(json['amount']),
+      accountId: serializer.fromJson<int>(json['accountId']),
+      projectId: serializer.fromJson<int?>(json['projectId']),
+      description: serializer.fromJson<String?>(json['description']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'transactionType': serializer.toJson<String>(transactionType),
+      'transactionCategoryId': serializer.toJson<int>(transactionCategoryId),
+      'amount': serializer.toJson<double>(amount),
+      'accountId': serializer.toJson<int>(accountId),
+      'projectId': serializer.toJson<int?>(projectId),
+      'description': serializer.toJson<String?>(description),
+      'date': serializer.toJson<DateTime>(date),
+      'isActive': serializer.toJson<bool>(isActive),
+    };
+  }
+
+  TransactionDb copyWith({
+    int? id,
+    int? userId,
+    String? transactionType,
+    int? transactionCategoryId,
+    double? amount,
+    int? accountId,
+    Value<int?> projectId = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    DateTime? date,
+    bool? isActive,
+  }) => TransactionDb(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    transactionType: transactionType ?? this.transactionType,
+    transactionCategoryId: transactionCategoryId ?? this.transactionCategoryId,
+    amount: amount ?? this.amount,
+    accountId: accountId ?? this.accountId,
+    projectId: projectId.present ? projectId.value : this.projectId,
+    description: description.present ? description.value : this.description,
+    date: date ?? this.date,
+    isActive: isActive ?? this.isActive,
+  );
+  TransactionDb copyWithCompanion(TransactionsCompanion data) {
+    return TransactionDb(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      transactionType:
+          data.transactionType.present
+              ? data.transactionType.value
+              : this.transactionType,
+      transactionCategoryId:
+          data.transactionCategoryId.present
+              ? data.transactionCategoryId.value
+              : this.transactionCategoryId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      description:
+          data.description.present ? data.description.value : this.description,
+      date: data.date.present ? data.date.value : this.date,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TransactionDb(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('transactionType: $transactionType, ')
+          ..write('transactionCategoryId: $transactionCategoryId, ')
+          ..write('amount: $amount, ')
+          ..write('accountId: $accountId, ')
+          ..write('projectId: $projectId, ')
+          ..write('description: $description, ')
+          ..write('date: $date, ')
+          ..write('isActive: $isActive')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    transactionType,
+    transactionCategoryId,
+    amount,
+    accountId,
+    projectId,
+    description,
+    date,
+    isActive,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TransactionDb &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.transactionType == this.transactionType &&
+          other.transactionCategoryId == this.transactionCategoryId &&
+          other.amount == this.amount &&
+          other.accountId == this.accountId &&
+          other.projectId == this.projectId &&
+          other.description == this.description &&
+          other.date == this.date &&
+          other.isActive == this.isActive);
+}
+
+class TransactionsCompanion extends UpdateCompanion<TransactionDb> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<String> transactionType;
+  final Value<int> transactionCategoryId;
+  final Value<double> amount;
+  final Value<int> accountId;
+  final Value<int?> projectId;
+  final Value<String?> description;
+  final Value<DateTime> date;
+  final Value<bool> isActive;
+  const TransactionsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.transactionType = const Value.absent(),
+    this.transactionCategoryId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.description = const Value.absent(),
+    this.date = const Value.absent(),
+    this.isActive = const Value.absent(),
+  });
+  TransactionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    required String transactionType,
+    required int transactionCategoryId,
+    required double amount,
+    required int accountId,
+    this.projectId = const Value.absent(),
+    this.description = const Value.absent(),
+    required DateTime date,
+    this.isActive = const Value.absent(),
+  }) : userId = Value(userId),
+       transactionType = Value(transactionType),
+       transactionCategoryId = Value(transactionCategoryId),
+       amount = Value(amount),
+       accountId = Value(accountId),
+       date = Value(date);
+  static Insertable<TransactionDb> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<String>? transactionType,
+    Expression<int>? transactionCategoryId,
+    Expression<double>? amount,
+    Expression<int>? accountId,
+    Expression<int>? projectId,
+    Expression<String>? description,
+    Expression<DateTime>? date,
+    Expression<bool>? isActive,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (transactionType != null) 'transaction_type': transactionType,
+      if (transactionCategoryId != null)
+        'transaction_category_id': transactionCategoryId,
+      if (amount != null) 'amount': amount,
+      if (accountId != null) 'account_id': accountId,
+      if (projectId != null) 'project_id': projectId,
+      if (description != null) 'description': description,
+      if (date != null) 'date': date,
+      if (isActive != null) 'is_active': isActive,
+    });
+  }
+
+  TransactionsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? userId,
+    Value<String>? transactionType,
+    Value<int>? transactionCategoryId,
+    Value<double>? amount,
+    Value<int>? accountId,
+    Value<int?>? projectId,
+    Value<String?>? description,
+    Value<DateTime>? date,
+    Value<bool>? isActive,
+  }) {
+    return TransactionsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      transactionType: transactionType ?? this.transactionType,
+      transactionCategoryId:
+          transactionCategoryId ?? this.transactionCategoryId,
+      amount: amount ?? this.amount,
+      accountId: accountId ?? this.accountId,
+      projectId: projectId ?? this.projectId,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      isActive: isActive ?? this.isActive,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (transactionType.present) {
+      map['transaction_type'] = Variable<String>(transactionType.value);
+    }
+    if (transactionCategoryId.present) {
+      map['transaction_category_id'] = Variable<int>(
+        transactionCategoryId.value,
+      );
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<int>(accountId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<int>(projectId.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TransactionsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('transactionType: $transactionType, ')
+          ..write('transactionCategoryId: $transactionCategoryId, ')
+          ..write('amount: $amount, ')
+          ..write('accountId: $accountId, ')
+          ..write('projectId: $projectId, ')
+          ..write('description: $description, ')
+          ..write('date: $date, ')
+          ..write('isActive: $isActive')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PendingRequestsTable extends PendingRequests
+    with TableInfo<$PendingRequestsTable, PendingRequest> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingRequestsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _methodMeta = const VerificationMeta('method');
+  @override
+  late final GeneratedColumn<String> method = GeneratedColumn<String>(
+    'method',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endpointMeta = const VerificationMeta(
+    'endpoint',
+  );
+  @override
+  late final GeneratedColumn<String> endpoint = GeneratedColumn<String>(
+    'endpoint',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  @override
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+    'data',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, method, endpoint, data, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_requests';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PendingRequest> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('method')) {
+      context.handle(
+        _methodMeta,
+        method.isAcceptableOrUnknown(data['method']!, _methodMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_methodMeta);
+    }
+    if (data.containsKey('endpoint')) {
+      context.handle(
+        _endpointMeta,
+        endpoint.isAcceptableOrUnknown(data['endpoint']!, _endpointMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endpointMeta);
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+        _dataMeta,
+        this.data.isAcceptableOrUnknown(data['data']!, _dataMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingRequest map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingRequest(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      method:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}method'],
+          )!,
+      endpoint:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}endpoint'],
+          )!,
+      data: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data'],
+      ),
+      createdAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}created_at'],
+          )!,
+    );
+  }
+
+  @override
+  $PendingRequestsTable createAlias(String alias) {
+    return $PendingRequestsTable(attachedDatabase, alias);
+  }
+}
+
+class PendingRequest extends DataClass implements Insertable<PendingRequest> {
+  final int id;
+  final String method;
+  final String endpoint;
+  final String? data;
+  final DateTime createdAt;
+  const PendingRequest({
+    required this.id,
+    required this.method,
+    required this.endpoint,
+    this.data,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['method'] = Variable<String>(method);
+    map['endpoint'] = Variable<String>(endpoint);
+    if (!nullToAbsent || data != null) {
+      map['data'] = Variable<String>(data);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  PendingRequestsCompanion toCompanion(bool nullToAbsent) {
+    return PendingRequestsCompanion(
+      id: Value(id),
+      method: Value(method),
+      endpoint: Value(endpoint),
+      data: data == null && nullToAbsent ? const Value.absent() : Value(data),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory PendingRequest.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingRequest(
+      id: serializer.fromJson<int>(json['id']),
+      method: serializer.fromJson<String>(json['method']),
+      endpoint: serializer.fromJson<String>(json['endpoint']),
+      data: serializer.fromJson<String?>(json['data']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'method': serializer.toJson<String>(method),
+      'endpoint': serializer.toJson<String>(endpoint),
+      'data': serializer.toJson<String?>(data),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  PendingRequest copyWith({
+    int? id,
+    String? method,
+    String? endpoint,
+    Value<String?> data = const Value.absent(),
+    DateTime? createdAt,
+  }) => PendingRequest(
+    id: id ?? this.id,
+    method: method ?? this.method,
+    endpoint: endpoint ?? this.endpoint,
+    data: data.present ? data.value : this.data,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  PendingRequest copyWithCompanion(PendingRequestsCompanion data) {
+    return PendingRequest(
+      id: data.id.present ? data.id.value : this.id,
+      method: data.method.present ? data.method.value : this.method,
+      endpoint: data.endpoint.present ? data.endpoint.value : this.endpoint,
+      data: data.data.present ? data.data.value : this.data,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingRequest(')
+          ..write('id: $id, ')
+          ..write('method: $method, ')
+          ..write('endpoint: $endpoint, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, method, endpoint, data, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingRequest &&
+          other.id == this.id &&
+          other.method == this.method &&
+          other.endpoint == this.endpoint &&
+          other.data == this.data &&
+          other.createdAt == this.createdAt);
+}
+
+class PendingRequestsCompanion extends UpdateCompanion<PendingRequest> {
+  final Value<int> id;
+  final Value<String> method;
+  final Value<String> endpoint;
+  final Value<String?> data;
+  final Value<DateTime> createdAt;
+  const PendingRequestsCompanion({
+    this.id = const Value.absent(),
+    this.method = const Value.absent(),
+    this.endpoint = const Value.absent(),
+    this.data = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  PendingRequestsCompanion.insert({
+    this.id = const Value.absent(),
+    required String method,
+    required String endpoint,
+    this.data = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : method = Value(method),
+       endpoint = Value(endpoint);
+  static Insertable<PendingRequest> custom({
+    Expression<int>? id,
+    Expression<String>? method,
+    Expression<String>? endpoint,
+    Expression<String>? data,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (method != null) 'method': method,
+      if (endpoint != null) 'endpoint': endpoint,
+      if (data != null) 'data': data,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  PendingRequestsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? method,
+    Value<String>? endpoint,
+    Value<String?>? data,
+    Value<DateTime>? createdAt,
+  }) {
+    return PendingRequestsCompanion(
+      id: id ?? this.id,
+      method: method ?? this.method,
+      endpoint: endpoint ?? this.endpoint,
+      data: data ?? this.data,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (method.present) {
+      map['method'] = Variable<String>(method.value);
+    }
+    if (endpoint.present) {
+      map['endpoint'] = Variable<String>(endpoint.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingRequestsCompanion(')
+          ..write('id: $id, ')
+          ..write('method: $method, ')
+          ..write('endpoint: $endpoint, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+abstract class _$AppDatabase extends GeneratedDatabase {
+  _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $TransactionsTable transactions = $TransactionsTable(this);
+  late final $PendingRequestsTable pendingRequests = $PendingRequestsTable(
+    this,
+  );
+  @override
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    transactions,
+    pendingRequests,
+  ];
+}
+
+typedef $$TransactionsTableCreateCompanionBuilder =
+    TransactionsCompanion Function({
+      Value<int> id,
+      required int userId,
+      required String transactionType,
+      required int transactionCategoryId,
+      required double amount,
+      required int accountId,
+      Value<int?> projectId,
+      Value<String?> description,
+      required DateTime date,
+      Value<bool> isActive,
+    });
+typedef $$TransactionsTableUpdateCompanionBuilder =
+    TransactionsCompanion Function({
+      Value<int> id,
+      Value<int> userId,
+      Value<String> transactionType,
+      Value<int> transactionCategoryId,
+      Value<double> amount,
+      Value<int> accountId,
+      Value<int?> projectId,
+      Value<String?> description,
+      Value<DateTime> date,
+      Value<bool> isActive,
+    });
+
+class $$TransactionsTableFilterComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transactionType => $composableBuilder(
+    column: $table.transactionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get transactionCategoryId => $composableBuilder(
+    column: $table.transactionCategoryId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TransactionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transactionType => $composableBuilder(
+    column: $table.transactionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get transactionCategoryId => $composableBuilder(
+    column: $table.transactionCategoryId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TransactionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get transactionType => $composableBuilder(
+    column: $table.transactionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get transactionCategoryId => $composableBuilder(
+    column: $table.transactionCategoryId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<int> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get projectId =>
+      $composableBuilder(column: $table.projectId, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+}
+
+class $$TransactionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TransactionsTable,
+          TransactionDb,
+          $$TransactionsTableFilterComposer,
+          $$TransactionsTableOrderingComposer,
+          $$TransactionsTableAnnotationComposer,
+          $$TransactionsTableCreateCompanionBuilder,
+          $$TransactionsTableUpdateCompanionBuilder,
+          (
+            TransactionDb,
+            BaseReferences<_$AppDatabase, $TransactionsTable, TransactionDb>,
+          ),
+          TransactionDb,
+          PrefetchHooks Function()
+        > {
+  $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () => $$TransactionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$TransactionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () =>
+                  $$TransactionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> userId = const Value.absent(),
+                Value<String> transactionType = const Value.absent(),
+                Value<int> transactionCategoryId = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<int> accountId = const Value.absent(),
+                Value<int?> projectId = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+              }) => TransactionsCompanion(
+                id: id,
+                userId: userId,
+                transactionType: transactionType,
+                transactionCategoryId: transactionCategoryId,
+                amount: amount,
+                accountId: accountId,
+                projectId: projectId,
+                description: description,
+                date: date,
+                isActive: isActive,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int userId,
+                required String transactionType,
+                required int transactionCategoryId,
+                required double amount,
+                required int accountId,
+                Value<int?> projectId = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                required DateTime date,
+                Value<bool> isActive = const Value.absent(),
+              }) => TransactionsCompanion.insert(
+                id: id,
+                userId: userId,
+                transactionType: transactionType,
+                transactionCategoryId: transactionCategoryId,
+                amount: amount,
+                accountId: accountId,
+                projectId: projectId,
+                description: description,
+                date: date,
+                isActive: isActive,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TransactionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TransactionsTable,
+      TransactionDb,
+      $$TransactionsTableFilterComposer,
+      $$TransactionsTableOrderingComposer,
+      $$TransactionsTableAnnotationComposer,
+      $$TransactionsTableCreateCompanionBuilder,
+      $$TransactionsTableUpdateCompanionBuilder,
+      (
+        TransactionDb,
+        BaseReferences<_$AppDatabase, $TransactionsTable, TransactionDb>,
+      ),
+      TransactionDb,
+      PrefetchHooks Function()
+    >;
+typedef $$PendingRequestsTableCreateCompanionBuilder =
+    PendingRequestsCompanion Function({
+      Value<int> id,
+      required String method,
+      required String endpoint,
+      Value<String?> data,
+      Value<DateTime> createdAt,
+    });
+typedef $$PendingRequestsTableUpdateCompanionBuilder =
+    PendingRequestsCompanion Function({
+      Value<int> id,
+      Value<String> method,
+      Value<String> endpoint,
+      Value<String?> data,
+      Value<DateTime> createdAt,
+    });
+
+class $$PendingRequestsTableFilterComposer
+    extends Composer<_$AppDatabase, $PendingRequestsTable> {
+  $$PendingRequestsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get method => $composableBuilder(
+    column: $table.method,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endpoint => $composableBuilder(
+    column: $table.endpoint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PendingRequestsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PendingRequestsTable> {
+  $$PendingRequestsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get method => $composableBuilder(
+    column: $table.method,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endpoint => $composableBuilder(
+    column: $table.endpoint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PendingRequestsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PendingRequestsTable> {
+  $$PendingRequestsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get method =>
+      $composableBuilder(column: $table.method, builder: (column) => column);
+
+  GeneratedColumn<String> get endpoint =>
+      $composableBuilder(column: $table.endpoint, builder: (column) => column);
+
+  GeneratedColumn<String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$PendingRequestsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PendingRequestsTable,
+          PendingRequest,
+          $$PendingRequestsTableFilterComposer,
+          $$PendingRequestsTableOrderingComposer,
+          $$PendingRequestsTableAnnotationComposer,
+          $$PendingRequestsTableCreateCompanionBuilder,
+          $$PendingRequestsTableUpdateCompanionBuilder,
+          (
+            PendingRequest,
+            BaseReferences<
+              _$AppDatabase,
+              $PendingRequestsTable,
+              PendingRequest
+            >,
+          ),
+          PendingRequest,
+          PrefetchHooks Function()
+        > {
+  $$PendingRequestsTableTableManager(
+    _$AppDatabase db,
+    $PendingRequestsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () =>
+                  $$PendingRequestsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$PendingRequestsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer:
+              () => $$PendingRequestsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> method = const Value.absent(),
+                Value<String> endpoint = const Value.absent(),
+                Value<String?> data = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => PendingRequestsCompanion(
+                id: id,
+                method: method,
+                endpoint: endpoint,
+                data: data,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String method,
+                required String endpoint,
+                Value<String?> data = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => PendingRequestsCompanion.insert(
+                id: id,
+                method: method,
+                endpoint: endpoint,
+                data: data,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PendingRequestsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PendingRequestsTable,
+      PendingRequest,
+      $$PendingRequestsTableFilterComposer,
+      $$PendingRequestsTableOrderingComposer,
+      $$PendingRequestsTableAnnotationComposer,
+      $$PendingRequestsTableCreateCompanionBuilder,
+      $$PendingRequestsTableUpdateCompanionBuilder,
+      (
+        PendingRequest,
+        BaseReferences<_$AppDatabase, $PendingRequestsTable, PendingRequest>,
+      ),
+      PendingRequest,
+      PrefetchHooks Function()
+    >;
+
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db, _db.transactions);
+  $$PendingRequestsTableTableManager get pendingRequests =>
+      $$PendingRequestsTableTableManager(_db, _db.pendingRequests);
+}

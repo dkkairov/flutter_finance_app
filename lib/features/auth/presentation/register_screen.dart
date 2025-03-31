@@ -1,33 +1,74 @@
-import 'package:flutter/material.dart';
-import '../../../common/widgets/custom_button.dart';
-import '../../../common/widgets/custom_text_field.dart';
+// lib/features/auth/presentation/register_screen.dart
 
-class RegisterScreen extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+import 'package:flutter/material.dart';
+
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _error;
+
+  Future<void> _register() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      // В реальном приложении: запрос к API
+      await Future.delayed(const Duration(seconds: 1)); // Заглушка
+
+      if (context.mounted) {
+        Navigator.pop(context); // Возврат на экран логина
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Ошибка регистрации: $e';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Регистрация')),
+      appBar: AppBar(title: const Text('Регистрация')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomTextField(controller: emailController, hintText: 'Email'),
-            SizedBox(height: 16),
-            CustomTextField(
-              controller: passwordController,
-              hintText: 'Пароль',
+            if (_error != null)
+              Text(_error!, style: const TextStyle(color: Colors.red)),
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Имя'),
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(labelText: 'Пароль'),
               obscureText: true,
             ),
-            SizedBox(height: 24),
-            CustomButton(
-              text: 'Зарегистрироваться',
-              onPressed: () {
-                Navigator.pop(context);
-              },
+            const SizedBox(height: 20),
+            _isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+              onPressed: _register,
+              child: const Text('Зарегистрироваться'),
             ),
           ],
         ),

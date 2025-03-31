@@ -9,8 +9,8 @@ import '../../features/projects/presentation/project_form_screen.dart';
 import '../../features/projects/presentation/projects_screen.dart';
 import '../../features/reports/presentation/reports_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
-import '../../features/transactions/presentation/transaction_form_screen.dart';
-import '../../features/transactions/presentation/transactions_list_screen.dart';
+import '../../features/transactions/presentation/screens/transaction_form_screen.dart';
+import '../../features/transactions/presentation/screens/transactions_list_screen.dart';
 
 class MainRouter {
   static const String initialRoute = '/';
@@ -24,21 +24,21 @@ class MainRouter {
       case '/':
         return MaterialPageRoute(builder: (_) => MainScreen());
       case '/transactions':
-        return MaterialPageRoute(builder: (_) => TransactionsListScreen());
+        return MaterialPageRoute(builder: (_) => TransactionListScreen());
       case '/main-transaction':
         return MaterialPageRoute(builder: (_) => TransactionFormScreen());
       case '/categories':
         return MaterialPageRoute(builder: (_) => CategoriesScreen());
       case '/main-category':
         return MaterialPageRoute(builder: (_) => CategoryFormScreen());
-      case '/projects':
-        return MaterialPageRoute(builder: (_) => ProjectsScreen());
-      case '/reports':
-        return MaterialPageRoute(builder: (_) => ReportsScreen());
+      // case '/projects':
+      //   return MaterialPageRoute(builder: (_) => ProjectsScreen());
+      // case '/reports':
+      //   return MaterialPageRoute(builder: (_) => ReportsScreen());
       case '/budget':
         return MaterialPageRoute(builder: (_) => BudgetScreen());
-      case '/settings':
-        return MaterialPageRoute(builder: (_) => SettingsScreen());
+      // case '/settings':
+      //   return MaterialPageRoute(builder: (_) => SettingsScreen());
       case '/main-project':
         return MaterialPageRoute(builder: (_) => ProjectFormScreen());
       default:
@@ -74,17 +74,17 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/':
       return FadeRoute(page: MainScreen());
     case '/transactions':
-      return FadeRoute(page: TransactionsListScreen());
+      return FadeRoute(page: TransactionListScreen());
     case '/categories':
       return FadeRoute(page: CategoriesScreen());
-    case '/projects':
-      return FadeRoute(page: ProjectsScreen());
-    case '/reports':
-      return FadeRoute(page: ReportsScreen());
+    // case '/projects':
+    //   return FadeRoute(page: ProjectsScreen());
+    // case '/reports':
+      // return FadeRoute(page: ReportsScreen());
     case '/budget':
       return FadeRoute(page: BudgetScreen());
-    case '/settings':
-      return FadeRoute(page: SettingsScreen());
+    // case '/settings':
+    //   return FadeRoute(page: SettingsScreen());
     default:
       return MaterialPageRoute(
         builder: (_) => Scaffold(

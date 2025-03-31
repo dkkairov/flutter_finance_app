@@ -1,38 +1,51 @@
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/api_service.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'auth_repository.dart';
 
-final authProvider = StateNotifierProvider<AuthNotifier, bool>((ref) => AuthNotifier());
+final authProvider = Provider<AuthService>((ref) {
+  final api = ref.read(apiServiceProvider);          // Экземпляр ApiService
+  final authRepo = ref.read(authRepositoryProvider); // Экземпляр AuthRepository
+  return AuthService(api, authRepo);
+});
 
-class AuthNotifier extends StateNotifier<bool> {
-  static const _storage = FlutterSecureStorage();
+class AuthService {
+  final ApiService apiService;
+  final AuthRepository authRepository;
 
-  AuthNotifier() : super(false);
+  AuthService(this.apiService, this.authRepository);
 
-  Future<void> login(String email, String password) async {
-    final response = await ApiService.post('/login', {
-      'email': email,
-      'password': password,
-    });
+  Future<bool> login(String email, String password) async {
+    try {
+      // 1. Отправляем запрос через экземпляр apiService
+      final response = await apiService.post('/login', {
+        'email': email,
+        'password': password,
+      });
 
-    if (response.statusCode == 200) {
-      final token = jsonDecode(response.body)['token'];
-      await ApiService.saveToken(token);
-      state = true;
-    } else {
-      state = false;
-      throw Exception('Ошибка авторизации');
+      if (response.statusCode == 200) {
+        // 2. Извлекаем token из response.data
+        final token = response.data['token'] as String?;
+        if (token != null && token.isNotEmpty) {
+          // 3. Сохраняем token в SecureStorage через authRepository
+          await authRepository.saveToken(token);
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      rethrow;
     }
   }
 
   Future<void> logout() async {
-    await ApiService.deleteToken();
-    state = false;
-  }
-
-  Future<void> checkAuthStatus() async {
-    final token = await _storage.read(key: 'token');
-    state = token != null;
+    try {
+      // 1. Отправляем запрос на logout (если нужно)
+      await apiService.post('/logout', {});
+    } catch (e) {
+      // пропускаем
+    } finally {
+      // 2. Удаляем локальный токен
+      await authRepository.deleteToken();
+    }
   }
 }

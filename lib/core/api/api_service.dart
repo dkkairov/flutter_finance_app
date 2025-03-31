@@ -1,47 +1,32 @@
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
+// lib/core/services/api_service.dart
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
+import '../api/dio_provider.dart';
+
+final apiServiceProvider = Provider<ApiService>((ref) {
+  final dio = ref.watch(dioProvider);
+  return ApiService(dio);
+});
 
 class ApiService {
-  static const String _baseUrl = 'https://example.com/api';
-  static const _storage = FlutterSecureStorage();
+  final Dio _dio;
 
-  static Future<String?> _getToken() async {
-    return await _storage.read(key: 'token');
+  ApiService(this._dio);
+
+  Future<Response> get(String endpoint) async {
+    return await _dio.get(endpoint);
   }
 
-  static Future<void> saveToken(String token) async {
-    await _storage.write(key: 'token', value: token);
+  Future<Response> post(String endpoint, Map<String, dynamic> data) async {
+    return await _dio.post(endpoint, data: data);
   }
 
-  static Future<void> deleteToken() async {
-    await _storage.delete(key: 'token');
+  Future<Response> put(String endpoint, Map<String, dynamic> data) async {
+    return await _dio.put(endpoint, data: data);
   }
 
-  static Future<http.Response> post(String url, Map<String, dynamic> data) async {
-    final response = await http.post(
-      Uri.parse('$_baseUrl$url'),
-      body: jsonEncode(data),
-      headers: {'Content-Type': 'application/json'},
-    );
-    return response;
-  }
-
-  static Future<http.Response> get(String url) async {
-    final token = await _getToken();
-    final response = await http.get(
-      Uri.parse('$_baseUrl$url'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    return response;
-  }
-
-  static Future<http.Response> delete(String url) async {
-    final token = await _getToken();
-    final response = await http.delete(
-      Uri.parse('$_baseUrl$url'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    return response;
+  Future<Response> delete(String endpoint) async {
+    return await _dio.delete(endpoint);
   }
 }

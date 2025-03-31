@@ -37,7 +37,7 @@ class AccountScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              TransactionListWidget()
+              TransactionListWidget(transactions: [],)
             ],
           ),
         )

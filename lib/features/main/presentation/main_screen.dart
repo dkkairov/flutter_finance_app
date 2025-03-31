@@ -13,14 +13,15 @@ class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reportData = ref.watch(reportProvider);
+    // final reportData = ref.watch(reportProvider);
     final currentScreenIndex = ref.watch(bottomNavProvider);
     final List<Widget> screens = [
       AddScreen(),
       AccountsListScreen(),
       BudgetScreen(),
       BudgetScreen(),
-      const SettingsScreen(),
+      BudgetScreen(),
+      // const SettingsScreen(),
     ];
     return SafeArea(
       child: Scaffold(
