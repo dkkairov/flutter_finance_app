@@ -10,14 +10,14 @@ import 'core/routing/main_router.dart';
 import 'core/localization/app_localizations.dart';
 
 void main() {
-  final container = ProviderContainer();
-  final offlineSyncService = container.read(offlineSyncServiceProvider);
-
-  container.listen(networkStatusProvider, (prev, next) {
-    if (next == NetworkStatus.online) {
-      offlineSyncService.syncPendingRequests();
-    }
-  });
+  // final container = ProviderContainer();
+  // final offlineSyncService = container.read(offlineSyncServiceProvider);
+  //
+  // container.listen(networkStatusProvider, (prev, next) {
+  //   if (next == NetworkStatus.online) {
+  //     offlineSyncService.syncPendingRequests();
+  //   }
+  // });
 
 
   runApp(ProviderScope(child: MyApp()));
