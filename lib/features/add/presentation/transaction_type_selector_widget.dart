@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/core/theme/app_colors.dart';
+import 'package:flutter_app_1/core/theme/app_text_styles.dart';
 import 'add_screen.dart';
 
 class TransactionTypeSelectorWidget extends StatelessWidget {
@@ -17,26 +19,26 @@ class TransactionTypeSelectorWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10.0),
       child: CupertinoSlidingSegmentedControl<TransactionType>(
-        backgroundColor: CupertinoColors.systemGrey2,
-        thumbColor: skyColors[selectedSegment]!,
+        backgroundColor: AppColors.mainLightGrey,
+        thumbColor: AppColors.mainWhite,
         groupValue: selectedSegment,
         onValueChanged: (TransactionType? value) {
           if (value != null) {
             onValueChanged(value);
           }
         },
-        children: const <TransactionType, Widget>{
+        children: <TransactionType, Widget>{
           TransactionType.expense: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Midnight', style: TextStyle(color: CupertinoColors.white)),
+            child: Text('Расход', style: AppTextStyles.normalMedium),
           ),
           TransactionType.income: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Viridian', style: TextStyle(color: CupertinoColors.white)),
+            child: Text('Доход', style: AppTextStyles.normalMedium),
           ),
           TransactionType.transfer: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Cerulean', style: TextStyle(color: CupertinoColors.white)),
+            child: Text('Перевод', style: AppTextStyles.normalMedium),
           ),
         },
       ),

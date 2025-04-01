@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/core/theme/app_text_styles.dart';
 import 'add_screen.dart';
 
 class SumViewerWidget extends StatelessWidget {
@@ -12,11 +13,7 @@ class SumViewerWidget extends StatelessWidget {
         children: [
           Text(
             '800 000',
-            style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: skyColors[TransactionType.expense]
-            ),
+            style: AppTextStyles.normalLarge,
           ),
           IconButton(
               onPressed: () {},

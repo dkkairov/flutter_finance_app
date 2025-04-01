@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/core/theme/app_colors.dart';
+import 'package:flutter_app_1/core/theme/app_text_styles.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CategoryPickerWidget extends StatelessWidget {
@@ -104,14 +106,14 @@ class CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.grey[300],
+    return Container(
+      color: AppColors.background,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(category.icon, size: 40, color: Colors.black87),
+          Icon(category.icon, size: 40, color: AppColors.primary),
           const SizedBox(height: 8),
-          Text(category.name, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14)),
+          Text(category.name, textAlign: TextAlign.center, style: AppTextStyles.normalSmall),
         ],
       ),
     );

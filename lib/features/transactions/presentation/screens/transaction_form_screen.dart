@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/features/transactions/data/repositories/transaction_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_text_field.dart';
+import '../../domain/models/transaction.dart';
 import '../providers/transaction_provider.dart';
 
 
@@ -11,7 +13,7 @@ class TransactionFormScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final transactionsNotifier = ref.read(transactionsProvider.notifier);
+    final transactionsNotifier = ref.read(transactionRepositoryProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text('Добавить Транзакцию')),
@@ -27,17 +29,18 @@ class TransactionFormScreen extends ConsumerWidget {
               text: 'Сохранить',
               onPressed: () async {
                 final transaction = Transaction(
-                  'expense',           // 1-й аргумент: type
-                  'Еда',               // 2-й аргумент: categoryName
-                  'Домашний проект',   // 3-й аргумент: projectName
-                  id: '',  // ID будет присвоен сервером
-                  title: titleController.text,
-                  amount: double.tryParse(amountController.text) ?? 0,
-                  date: DateTime.now(),
+                  id: 1,
+                  userId: 1,
+                  transactionType: 'expense',
+                  transactionCategoryId: 1,
+                  amount: 500.0,
+                  accountId: 1,
+                  date: DateTime.now().subtract(const Duration(days: 1)),
+                  isActive: true,
                 );
 
                 try {
-                  await transactionsNotifier.addTransaction(transaction);
+                  await transactionsNotifier.createTransaction(transaction);
                   Navigator.pop(context);
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(

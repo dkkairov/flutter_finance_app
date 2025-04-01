@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../transactions/presentation/providers/transaction_provider.dart';
+import '../../transactions/domain/models/transaction.dart';
 
 class TransactionListWidget extends StatelessWidget {
   final List<Transaction> transactions;
@@ -15,15 +15,15 @@ class TransactionListWidget extends StatelessWidget {
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final transaction = transactions[index];
-        final isExpense = transaction.type == 'expense';
+        final isExpense = transaction.transactionType == 'expense';
 
         return ListTile(
           leading: Icon(
             Icons.category, // Здесь можно использовать кастомные иконки
             color: Colors.blue,
           ),
-          title: Text(transaction.categoryName),
-          subtitle: Text(transaction.projectName ?? 'Без проекта'),
+          title: Text(transaction.transactionCategoryId as String),
+          subtitle: Text(transaction.projectId as String ?? 'Без проекта'),
           trailing: Text(
             '${isExpense ? '-' : '+'}${transaction.amount.toStringAsFixed(2)}',
             style: TextStyle(

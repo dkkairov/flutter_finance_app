@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/core/theme/app_text_styles.dart';
 
 class NumericKeypadWidget extends StatelessWidget {
   final void Function(String) onKeyPressed;
@@ -36,16 +37,14 @@ class NumericKeypadWidget extends StatelessWidget {
             )
             : ElevatedButton(
             onPressed: () => onKeyPressed(keys[index]),
-            child: Text(
-                keys[index],
-                style: const TextStyle(
-                  fontSize: 24,
-                )
-            ),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
               ),
+            ),
+            child: Text(
+                keys[index],
+                style: AppTextStyles.normalLarge
             ),
         );
       },

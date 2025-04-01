@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/core/theme/app_colors.dart';
 import 'package:flutter_app_1/features/add/presentation/sum_viewer_widget.dart';
 import 'package:flutter_app_1/features/add/presentation/transaction_type_selector_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,14 +10,8 @@ import 'numeric_keypad_widget.dart';
 
 enum TransactionType { expense, income, transfer}
 
-Map<TransactionType, Color> skyColors = <TransactionType, Color>{
-  TransactionType.expense: const Color(0xff191970),
-  TransactionType.income: const Color(0xff40826d),
-  TransactionType.transfer: const Color(0xff007ba7),
-};
-
 class AddScreen extends ConsumerWidget {
-  AddScreen({super.key});
+  const AddScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

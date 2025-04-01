@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/core/theme/app_text_styles.dart';
+
+import '../../../core/theme/app_colors.dart';
 
 class AdditionalFieldsWidget extends StatefulWidget {
   @override
@@ -31,7 +34,7 @@ class _AdditionalFieldsWidgetState extends State<AdditionalFieldsWidget> {
                     padding: const EdgeInsets.all(4.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[800], // Серый фон
+                        color: AppColors.mainLightGrey,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -40,8 +43,8 @@ class _AdditionalFieldsWidgetState extends State<AdditionalFieldsWidget> {
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                         ),
-                        dropdownColor: Colors.grey[900], // Цвет списка
-                        style: const TextStyle(color: Colors.white), // Белый текст
+                        dropdownColor: AppColors.mainDarkGrey,
+                        style: AppTextStyles.normalMedium,
                         items: ['Option 1', 'Option 2', 'Option 3']
                             .map((item) => DropdownMenuItem(
                           value: item,
@@ -55,7 +58,7 @@ class _AdditionalFieldsWidgetState extends State<AdditionalFieldsWidget> {
                         },
                         hint: Text(
                           fields[j],
-                          style: const TextStyle(color: Colors.white),
+                          style: AppTextStyles.normalMedium,
                         ),
                       ),
                     ),
