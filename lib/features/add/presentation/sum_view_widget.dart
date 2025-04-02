@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_1/core/theme/app_text_styles.dart';
-import 'add_screen.dart';
 
-class SumViewerWidget extends StatelessWidget {
-  const SumViewerWidget({super.key});
+class SumViewWidget extends StatelessWidget {
+  const SumViewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

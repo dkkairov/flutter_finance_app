@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/accounts/presentation/transaction_list_widget.dart';
+import '../../transactions/presentation/screens/transactions_list_widget.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -37,7 +36,7 @@ class AccountScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              TransactionListWidget(transactions: [],)
+              TransactionsListWidget()
             ],
           ),
         )

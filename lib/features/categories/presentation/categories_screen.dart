@@ -35,12 +35,12 @@ class CategoriesScreen extends ConsumerWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/main-category');
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.pushNamed(context, '/main-category');
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }

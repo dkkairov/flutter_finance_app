@@ -1,19 +1,17 @@
-// lib/features/transactions/presentation/screens/transaction_list_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../common/widgets/section_list_view.dart';
 import '../../domain/models/transaction.dart';
 import '../../domain/transaction_use_case.dart';
-import '../widgets/transaction_item_widget.dart';
 
-class TransactionListScreen extends ConsumerStatefulWidget {
-  const TransactionListScreen({super.key});
+class TransactionsListWidget extends ConsumerStatefulWidget {
+  const TransactionsListWidget({super.key});
 
   @override
-  ConsumerState<TransactionListScreen> createState() => _TransactionListScreenState();
+  ConsumerState<TransactionsListWidget> createState() => _TransactionsListWidgetState();
 }
 
-class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
+class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget> {
   late Future<List<Transaction>> _future;
 
   @override
@@ -30,11 +28,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Список транзакций'),
-      ),
-      body: FutureBuilder<List<Transaction>>(
+    return Expanded(
+      child: FutureBuilder<List<Transaction>>(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -49,14 +44,22 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
             return const Center(child: Text('Нет транзакций'));
           }
 
+          final items = transactions.map((tx) => SectionListItemModel(
+            title: tx.transactionCategoryId.toString(),
+            subtitle: tx.date.toString(),
+            trailing: Text(
+              (tx.amount > 0 ? '+' : '') + tx.amount.toStringAsFixed(0) + ' ₸',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: tx.amount > 0 ? Colors.green : Colors.red,
+              ),
+            ),
+            onTap: () {}, // TODO: добавить переход к деталям транзакции
+          )).toList();
+
           return RefreshIndicator(
             onRefresh: _refresh,
-            child: ListView.builder(
-              itemCount: transactions.length,
-              itemBuilder: (context, index) {
-                return TransactionItemWidget(transaction: transactions[index]);
-              },
-            ),
+            child: SectionListView(items: items),
           );
         },
       ),

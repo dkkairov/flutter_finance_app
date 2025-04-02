@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/budget/presentation/budget_screen.dart';
+import 'package:flutter_app_1/features/accounts/presentation/accounts_screen.dart';
+import 'package:flutter_app_1/features/add/presentation/add_screen.dart';
+import 'package:flutter_app_1/features/transactions/presentation/screens/transactions_screen.dart';
 import '../../features/main/presentation/main_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/categories/presentation/categories_screen.dart';
-import '../../features/categories/presentation/category_form_screen.dart';
-import '../../features/projects/presentation/project_form_screen.dart';
-import '../../features/projects/presentation/projects_screen.dart';
-import '../../features/reports/presentation/reports_screen.dart';
-import '../../features/settings/presentation/settings_screen.dart';
-import '../../features/transactions/presentation/screens/transaction_form_screen.dart';
-import '../../features/transactions/presentation/screens/transactions_list_screen.dart';
 
 class MainRouter {
   static const String initialRoute = '/';
@@ -24,23 +19,13 @@ class MainRouter {
       case '/':
         return MaterialPageRoute(builder: (_) => MainScreen());
       case '/transactions':
-        return MaterialPageRoute(builder: (_) => TransactionListScreen());
-      case '/main-transaction':
-        return MaterialPageRoute(builder: (_) => TransactionFormScreen());
+        return MaterialPageRoute(builder: (_) => TransactionsScreen());
+      case '/transactions/add':
+        return MaterialPageRoute(builder: (_) => AddScreen());
       case '/categories':
         return MaterialPageRoute(builder: (_) => CategoriesScreen());
-      case '/main-category':
-        return MaterialPageRoute(builder: (_) => CategoryFormScreen());
-      // case '/projects':
-      //   return MaterialPageRoute(builder: (_) => ProjectsScreen());
-      // case '/reports':
-      //   return MaterialPageRoute(builder: (_) => ReportsScreen());
-      case '/budget':
-        return MaterialPageRoute(builder: (_) => BudgetScreen());
-      // case '/settings':
-      //   return MaterialPageRoute(builder: (_) => SettingsScreen());
-      case '/main-project':
-        return MaterialPageRoute(builder: (_) => ProjectFormScreen());
+      case '/accounts':
+        return FadeRoute(page: AccountsScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
@@ -74,17 +59,13 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     case '/':
       return FadeRoute(page: MainScreen());
     case '/transactions':
-      return FadeRoute(page: TransactionListScreen());
+      return FadeRoute(page: TransactionsScreen());
+    case '/transactions/add':
+      return MaterialPageRoute(builder: (_) => AddScreen());
     case '/categories':
       return FadeRoute(page: CategoriesScreen());
-    // case '/projects':
-    //   return FadeRoute(page: ProjectsScreen());
-    // case '/reports':
-      // return FadeRoute(page: ReportsScreen());
-    case '/budget':
-      return FadeRoute(page: BudgetScreen());
-    // case '/settings':
-    //   return FadeRoute(page: SettingsScreen());
+    case '/accounts':
+      return FadeRoute(page: AccountsScreen());
     default:
       return MaterialPageRoute(
         builder: (_) => Scaffold(

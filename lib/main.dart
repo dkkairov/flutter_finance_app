@@ -3,26 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/add/presentation/add_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'common/providers/theme_provider.dart';
 import 'core/network/network_status_notifier.dart';
 import 'core/network/offline_sync_service.dart';
-import 'core/theme/theme_manager.dart';
 import 'core/routing/main_router.dart';
 import 'core/localization/app_localizations.dart';
+import 'core/theme/theme_manager.dart';
 
 void main() {
-  // final container = ProviderContainer();
-  // final offlineSyncService = container.read(offlineSyncServiceProvider);
-  //
-  // container.listen(networkStatusProvider, (prev, next) {
-  //   if (next == NetworkStatus.online) {
-  //     offlineSyncService.syncPendingRequests();
-  //   }
-  // });
-
-
   runApp(ProviderScope(child: MyApp()));
 }
-
 
 final bottomNavProvider = StateProvider<int>((ref) => 0);
 final transactionTypeProvider = StateProvider<TransactionType>((ref) => TransactionType.expense);
@@ -48,7 +38,8 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final themeMode = ref.watch(themeModeProvider);
+    final themeModeAsync = ref.watch(themeModeProvider);
+    final themeMode = themeModeAsync.value ?? ThemeMode.system;
 
     return MaterialApp(
       title: 'Финансовый учёт',
