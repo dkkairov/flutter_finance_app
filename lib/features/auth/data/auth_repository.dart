@@ -8,7 +8,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 });
 
 class AuthRepository {
-  static const _tokenKey = 'token';
+  static const _tokenKey = '2|NvXjOtpSsbjmxDOKaSNMXuDItgiO1S6DPWsBMfTs3461f7b3';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<void> saveToken(String token) async {

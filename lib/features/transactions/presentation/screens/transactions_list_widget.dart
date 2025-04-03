@@ -1,13 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../common/widgets/section_list_view.dart';
+import '../providers/transaction_dependencies.dart';
 import '../providers/transaction_provider.dart';
 
-class TransactionsListWidget extends ConsumerWidget {
+class TransactionsListWidget extends ConsumerStatefulWidget {
   const TransactionsListWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TransactionsListWidget> createState() => _TransactionsListWidgetState();
+}
+
+class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() async {
+      final remote = ref.read(transactionRemoteDataSourceProvider);
+      try {
+        final result = await remote.fetchTransactions();
+        debugPrint('✅ Получено ${result.length} транзакций:');
+        for (var tx in result) {
+          debugPrint('- ${tx.description ?? 'Без описания'}: ${tx.amount} ₸');
+        }
+      } catch (e, st) {
+        debugPrint('❌ Ошибка при получении транзакций: $e\n$st');
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final transactionsAsync = ref.watch(transactionStreamProvider);
     final repository = ref.read(transactionRepositoryProvider);
 
@@ -30,7 +54,7 @@ class TransactionsListWidget extends ConsumerWidget {
                 color: tx.amount > 0 ? Colors.green : Colors.red,
               ),
             ),
-            onTap: () {}, // TODO: перейти на детали
+            onTap: () {},
           );
         }).toList();
 

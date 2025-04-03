@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/add/presentation/add_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'common/providers/theme_provider.dart';
 import 'core/network/network_status_notifier.dart';
 import 'core/routing/main_router.dart';
@@ -12,7 +13,18 @@ import 'core/theme/theme_manager.dart';
 import 'features/transactions/presentation/providers/transaction_dependencies.dart';
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  const storage = FlutterSecureStorage();
+
+  // 🟡 ← вставь свой рабочий токен здесь:
+  const token = '1|SxInNroV15HXdmVfercVMBTCvdJgLGnyOPiTDytP9cf82459';
+  await storage.write(key: 'token', value: token);
+
+  final check = await storage.read(key: 'token');
+  debugPrint('📦 Токен сохранён: $check'); // ← вот это добавь
+
   runApp(ProviderScope(child: MyApp()));
 }
 
