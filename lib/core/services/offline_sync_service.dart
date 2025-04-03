@@ -1,57 +1,61 @@
-// lib/core/services/offline_sync_service.dart
-
 import 'dart:convert';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
-
-import '../db/app_database.dart';
-import '../providers/database_provider.dart';
-import '../api/dio_provider.dart';
-
-final offlineSyncServiceProvider = Provider<OfflineSyncService>((ref) {
-  final db = ref.watch(databaseProvider);
-  final dio = ref.watch(dioProvider);
-  return OfflineSyncService(database: db, dio: dio);
-});
+import 'package:drift/drift.dart';
+import 'package:flutter_app_1/core/db/app_database.dart';
+import '../network/network_status_notifier.dart';
 
 class OfflineSyncService {
-  final AppDatabase database;
   final Dio dio;
+  final AppDatabase db;
+  final NetworkStatus networkStatusProvider;
 
   OfflineSyncService({
-    required this.database,
     required this.dio,
+    required this.db,
+    required this.networkStatusProvider,
   });
 
+  Future<void> enqueueRequest({
+    required String method,
+    required String endpoint,
+    Map<String, dynamic>? body,
+  }) async {
+    final request = PendingRequestsCompanion.insert(
+      method: method,
+      endpoint: endpoint,
+      body: Value(body != null ? jsonEncode(body) : null),
+    );
+
+    await db.insertPendingRequest(request);
+  }
+
   Future<void> syncPendingRequests() async {
-    final pending = await database.getPendingRequests();
+    final isOnline = await networkStatusProvider.isConnected();
+    if (!isOnline) return;
 
-    for (final request in pending) {
+    final pending = await db.getAllPendingRequests();
+
+    for (final req in pending) {
       try {
-        final body = request.data != null && request.data!.isNotEmpty
-            ? jsonDecode(request.data!)
-            : null;
-        Response response;
+        final data = req.body != null ? jsonDecode(req.body!) : null;
 
-        switch (request.method.toUpperCase()) {
+        switch (req.method.toUpperCase()) {
           case 'POST':
-            response = await dio.post(request.endpoint, data: body);
+            await dio.post(req.endpoint, data: data);
             break;
           case 'PUT':
-            response = await dio.put(request.endpoint, data: body);
+            await dio.put(req.endpoint, data: data);
             break;
           case 'DELETE':
-            response = await dio.delete(request.endpoint);
+            await dio.delete(req.endpoint);
             break;
           default:
-            throw UnsupportedError('Unsupported method: ${request.method}');
+            continue;
         }
 
-        if (response.statusCode != null && response.statusCode! < 300) {
-          await database.deletePendingRequest(request.id);
-        }
+        await db.deletePendingRequestById(req.id);
       } catch (e) {
-        print('Ошибка синхронизации запроса #${request.id}: $e');
+        continue;
       }
     }
   }

@@ -1,37 +1,35 @@
-// lib/features/transactions/data/data_sources/transaction_remote_data_source.dart
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
-
-import '../../../../core/api/api_service.dart';
-import '../../domain/models/transaction.dart';
-
-final transactionRemoteDataSourceProvider = Provider<TransactionRemoteDataSource>((ref) {
-  final api = ref.watch(apiServiceProvider);
-  return TransactionRemoteDataSource(api);
-});
+import 'package:flutter_app_1/core/models/transaction_dto.dart';
 
 class TransactionRemoteDataSource {
-  final ApiService apiService;
+  final Dio dio;
 
-  TransactionRemoteDataSource(this.apiService);
+  TransactionRemoteDataSource({required this.dio});
 
-  Future<List<Transaction>> fetchAll() async {
-    final response = await apiService.get('/transactions');
-    return (response.data as List)
-        .map((json) => Transaction.fromJson(json))
+  /// Получение списка транзакций
+  Future<List<TransactionDto>> fetchTransactions() async {
+    final response = await dio.get('/api/transactions');
+    final data = response.data as List;
+
+    return data
+        .map((json) => TransactionDto.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
-  Future<void> create(Transaction transaction) async {
-    await apiService.post('/transactions', transaction.toJson());
+  /// Создание транзакции
+  Future<TransactionDto> createTransaction(TransactionDto dto) async {
+    final response = await dio.post('/api/transactions', data: dto.toJson());
+    return TransactionDto.fromJson(response.data);
   }
 
-  Future<void> update(Transaction transaction) async {
-    await apiService.put('/transactions/${transaction.id}', transaction.toJson());
+  /// Обновление транзакции
+  Future<TransactionDto> updateTransaction(int id, TransactionDto dto) async {
+    final response = await dio.put('/api/transactions/$id', data: dto.toJson());
+    return TransactionDto.fromJson(response.data);
   }
 
-  Future<void> delete(int id) async {
-    await apiService.delete('/transactions/$id');
+  /// Удаление транзакции
+  Future<void> deleteTransaction(int id) async {
+    await dio.delete('/api/transactions/$id');
   }
 }

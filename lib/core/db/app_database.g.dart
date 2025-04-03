@@ -4,7 +4,7 @@ part of 'app_database.dart';
 
 // ignore_for_file: type=lint
 class $TransactionsTable extends Transactions
-    with TableInfo<$TransactionsTable, TransactionDb> {
+    with TableInfo<$TransactionsTable, Transaction> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -48,9 +48,9 @@ class $TransactionsTable extends Transactions
   late final GeneratedColumn<int> transactionCategoryId = GeneratedColumn<int>(
     'transaction_category_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
@@ -68,9 +68,9 @@ class $TransactionsTable extends Transactions
   late final GeneratedColumn<int> accountId = GeneratedColumn<int>(
     'account_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _projectIdMeta = const VerificationMeta(
     'projectId',
@@ -138,7 +138,7 @@ class $TransactionsTable extends Transactions
   static const String $name = 'transactions';
   @override
   VerificationContext validateIntegrity(
-    Insertable<TransactionDb> instance, {
+    Insertable<Transaction> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -173,8 +173,6 @@ class $TransactionsTable extends Transactions
           _transactionCategoryIdMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_transactionCategoryIdMeta);
     }
     if (data.containsKey('amount')) {
       context.handle(
@@ -189,8 +187,6 @@ class $TransactionsTable extends Transactions
         _accountIdMeta,
         accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_accountIdMeta);
     }
     if (data.containsKey('project_id')) {
       context.handle(
@@ -227,9 +223,9 @@ class $TransactionsTable extends Transactions
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  TransactionDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TransactionDb(
+    return Transaction(
       id:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -245,21 +241,19 @@ class $TransactionsTable extends Transactions
             DriftSqlType.string,
             data['${effectivePrefix}transaction_type'],
           )!,
-      transactionCategoryId:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}transaction_category_id'],
-          )!,
+      transactionCategoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}transaction_category_id'],
+      ),
       amount:
           attachedDatabase.typeMapping.read(
             DriftSqlType.double,
             data['${effectivePrefix}amount'],
           )!,
-      accountId:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}account_id'],
-          )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}account_id'],
+      ),
       projectId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}project_id'],
@@ -287,24 +281,24 @@ class $TransactionsTable extends Transactions
   }
 }
 
-class TransactionDb extends DataClass implements Insertable<TransactionDb> {
+class Transaction extends DataClass implements Insertable<Transaction> {
   final int id;
   final int userId;
   final String transactionType;
-  final int transactionCategoryId;
+  final int? transactionCategoryId;
   final double amount;
-  final int accountId;
+  final int? accountId;
   final int? projectId;
   final String? description;
   final DateTime date;
   final bool isActive;
-  const TransactionDb({
+  const Transaction({
     required this.id,
     required this.userId,
     required this.transactionType,
-    required this.transactionCategoryId,
+    this.transactionCategoryId,
     required this.amount,
-    required this.accountId,
+    this.accountId,
     this.projectId,
     this.description,
     required this.date,
@@ -316,9 +310,13 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<int>(userId);
     map['transaction_type'] = Variable<String>(transactionType);
-    map['transaction_category_id'] = Variable<int>(transactionCategoryId);
+    if (!nullToAbsent || transactionCategoryId != null) {
+      map['transaction_category_id'] = Variable<int>(transactionCategoryId);
+    }
     map['amount'] = Variable<double>(amount);
-    map['account_id'] = Variable<int>(accountId);
+    if (!nullToAbsent || accountId != null) {
+      map['account_id'] = Variable<int>(accountId);
+    }
     if (!nullToAbsent || projectId != null) {
       map['project_id'] = Variable<int>(projectId);
     }
@@ -335,9 +333,15 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
       id: Value(id),
       userId: Value(userId),
       transactionType: Value(transactionType),
-      transactionCategoryId: Value(transactionCategoryId),
+      transactionCategoryId:
+          transactionCategoryId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(transactionCategoryId),
       amount: Value(amount),
-      accountId: Value(accountId),
+      accountId:
+          accountId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(accountId),
       projectId:
           projectId == null && nullToAbsent
               ? const Value.absent()
@@ -351,20 +355,20 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
     );
   }
 
-  factory TransactionDb.fromJson(
+  factory Transaction.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TransactionDb(
+    return Transaction(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<int>(json['userId']),
       transactionType: serializer.fromJson<String>(json['transactionType']),
-      transactionCategoryId: serializer.fromJson<int>(
+      transactionCategoryId: serializer.fromJson<int?>(
         json['transactionCategoryId'],
       ),
       amount: serializer.fromJson<double>(json['amount']),
-      accountId: serializer.fromJson<int>(json['accountId']),
+      accountId: serializer.fromJson<int?>(json['accountId']),
       projectId: serializer.fromJson<int?>(json['projectId']),
       description: serializer.fromJson<String?>(json['description']),
       date: serializer.fromJson<DateTime>(json['date']),
@@ -378,9 +382,9 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<int>(userId),
       'transactionType': serializer.toJson<String>(transactionType),
-      'transactionCategoryId': serializer.toJson<int>(transactionCategoryId),
+      'transactionCategoryId': serializer.toJson<int?>(transactionCategoryId),
       'amount': serializer.toJson<double>(amount),
-      'accountId': serializer.toJson<int>(accountId),
+      'accountId': serializer.toJson<int?>(accountId),
       'projectId': serializer.toJson<int?>(projectId),
       'description': serializer.toJson<String?>(description),
       'date': serializer.toJson<DateTime>(date),
@@ -388,31 +392,34 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
     };
   }
 
-  TransactionDb copyWith({
+  Transaction copyWith({
     int? id,
     int? userId,
     String? transactionType,
-    int? transactionCategoryId,
+    Value<int?> transactionCategoryId = const Value.absent(),
     double? amount,
-    int? accountId,
+    Value<int?> accountId = const Value.absent(),
     Value<int?> projectId = const Value.absent(),
     Value<String?> description = const Value.absent(),
     DateTime? date,
     bool? isActive,
-  }) => TransactionDb(
+  }) => Transaction(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     transactionType: transactionType ?? this.transactionType,
-    transactionCategoryId: transactionCategoryId ?? this.transactionCategoryId,
+    transactionCategoryId:
+        transactionCategoryId.present
+            ? transactionCategoryId.value
+            : this.transactionCategoryId,
     amount: amount ?? this.amount,
-    accountId: accountId ?? this.accountId,
+    accountId: accountId.present ? accountId.value : this.accountId,
     projectId: projectId.present ? projectId.value : this.projectId,
     description: description.present ? description.value : this.description,
     date: date ?? this.date,
     isActive: isActive ?? this.isActive,
   );
-  TransactionDb copyWithCompanion(TransactionsCompanion data) {
-    return TransactionDb(
+  Transaction copyWithCompanion(TransactionsCompanion data) {
+    return Transaction(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       transactionType:
@@ -435,7 +442,7 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
 
   @override
   String toString() {
-    return (StringBuffer('TransactionDb(')
+    return (StringBuffer('Transaction(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('transactionType: $transactionType, ')
@@ -466,7 +473,7 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TransactionDb &&
+      (other is Transaction &&
           other.id == this.id &&
           other.userId == this.userId &&
           other.transactionType == this.transactionType &&
@@ -479,13 +486,13 @@ class TransactionDb extends DataClass implements Insertable<TransactionDb> {
           other.isActive == this.isActive);
 }
 
-class TransactionsCompanion extends UpdateCompanion<TransactionDb> {
+class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<int> id;
   final Value<int> userId;
   final Value<String> transactionType;
-  final Value<int> transactionCategoryId;
+  final Value<int?> transactionCategoryId;
   final Value<double> amount;
-  final Value<int> accountId;
+  final Value<int?> accountId;
   final Value<int?> projectId;
   final Value<String?> description;
   final Value<DateTime> date;
@@ -506,20 +513,18 @@ class TransactionsCompanion extends UpdateCompanion<TransactionDb> {
     this.id = const Value.absent(),
     required int userId,
     required String transactionType,
-    required int transactionCategoryId,
+    this.transactionCategoryId = const Value.absent(),
     required double amount,
-    required int accountId,
+    this.accountId = const Value.absent(),
     this.projectId = const Value.absent(),
     this.description = const Value.absent(),
     required DateTime date,
     this.isActive = const Value.absent(),
   }) : userId = Value(userId),
        transactionType = Value(transactionType),
-       transactionCategoryId = Value(transactionCategoryId),
        amount = Value(amount),
-       accountId = Value(accountId),
        date = Value(date);
-  static Insertable<TransactionDb> custom({
+  static Insertable<Transaction> custom({
     Expression<int>? id,
     Expression<int>? userId,
     Expression<String>? transactionType,
@@ -550,9 +555,9 @@ class TransactionsCompanion extends UpdateCompanion<TransactionDb> {
     Value<int>? id,
     Value<int>? userId,
     Value<String>? transactionType,
-    Value<int>? transactionCategoryId,
+    Value<int?>? transactionCategoryId,
     Value<double>? amount,
-    Value<int>? accountId,
+    Value<int?>? accountId,
     Value<int?>? projectId,
     Value<String?>? description,
     Value<DateTime>? date,
@@ -668,10 +673,10 @@ class $PendingRequestsTable extends PendingRequests
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
   @override
-  late final GeneratedColumn<String> data = GeneratedColumn<String>(
-    'data',
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
     aliasedName,
     true,
     type: DriftSqlType.string,
@@ -690,7 +695,7 @@ class $PendingRequestsTable extends PendingRequests
     defaultValue: currentDateAndTime,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, method, endpoint, data, createdAt];
+  List<GeneratedColumn> get $columns => [id, method, endpoint, body, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -722,10 +727,10 @@ class $PendingRequestsTable extends PendingRequests
     } else if (isInserting) {
       context.missing(_endpointMeta);
     }
-    if (data.containsKey('data')) {
+    if (data.containsKey('body')) {
       context.handle(
-        _dataMeta,
-        this.data.isAcceptableOrUnknown(data['data']!, _dataMeta),
+        _bodyMeta,
+        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
       );
     }
     if (data.containsKey('created_at')) {
@@ -758,9 +763,9 @@ class $PendingRequestsTable extends PendingRequests
             DriftSqlType.string,
             data['${effectivePrefix}endpoint'],
           )!,
-      data: attachedDatabase.typeMapping.read(
+      body: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}data'],
+        data['${effectivePrefix}body'],
       ),
       createdAt:
           attachedDatabase.typeMapping.read(
@@ -780,13 +785,13 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
   final int id;
   final String method;
   final String endpoint;
-  final String? data;
+  final String? body;
   final DateTime createdAt;
   const PendingRequest({
     required this.id,
     required this.method,
     required this.endpoint,
-    this.data,
+    this.body,
     required this.createdAt,
   });
   @override
@@ -795,8 +800,8 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
     map['id'] = Variable<int>(id);
     map['method'] = Variable<String>(method);
     map['endpoint'] = Variable<String>(endpoint);
-    if (!nullToAbsent || data != null) {
-      map['data'] = Variable<String>(data);
+    if (!nullToAbsent || body != null) {
+      map['body'] = Variable<String>(body);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -807,7 +812,7 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
       id: Value(id),
       method: Value(method),
       endpoint: Value(endpoint),
-      data: data == null && nullToAbsent ? const Value.absent() : Value(data),
+      body: body == null && nullToAbsent ? const Value.absent() : Value(body),
       createdAt: Value(createdAt),
     );
   }
@@ -821,7 +826,7 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
       id: serializer.fromJson<int>(json['id']),
       method: serializer.fromJson<String>(json['method']),
       endpoint: serializer.fromJson<String>(json['endpoint']),
-      data: serializer.fromJson<String?>(json['data']),
+      body: serializer.fromJson<String?>(json['body']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -832,7 +837,7 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
       'id': serializer.toJson<int>(id),
       'method': serializer.toJson<String>(method),
       'endpoint': serializer.toJson<String>(endpoint),
-      'data': serializer.toJson<String?>(data),
+      'body': serializer.toJson<String?>(body),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -841,13 +846,13 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
     int? id,
     String? method,
     String? endpoint,
-    Value<String?> data = const Value.absent(),
+    Value<String?> body = const Value.absent(),
     DateTime? createdAt,
   }) => PendingRequest(
     id: id ?? this.id,
     method: method ?? this.method,
     endpoint: endpoint ?? this.endpoint,
-    data: data.present ? data.value : this.data,
+    body: body.present ? body.value : this.body,
     createdAt: createdAt ?? this.createdAt,
   );
   PendingRequest copyWithCompanion(PendingRequestsCompanion data) {
@@ -855,7 +860,7 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
       id: data.id.present ? data.id.value : this.id,
       method: data.method.present ? data.method.value : this.method,
       endpoint: data.endpoint.present ? data.endpoint.value : this.endpoint,
-      data: data.data.present ? data.data.value : this.data,
+      body: data.body.present ? data.body.value : this.body,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -866,14 +871,14 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
           ..write('id: $id, ')
           ..write('method: $method, ')
           ..write('endpoint: $endpoint, ')
-          ..write('data: $data, ')
+          ..write('body: $body, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, method, endpoint, data, createdAt);
+  int get hashCode => Object.hash(id, method, endpoint, body, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -881,7 +886,7 @@ class PendingRequest extends DataClass implements Insertable<PendingRequest> {
           other.id == this.id &&
           other.method == this.method &&
           other.endpoint == this.endpoint &&
-          other.data == this.data &&
+          other.body == this.body &&
           other.createdAt == this.createdAt);
 }
 
@@ -889,20 +894,20 @@ class PendingRequestsCompanion extends UpdateCompanion<PendingRequest> {
   final Value<int> id;
   final Value<String> method;
   final Value<String> endpoint;
-  final Value<String?> data;
+  final Value<String?> body;
   final Value<DateTime> createdAt;
   const PendingRequestsCompanion({
     this.id = const Value.absent(),
     this.method = const Value.absent(),
     this.endpoint = const Value.absent(),
-    this.data = const Value.absent(),
+    this.body = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   PendingRequestsCompanion.insert({
     this.id = const Value.absent(),
     required String method,
     required String endpoint,
-    this.data = const Value.absent(),
+    this.body = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : method = Value(method),
        endpoint = Value(endpoint);
@@ -910,14 +915,14 @@ class PendingRequestsCompanion extends UpdateCompanion<PendingRequest> {
     Expression<int>? id,
     Expression<String>? method,
     Expression<String>? endpoint,
-    Expression<String>? data,
+    Expression<String>? body,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (method != null) 'method': method,
       if (endpoint != null) 'endpoint': endpoint,
-      if (data != null) 'data': data,
+      if (body != null) 'body': body,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -926,14 +931,14 @@ class PendingRequestsCompanion extends UpdateCompanion<PendingRequest> {
     Value<int>? id,
     Value<String>? method,
     Value<String>? endpoint,
-    Value<String?>? data,
+    Value<String?>? body,
     Value<DateTime>? createdAt,
   }) {
     return PendingRequestsCompanion(
       id: id ?? this.id,
       method: method ?? this.method,
       endpoint: endpoint ?? this.endpoint,
-      data: data ?? this.data,
+      body: body ?? this.body,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -950,8 +955,8 @@ class PendingRequestsCompanion extends UpdateCompanion<PendingRequest> {
     if (endpoint.present) {
       map['endpoint'] = Variable<String>(endpoint.value);
     }
-    if (data.present) {
-      map['data'] = Variable<String>(data.value);
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -965,7 +970,7 @@ class PendingRequestsCompanion extends UpdateCompanion<PendingRequest> {
           ..write('id: $id, ')
           ..write('method: $method, ')
           ..write('endpoint: $endpoint, ')
-          ..write('data: $data, ')
+          ..write('body: $body, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -1206,9 +1211,9 @@ typedef $$TransactionsTableCreateCompanionBuilder =
       Value<int> id,
       required int userId,
       required String transactionType,
-      required int transactionCategoryId,
+      Value<int?> transactionCategoryId,
       required double amount,
-      required int accountId,
+      Value<int?> accountId,
       Value<int?> projectId,
       Value<String?> description,
       required DateTime date,
@@ -1219,9 +1224,9 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<int> userId,
       Value<String> transactionType,
-      Value<int> transactionCategoryId,
+      Value<int?> transactionCategoryId,
       Value<double> amount,
-      Value<int> accountId,
+      Value<int?> accountId,
       Value<int?> projectId,
       Value<String?> description,
       Value<DateTime> date,
@@ -1399,17 +1404,17 @@ class $$TransactionsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $TransactionsTable,
-          TransactionDb,
+          Transaction,
           $$TransactionsTableFilterComposer,
           $$TransactionsTableOrderingComposer,
           $$TransactionsTableAnnotationComposer,
           $$TransactionsTableCreateCompanionBuilder,
           $$TransactionsTableUpdateCompanionBuilder,
           (
-            TransactionDb,
-            BaseReferences<_$AppDatabase, $TransactionsTable, TransactionDb>,
+            Transaction,
+            BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>,
           ),
-          TransactionDb,
+          Transaction,
           PrefetchHooks Function()
         > {
   $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
@@ -1429,9 +1434,9 @@ class $$TransactionsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<int> userId = const Value.absent(),
                 Value<String> transactionType = const Value.absent(),
-                Value<int> transactionCategoryId = const Value.absent(),
+                Value<int?> transactionCategoryId = const Value.absent(),
                 Value<double> amount = const Value.absent(),
-                Value<int> accountId = const Value.absent(),
+                Value<int?> accountId = const Value.absent(),
                 Value<int?> projectId = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
@@ -1453,9 +1458,9 @@ class $$TransactionsTableTableManager
                 Value<int> id = const Value.absent(),
                 required int userId,
                 required String transactionType,
-                required int transactionCategoryId,
+                Value<int?> transactionCategoryId = const Value.absent(),
                 required double amount,
-                required int accountId,
+                Value<int?> accountId = const Value.absent(),
                 Value<int?> projectId = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 required DateTime date,
@@ -1491,17 +1496,17 @@ typedef $$TransactionsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $TransactionsTable,
-      TransactionDb,
+      Transaction,
       $$TransactionsTableFilterComposer,
       $$TransactionsTableOrderingComposer,
       $$TransactionsTableAnnotationComposer,
       $$TransactionsTableCreateCompanionBuilder,
       $$TransactionsTableUpdateCompanionBuilder,
       (
-        TransactionDb,
-        BaseReferences<_$AppDatabase, $TransactionsTable, TransactionDb>,
+        Transaction,
+        BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>,
       ),
-      TransactionDb,
+      Transaction,
       PrefetchHooks Function()
     >;
 typedef $$PendingRequestsTableCreateCompanionBuilder =
@@ -1509,7 +1514,7 @@ typedef $$PendingRequestsTableCreateCompanionBuilder =
       Value<int> id,
       required String method,
       required String endpoint,
-      Value<String?> data,
+      Value<String?> body,
       Value<DateTime> createdAt,
     });
 typedef $$PendingRequestsTableUpdateCompanionBuilder =
@@ -1517,7 +1522,7 @@ typedef $$PendingRequestsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> method,
       Value<String> endpoint,
-      Value<String?> data,
+      Value<String?> body,
       Value<DateTime> createdAt,
     });
 
@@ -1545,8 +1550,8 @@ class $$PendingRequestsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get data => $composableBuilder(
-    column: $table.data,
+  ColumnFilters<String> get body => $composableBuilder(
+    column: $table.body,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1580,8 +1585,8 @@ class $$PendingRequestsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get data => $composableBuilder(
-    column: $table.data,
+  ColumnOrderings<String> get body => $composableBuilder(
+    column: $table.body,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1609,8 +1614,8 @@ class $$PendingRequestsTableAnnotationComposer
   GeneratedColumn<String> get endpoint =>
       $composableBuilder(column: $table.endpoint, builder: (column) => column);
 
-  GeneratedColumn<String> get data =>
-      $composableBuilder(column: $table.data, builder: (column) => column);
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -1663,13 +1668,13 @@ class $$PendingRequestsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> method = const Value.absent(),
                 Value<String> endpoint = const Value.absent(),
-                Value<String?> data = const Value.absent(),
+                Value<String?> body = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => PendingRequestsCompanion(
                 id: id,
                 method: method,
                 endpoint: endpoint,
-                data: data,
+                body: body,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -1677,13 +1682,13 @@ class $$PendingRequestsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String method,
                 required String endpoint,
-                Value<String?> data = const Value.absent(),
+                Value<String?> body = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => PendingRequestsCompanion.insert(
                 id: id,
                 method: method,
                 endpoint: endpoint,
-                data: data,
+                body: body,
                 createdAt: createdAt,
               ),
           withReferenceMapper:

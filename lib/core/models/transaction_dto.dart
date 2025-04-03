@@ -1,16 +1,16 @@
-// lib/features/transactions/domain/models/transaction.dart
+// lib/core/models/transaction_dto.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'transaction.freezed.dart';
-part 'transaction.g.dart';
+part 'transaction_dto.freezed.dart';
+part 'transaction_dto.g.dart';
 
 @freezed
-class Transaction with _$Transaction {
-  const factory Transaction({
+class TransactionDto with _$TransactionDto {
+  const factory TransactionDto({
     required int id,
     required int userId,
-    required String transactionType,      // 'income' / 'expense'
+    required String transactionType,
     required int transactionCategoryId,
     required double amount,
     required int accountId,
@@ -18,11 +18,10 @@ class Transaction with _$Transaction {
     String? description,
     required DateTime date,
     required bool isActive,
-  }) = _Transaction;
+  }) = _TransactionDto;
 
-
-
-  factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
+  factory TransactionDto.fromJson(Map<String, dynamic> json) =>
+      _$TransactionDtoFromJson(json);
 
   @override
   // TODO: implement accountId

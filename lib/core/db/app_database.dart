@@ -1,61 +1,81 @@
 import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_app_1/core/db/transactions_table.dart';
+import 'package:flutter_app_1/core/db/pending_requests_table.dart';
+import 'package:flutter_app_1/core/db/user_settings_table.dart';
 import 'package:path/path.dart' as p;
-
-import 'transactions_table.dart';
-import 'pending_requests_table.dart';
-import 'user_settings_table.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Transactions, PendingRequests, UserSettings])
+@DriftDatabase(
+  tables: [Transactions, PendingRequests, UserSettings],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 2; // 🚨 увеличил версию с 1 на 2
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (m) async {
+    onCreate: (Migrator m) async {
       await m.createAll();
     },
-    onUpgrade: (m, from, to) async {
-      // Удаляем старые таблицы (если важно сохранить данные, напиши конкретную миграцию)
-      await m.deleteTable('transactions');
-      await m.deleteTable('pending_requests');
-      await m.createAll();
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from == 1) {
+        await m.createTable(userSettings); // добавили новую таблицу
+      }
+    },
+    beforeOpen: (details) async {
+      // при необходимости можно сюда добавить seed-данные
     },
   );
 
-  // ========== Транзакции ==========
-  Future<List<TransactionDb>> getAllTransactions() => select(transactions).get();
+  // ▸ Transactions
+  Future<int> insertTransaction(TransactionsCompanion txn) =>
+      into(transactions).insert(txn);
 
-  Future<int> insertTransaction(TransactionsCompanion entity) => into(transactions).insert(entity);
+  Future<List<Transaction>> getAllTransactions() =>
+      select(transactions).get();
 
-  Future<bool> updateTransaction(TransactionsCompanion entity) => update(transactions).replace(entity);
+  Stream<List<Transaction>> watchAllTransactions() =>
+      select(transactions).watch();
 
-  Future<int> deleteTransaction(int id) =>
+  Future<bool> updateTransaction(Transaction txn) =>
+      update(transactions).replace(txn);
+
+  Future<int> deleteTransactionById(int id) =>
       (delete(transactions)..where((t) => t.id.equals(id))).go();
 
-  // ========== Pending Requests ==========
-  Future<List<PendingRequest>> getPendingRequests() => select(pendingRequests).get();
+  // ▸ Pending Requests
+  Future<int> insertPendingRequest(PendingRequestsCompanion req) =>
+      into(pendingRequests).insert(req);
 
-  Future<int> addPendingRequest(PendingRequestsCompanion request) => into(pendingRequests).insert(request);
+  Future<List<PendingRequest>> getAllPendingRequests() =>
+      select(pendingRequests).get();
 
-  Future<int> deletePendingRequest(int id) =>
+  Future<void> deletePendingRequestById(int id) =>
       (delete(pendingRequests)..where((r) => r.id.equals(id))).go();
+
+  Future<void> clearPendingRequests() =>
+      delete(pendingRequests).go();
+
+  // ▸ User Settings
+  Future<void> saveUserSetting(String key, String value) =>
+      into(userSettings).insertOnConflictUpdate(UserSetting(key: key, value: value));
+
+  Stream<String?> watchUserSetting(String key) =>
+      (select(userSettings)..where((tbl) => tbl.key.equals(key)))
+          .watchSingleOrNull()
+          .map((row) => row?.value);
 }
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'app.db'));
-    return NativeDatabase(file);
+    final dir = await getApplicationDocumentsDirectory();
+    final dbPath = p.join(dir.path, 'app.db');
+    return NativeDatabase(File(dbPath));
   });
 }
-
-final appDatabaseProvider = Provider<AppDatabase>((ref) => AppDatabase());

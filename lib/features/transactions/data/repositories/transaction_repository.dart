@@ -1,134 +1,87 @@
-// lib/features/transactions/data/repositories/transaction_repository.dart
+import 'package:flutter_app_1/core/services/offline_sync_service.dart';
+import 'package:flutter_app_1/features/transactions/data/data_sources/transaction_local_data_source.dart';
+import 'package:flutter_app_1/features/transactions/data/data_sources/transaction_remote_data_source.dart';
+import 'package:flutter_app_1/features/transactions/utils/transaction_mapper.dart';
 
-import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
-
-import '../../../../core/api/api_service.dart';
-import '../../../../core/db/app_database.dart';
-import '../../../../core/providers/database_provider.dart';
-import '../../domain/models/transaction.dart';
-
-final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
-  final api = ref.watch(apiServiceProvider);
-  final db = ref.watch(databaseProvider);
-  return TransactionRepository(apiService: api, database: db);
-});
+import '../../domain/models/transaction_entity.dart';
 
 class TransactionRepository {
-  final ApiService apiService;
-  final AppDatabase database;
+  final TransactionRemoteDataSource remote;
+  final TransactionLocalDataSource local;
+  final OfflineSyncService syncService;
 
   TransactionRepository({
-    required this.apiService,
-    required this.database,
+    required this.remote,
+    required this.local,
+    required this.syncService,
   });
 
-  Future<List<Transaction>> fetchTransactions() async {
-    // try {
-    //   final response = await apiService.get('/transactions');
-    //   final transactions = (response.data as List)
-    //       .map((json) => Transaction.fromJson(json))
-    //       .toList();
-    //
-    //   // Сохраняем в локальную базу
-    //   for (final t in transactions) {
-    //     await database.insertTransaction(TransactionsCompanion(
-    //       id: Value(t.id),
-    //       userId: Value(t.userId),
-    //       transactionType: Value(t.transactionType),
-    //       transactionCategoryId: Value(t.transactionCategoryId),
-    //       amount: Value(t.amount),
-    //       accountId: Value(t.accountId),
-    //       projectId: Value(t.projectId),
-    //       description: Value(t.description),
-    //       date: Value(t.date),
-    //       isActive: Value(t.isActive),
-    //     ));
-    //   }
-    //
-    //   return transactions;
-    // } catch (e) {
-    //   // Если нет сети или ошибка запроса, берем локальные данные
-    //   final local = await database.getAllTransactions();
-    //   // Нужно сконвертировать TransactionData -> Transaction (Freezed)
-    //   return local.map((data) {
-    //     return Transaction(
-    //       id: data.id,
-    //       userId: data.userId,
-    //       transactionType: data.transactionType,
-    //       transactionCategoryId: data.transactionCategoryId,
-    //       amount: data.amount,
-    //       accountId: data.accountId,
-    //       projectId: data.projectId,
-    //       description: data.description,
-    //       date: data.date,
-    //       isActive: data.isActive,
-    //     );
-    //   }).toList();
-    // }
-    return [
-      Transaction(
-        transactionType: 'expense',
-        transactionCategoryId: 1,
-        accountId: 1,
-        id: 1,
-        amount: 500.0,
-        date: DateTime.now().subtract(const Duration(days: 1)),
-        userId: 1,
-        isActive: true,
-      ),
-      Transaction(
-        transactionType: 'expense',
-        transactionCategoryId: 1,
-        accountId: 1,
-        id: 1,
-        amount: 30000.0,
-        date: DateTime.now().subtract(const Duration(days: 1)),
-        userId: 1,
-        isActive: true,
-      ),
-    ];
+  /// Подписка на все транзакции из локальной базы
+  Stream<List<TransactionEntity>> watchAll() {
+    return local.watchAllTransactions();
   }
 
-  Future<void> createTransaction(Transaction transaction) async {
+  /// Получение и кэширование всех транзакций с сервера
+  Future<List<TransactionEntity>> fetch() async {
     try {
-      await apiService.post('/transactions', transaction.toJson());
-    } catch (e) {
-      // Если запрос не прошел, записываем в pending_requests
-      await database.addPendingRequest(PendingRequestsCompanion(
-        method: const Value('POST'),
-        endpoint: const Value('/transactions'),
-        data: Value(transaction.toJson().toString()),
-      ));
-    }
+      final dtos = await remote.fetchTransactions();
+      final List<TransactionEntity> entities = dtos
+          .map((dto) => TransactionMapper.fromDto(dto))
+          .toList();
 
-    // В любом случае сохраняем транзакцию в локальную базу
-    await database.insertTransaction(TransactionsCompanion(
-      userId: Value(transaction.userId),
-      transactionType: Value(transaction.transactionType),
-      transactionCategoryId: Value(transaction.transactionCategoryId),
-      amount: Value(transaction.amount),
-      accountId: Value(transaction.accountId),
-      projectId: Value(transaction.projectId),
-      description: Value(transaction.description),
-      date: Value(transaction.date),
-      isActive: Value(transaction.isActive),
-    ));
+      for (final entity in entities) {
+        await local.insertTransaction(entity); // upsert можно улучшить позже
+      }
+
+      return entities;
+    } catch (_) {
+      return local.getAllTransactions();
+    }
   }
 
-  Future<void> deleteTransaction(int id) async {
+  /// Создание транзакции (и офлайн-поддержка)
+  Future<void> create(TransactionEntity entity) async {
     try {
-      await apiService.delete('/transactions/$id');
-    } catch (e) {
-      // Оффлайн - в таблицу pending_requests
-      await database.addPendingRequest(PendingRequestsCompanion(
-        method: const Value('DELETE'),
-        endpoint: Value('/transactions/$id'),
-        data: const Value(''),
-      ));
+      final dto = TransactionMapper.toDto(entity, local.userId);
+      await remote.createTransaction(dto);
+    } catch (_) {
+      await syncService.enqueueRequest(
+        method: 'POST',
+        endpoint: '/api/transactions',
+        body: TransactionMapper.toDto(entity, local.userId).toJson(),
+      );
     }
 
-    await database.deleteTransaction(id);
+    await local.insertTransaction(entity);
+  }
+
+  /// Обновление транзакции
+  Future<void> update(TransactionEntity entity) async {
+    try {
+      final dto = TransactionMapper.toDto(entity, local.userId);
+      await remote.updateTransaction(entity.id, dto);
+    } catch (_) {
+      await syncService.enqueueRequest(
+        method: 'PUT',
+        endpoint: '/api/transactions/${entity.id}',
+        body: TransactionMapper.toDto(entity, local.userId).toJson(),
+      );
+    }
+
+    await local.updateTransaction(entity);
+  }
+
+  /// Удаление транзакции
+  Future<void> delete(int id) async {
+    try {
+      await remote.deleteTransaction(id);
+    } catch (_) {
+      await syncService.enqueueRequest(
+        method: 'DELETE',
+        endpoint: '/api/transactions/$id',
+      );
+    }
+
+    await local.deleteTransaction(id);
   }
 }

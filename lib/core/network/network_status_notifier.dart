@@ -2,32 +2,24 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum NetworkStatus { online, offline }
+final networkStatusProvider = Provider<NetworkStatus>((ref) {
+  return NetworkStatus();
+});
 
-class NetworkStatusNotifier extends StateNotifier<NetworkStatus> {
-  StreamSubscription? _subscription;
+class NetworkStatus {
+  final Connectivity _connectivity = Connectivity();
+  final StreamController<bool> _controller = StreamController<bool>.broadcast();
 
-  NetworkStatusNotifier() : super(NetworkStatus.offline) {
-    _monitorNetworkStatus();
-  }
-
-  void _monitorNetworkStatus() {
-    _subscription = Connectivity().onConnectivityChanged.listen((result) {
-      if (result == ConnectivityResult.none) {
-        state = NetworkStatus.offline;
-      } else {
-        state = NetworkStatus.online;
-      }
+  NetworkStatus() {
+    _connectivity.onConnectivityChanged.listen((result) {
+      _controller.add(result != ConnectivityResult.none);
     });
   }
 
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
+  Future<bool> isConnected() async {
+    final result = await _connectivity.checkConnectivity();
+    return result != ConnectivityResult.none;
   }
-}
 
-final networkStatusProvider = StateNotifierProvider<NetworkStatusNotifier, NetworkStatus>((ref) {
-  return NetworkStatusNotifier();
-});
+  Stream<bool> get onStatusChange => _controller.stream;
+}

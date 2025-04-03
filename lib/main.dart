@@ -5,10 +5,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'common/providers/theme_provider.dart';
 import 'core/network/network_status_notifier.dart';
-import 'core/network/offline_sync_service.dart';
 import 'core/routing/main_router.dart';
 import 'core/localization/app_localizations.dart';
 import 'core/theme/theme_manager.dart';
+
+import 'features/transactions/presentation/providers/transaction_dependencies.dart';
+
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
@@ -29,6 +31,34 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   Locale _locale = const Locale('ru');
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   Future.microtask(() async {
+  //     final syncService = ref.read(offlineSyncServiceProvider);
+  //     await syncService.syncPendingRequests();
+  //   });
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final syncService = ref.read(offlineSyncServiceProvider);
+    final network = ref.read(networkStatusProvider);
+
+    network.isConnected().then((connected) {
+      if (connected) syncService.syncPendingRequests();
+    });
+
+    network.onStatusChange.listen((isOnline) {
+      if (isOnline) syncService.syncPendingRequests();
+    });
+  }
+
+
 
   void setLocale(Locale newLocale) {
     setState(() {

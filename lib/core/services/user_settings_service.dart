@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../features/transactions/presentation/providers/transaction_dependencies.dart';
 import '../db/app_database.dart';
 
 final userSettingsServiceProvider = Provider<UserSettingsService>((ref) {

@@ -1,54 +1,52 @@
-// lib/features/transactions/data/data_sources/transaction_local_data_source.dart
-
-import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/db/app_database.dart';
-import '../../../../core/providers/database_provider.dart';
-import '../../domain/models/transaction.dart';
-
-final transactionLocalDataSourceProvider =
-Provider<TransactionLocalDataSource>((ref) {
-  final db = ref.watch(databaseProvider);
-  return TransactionLocalDataSource(db);
-});
+import 'package:flutter_app_1/core/db/app_database.dart';
+import 'package:flutter_app_1/features/transactions/utils/transaction_mapper.dart';
+import '../../domain/models/transaction_entity.dart';
 
 class TransactionLocalDataSource {
-  final AppDatabase database;
+  final AppDatabase db;
+  final int userId;
 
-  TransactionLocalDataSource(this.database);
+  TransactionLocalDataSource({required this.db, required this.userId});
 
-  Future<List<Transaction>> getAll() async {
-    final records = await database.getAllTransactions();
-    return records.map((e) => Transaction(
-      id: e.id,
-      userId: e.userId,
-      transactionType: e.transactionType,
-      transactionCategoryId: e.transactionCategoryId,
-      amount: e.amount,
-      accountId: e.accountId,
-      projectId: e.projectId,
-      description: e.description,
-      date: e.date,
-      isActive: e.isActive,
-    )).toList();
+  /// Получение всех транзакций как потока (для StreamProvider)
+  Stream<List<TransactionEntity>> watchAllTransactions() {
+    return db.watchAllTransactions().map(
+          (rows) => rows.map(TransactionMapper.fromDb).toList(),
+    );
   }
 
-  Future<void> save(Transaction transaction) async {
-    await database.insertTransaction(TransactionsCompanion(
-      id: Value(transaction.id),
-      userId: Value(transaction.userId),
-      transactionType: Value(transaction.transactionType),
-      transactionCategoryId: Value(transaction.transactionCategoryId),
-      amount: Value(transaction.amount),
-      accountId: Value(transaction.accountId),
-      projectId: Value(transaction.projectId),
-      description: Value(transaction.description),
-      date: Value(transaction.date),
-      isActive: Value(transaction.isActive),
-    ));
+  /// Получение всех транзакций единоразово
+  Future<List<TransactionEntity>> getAllTransactions() async {
+    final rows = await db.getAllTransactions();
+    return rows.map(TransactionMapper.fromDb).toList();
   }
 
-  Future<void> delete(int id) async {
-    await database.deleteTransaction(id);
+  /// Создание новой транзакции
+  Future<int> insertTransaction(TransactionEntity entity) {
+    final data = TransactionMapper.toDb(entity, userId: userId);
+    return db.insertTransaction(data);
+  }
+
+  /// Обновление
+  Future<bool> updateTransaction(TransactionEntity entity) {
+    final txn = Transaction(
+      id: entity.id,
+      userId: userId,
+      transactionType: entity.type,
+      transactionCategoryId: null,
+      amount: entity.amount,
+      accountId: null,
+      projectId: null,
+      description: entity.description,
+      date: entity.date,
+      isActive: true,
+    );
+    return db.updateTransaction(txn);
+  }
+
+
+  /// Удаление
+  Future<int> deleteTransaction(int id) {
+    return db.deleteTransactionById(id);
   }
 }

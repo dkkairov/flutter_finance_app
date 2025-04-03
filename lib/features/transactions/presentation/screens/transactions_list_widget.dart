@@ -1,51 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../common/widgets/section_list_view.dart';
-import '../../domain/models/transaction.dart';
-import '../../domain/transaction_use_case.dart';
+import '../providers/transaction_provider.dart';
 
-class TransactionsListWidget extends ConsumerStatefulWidget {
+class TransactionsListWidget extends ConsumerWidget {
   const TransactionsListWidget({super.key});
 
   @override
-  ConsumerState<TransactionsListWidget> createState() => _TransactionsListWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transactionsAsync = ref.watch(transactionStreamProvider);
+    final repository = ref.read(transactionRepositoryProvider);
 
-class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget> {
-  late Future<List<Transaction>> _future;
+    return transactionsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(child: Text('Ошибка: $error')),
+      data: (transactions) {
+        if (transactions.isEmpty) {
+          return const Center(child: Text('Нет транзакций'));
+        }
 
-  @override
-  void initState() {
-    super.initState();
-    _future = ref.read(transactionUseCaseProvider).fetchTransactions();
-  }
-
-  Future<void> _refresh() async {
-    setState(() {
-      _future = ref.read(transactionUseCaseProvider).fetchTransactions();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: FutureBuilder<List<Transaction>>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Ошибка: ${snapshot.error}'));
-          }
-
-          final transactions = snapshot.data ?? [];
-          if (transactions.isEmpty) {
-            return const Center(child: Text('Нет транзакций'));
-          }
-
-          final items = transactions.map((tx) => SectionListItemModel(
-            title: tx.transactionCategoryId.toString(),
+        final items = transactions.map((tx) {
+          return SectionListItemModel(
+            title: tx.type,
             subtitle: tx.date.toString(),
             trailing: Text(
               (tx.amount > 0 ? '+' : '') + tx.amount.toStringAsFixed(0) + ' ₸',
@@ -54,15 +30,15 @@ class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget>
                 color: tx.amount > 0 ? Colors.green : Colors.red,
               ),
             ),
-            onTap: () {}, // TODO: добавить переход к деталям транзакции
-          )).toList();
-
-          return RefreshIndicator(
-            onRefresh: _refresh,
-            child: SectionListView(items: items),
+            onTap: () {}, // TODO: перейти на детали
           );
-        },
-      ),
+        }).toList();
+
+        return RefreshIndicator(
+          onRefresh: () => repository.fetch(),
+          child: SectionListView(items: items),
+        );
+      },
     );
   }
 }
