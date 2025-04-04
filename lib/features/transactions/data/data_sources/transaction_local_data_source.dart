@@ -1,19 +1,25 @@
+// lib/features/transactions/data/data_sources/transaction_local_data_source.dart
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_app_1/core/db/app_database.dart';
 import 'package:flutter_app_1/features/transactions/utils/transaction_mapper.dart';
 import '../../domain/models/transaction_entity.dart';
 
 class TransactionLocalDataSource {
   final AppDatabase db;
-  final int userId;
 
-  TransactionLocalDataSource({required this.db, required this.userId});
+  TransactionLocalDataSource({
+    required this.db, required int userId,
+  });
 
   /// Получение всех транзакций как потока (для StreamProvider)
   Stream<List<TransactionEntity>> watchAllTransactions() {
-    return db.watchAllTransactions().map(
-          (rows) => rows.map(TransactionMapper.fromDb).toList(),
-    );
+    return db.watchAllTransactions().map((rows) {
+      debugPrint('📦 Из базы пришло ${rows.length} записей');
+      return rows.map(TransactionMapper.fromDb).toList();
+    });
   }
+
 
   /// Получение всех транзакций единоразово
   Future<List<TransactionEntity>> getAllTransactions() async {
@@ -21,31 +27,21 @@ class TransactionLocalDataSource {
     return rows.map(TransactionMapper.fromDb).toList();
   }
 
-  /// Создание новой транзакции
-  Future<int> insertTransaction(TransactionEntity entity) {
-    final data = TransactionMapper.toDb(entity, userId: userId);
-    return db.insertTransaction(data);
-  }
-
-  /// Обновление
-  Future<bool> updateTransaction(TransactionEntity entity) {
-    final txn = Transaction(
-      id: entity.id,
-      userId: userId,
-      transactionType: entity.transactionType,
-      transactionCategoryId: null,
-      amount: entity.amount,
-      accountId: null,
-      projectId: null,
-      description: entity.description,
-      date: entity.date,
-      isActive: true,
-    );
-    return db.updateTransaction(txn);
+  /// Вставка или обновление транзакции
+  Future<void> insertTransaction(TransactionEntity entity, {required int userId}) async {
+    final companion = TransactionMapper.toDb(entity, userId: userId);
+    debugPrint('💾 Сохраняю в локальную БД транзакцию: ${entity.id}');
+    await db.insertTransaction(entity, userId: userId);
   }
 
 
-  /// Удаление
+  /// Обновление транзакции
+  Future<bool> updateTransaction(TransactionEntity entity, {required int userId}) {
+    final updated = TransactionMapper.toFullDriftModel(entity, userId: userId);
+    return db.updateTransaction(updated);
+  }
+
+  /// Удаление по ID
   Future<int> deleteTransaction(int id) {
     return db.deleteTransactionById(id);
   }

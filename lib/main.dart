@@ -9,8 +9,7 @@ import 'core/network/network_status_notifier.dart';
 import 'core/routing/main_router.dart';
 import 'core/localization/app_localizations.dart';
 import 'core/theme/theme_manager.dart';
-
-import 'features/transactions/presentation/providers/transaction_dependencies.dart';
+import 'features/transactions/presentation/providers/transaction_provider.dart';
 
 
 void main() async {

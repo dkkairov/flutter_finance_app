@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../common/widgets/section_list_view.dart';
-import '../providers/transaction_dependencies.dart';
 import '../providers/transaction_provider.dart';
 
 class TransactionsListWidget extends ConsumerStatefulWidget {
@@ -32,13 +31,15 @@ class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget>
 
   @override
   Widget build(BuildContext context) {
-    final transactionsAsync = ref.watch(transactionStreamProvider);
     final repository = ref.read(transactionRepositoryProvider);
+    final transactionsAsync = ref.watch(transactionStreamProvider);
 
     return transactionsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Center(child: Text('Ошибка: $error')),
       data: (transactions) {
+        debugPrint('📦 Из локальной базы: ${transactions.length} транзакций');
+
         if (transactions.isEmpty) {
           return const Center(child: Text('Нет транзакций'));
         }
@@ -64,5 +65,6 @@ class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget>
         );
       },
     );
+
   }
 }

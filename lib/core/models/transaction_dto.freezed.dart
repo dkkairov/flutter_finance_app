@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TransactionDto {
 
- int get id;@JsonKey(name: 'user_id', fromJson: _toInt) int get userId;@JsonKey(name: 'transaction_type', fromJson: _toTransactionType) String get transactionType;@JsonKey(name: 'transaction_category_id', fromJson: _toInt) int get transactionCategoryId;@JsonKey(fromJson: _toDouble) double get amount;@JsonKey(name: 'account_id', fromJson: _toIntNullable) int? get accountId;@JsonKey(name: 'project_id', fromJson: _toIntNullable) int? get projectId; String? get description; DateTime get date;@JsonKey(name: 'is_active') bool get isActive;
+ int get id;@JsonKey(name: 'userId') int get userId;@JsonKey(name: 'transactionType') String get transactionType;@JsonKey(name: 'transactionCategoryId') int get transactionCategoryId; double get amount;@JsonKey(name: 'accountId') int? get accountId;@JsonKey(name: 'projectId') int? get projectId; String? get description; DateTime get date;@JsonKey(name: 'isActive') bool get isActive;
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $TransactionDtoCopyWith<$Res>  {
   factory $TransactionDtoCopyWith(TransactionDto value, $Res Function(TransactionDto) _then) = _$TransactionDtoCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'user_id', fromJson: _toInt) int userId,@JsonKey(name: 'transaction_type', fromJson: _toTransactionType) String transactionType,@JsonKey(name: 'transaction_category_id', fromJson: _toInt) int transactionCategoryId,@JsonKey(fromJson: _toDouble) double amount,@JsonKey(name: 'account_id', fromJson: _toIntNullable) int? accountId,@JsonKey(name: 'project_id', fromJson: _toIntNullable) int? projectId, String? description, DateTime date,@JsonKey(name: 'is_active') bool isActive
+ int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
 });
 
 
@@ -89,19 +89,19 @@ as bool,
 @JsonSerializable()
 
 class _TransactionDto implements TransactionDto {
-  const _TransactionDto({required this.id, @JsonKey(name: 'user_id', fromJson: _toInt) required this.userId, @JsonKey(name: 'transaction_type', fromJson: _toTransactionType) required this.transactionType, @JsonKey(name: 'transaction_category_id', fromJson: _toInt) required this.transactionCategoryId, @JsonKey(fromJson: _toDouble) required this.amount, @JsonKey(name: 'account_id', fromJson: _toIntNullable) this.accountId, @JsonKey(name: 'project_id', fromJson: _toIntNullable) this.projectId, this.description, required this.date, @JsonKey(name: 'is_active') required this.isActive});
+  const _TransactionDto({required this.id, @JsonKey(name: 'userId') required this.userId, @JsonKey(name: 'transactionType') required this.transactionType, @JsonKey(name: 'transactionCategoryId') required this.transactionCategoryId, required this.amount, @JsonKey(name: 'accountId') this.accountId, @JsonKey(name: 'projectId') this.projectId, this.description, required this.date, @JsonKey(name: 'isActive') required this.isActive});
   factory _TransactionDto.fromJson(Map<String, dynamic> json) => _$TransactionDtoFromJson(json);
 
 @override final  int id;
-@override@JsonKey(name: 'user_id', fromJson: _toInt) final  int userId;
-@override@JsonKey(name: 'transaction_type', fromJson: _toTransactionType) final  String transactionType;
-@override@JsonKey(name: 'transaction_category_id', fromJson: _toInt) final  int transactionCategoryId;
-@override@JsonKey(fromJson: _toDouble) final  double amount;
-@override@JsonKey(name: 'account_id', fromJson: _toIntNullable) final  int? accountId;
-@override@JsonKey(name: 'project_id', fromJson: _toIntNullable) final  int? projectId;
+@override@JsonKey(name: 'userId') final  int userId;
+@override@JsonKey(name: 'transactionType') final  String transactionType;
+@override@JsonKey(name: 'transactionCategoryId') final  int transactionCategoryId;
+@override final  double amount;
+@override@JsonKey(name: 'accountId') final  int? accountId;
+@override@JsonKey(name: 'projectId') final  int? projectId;
 @override final  String? description;
 @override final  DateTime date;
-@override@JsonKey(name: 'is_active') final  bool isActive;
+@override@JsonKey(name: 'isActive') final  bool isActive;
 
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
@@ -136,7 +136,7 @@ abstract mixin class _$TransactionDtoCopyWith<$Res> implements $TransactionDtoCo
   factory _$TransactionDtoCopyWith(_TransactionDto value, $Res Function(_TransactionDto) _then) = __$TransactionDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'user_id', fromJson: _toInt) int userId,@JsonKey(name: 'transaction_type', fromJson: _toTransactionType) String transactionType,@JsonKey(name: 'transaction_category_id', fromJson: _toInt) int transactionCategoryId,@JsonKey(fromJson: _toDouble) double amount,@JsonKey(name: 'account_id', fromJson: _toIntNullable) int? accountId,@JsonKey(name: 'project_id', fromJson: _toIntNullable) int? projectId, String? description, DateTime date,@JsonKey(name: 'is_active') bool isActive
+ int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
 });
 
 

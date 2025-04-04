@@ -19,7 +19,7 @@ class TransactionMapper {
   );
 
   /// Entity → DTO (userId можно передать, если нужно переопределить)
-  static TransactionDto toDto(TransactionEntity entity, int userId) => TransactionDto(
+  static TransactionDto toDto(TransactionEntity entity, {required int userId}) => TransactionDto(
     id: entity.id,
     userId: userId ?? entity.userId,
     transactionType: entity.transactionType,
@@ -67,6 +67,22 @@ class TransactionMapper {
           : const Value.absent(),
       date: Value(entity.date),
       isActive: Value(entity.isActive),
+    );
+  }
+
+  /// Entity → полная Drift-модель (для обновления)
+  static Transaction toFullDriftModel(TransactionEntity entity, {required int userId}) {
+    return Transaction(
+      id: entity.id,
+      userId: userId,
+      transactionType: entity.transactionType,
+      transactionCategoryId: entity.transactionCategoryId,
+      amount: entity.amount,
+      accountId: entity.accountId,
+      projectId: entity.projectId,
+      description: entity.description,
+      date: entity.date,
+      isActive: entity.isActive,
     );
   }
 }

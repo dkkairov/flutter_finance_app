@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart'; // только для debugPrint
 import 'package:flutter_app_1/core/db/transactions_table.dart';
 import 'package:flutter_app_1/core/db/pending_requests_table.dart';
 import 'package:flutter_app_1/core/db/user_settings_table.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+
+import '../../features/transactions/domain/models/transaction_entity.dart';
+import '../../features/transactions/utils/transaction_mapper.dart';
 
 part 'app_database.g.dart';
 
@@ -34,8 +38,12 @@ class AppDatabase extends _$AppDatabase {
   );
 
   // ▸ Transactions
-  Future<int> insertTransaction(TransactionsCompanion txn) =>
-      into(transactions).insert(txn);
+  Future<void> insertTransaction(TransactionEntity entity, {required int userId}) async {
+    final companion = TransactionMapper.toDb(entity, userId: userId);
+    debugPrint('💾 Сохраняю в локальную БД транзакцию: ${entity.id}');
+    await into(transactions).insertOnConflictUpdate(companion); // <-- именно insertOnConflictUpdate
+  }
+
 
   Future<List<Transaction>> getAllTransactions() =>
       select(transactions).get();
