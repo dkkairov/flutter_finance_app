@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_app_1/core/db/app_database.dart';
 import 'package:flutter_app_1/core/services/offline_sync_service.dart';
 import 'package:flutter_app_1/features/transactions/data/data_sources/transaction_local_data_source.dart';
@@ -33,7 +34,12 @@ class TransactionRepository {
       final entities = dtos.map(TransactionMapper.fromDto).toList();
 
       for (final entity in entities) {
-        await local.insertTransaction(entity, userId: userId);
+        try {
+          await local.insertTransaction(entity); // Используем метод локального источника
+          await db.printAllTransactions(); // Временный вызов для отладки
+        } catch (e) {
+          debugPrint('Ошибка при вставке: $e');
+        }
       }
 
       return entities;
@@ -56,7 +62,13 @@ class TransactionRepository {
       );
     }
 
-    await local.insertTransaction(entity, userId: userId);
+    try {
+      await db.insertTransaction(entity, userId: userId);
+      await db.printAllTransactions(); // Временный вызов для отладки
+    } catch (e) {
+      debugPrint('Ошибка при вставке: $e');
+    }
+
   }
 
   /// Обновление транзакции
@@ -73,7 +85,7 @@ class TransactionRepository {
       );
     }
 
-    await local.updateTransaction(entity, userId: userId);
+    await db.updateTransaction(entity as Transaction, userId: userId);
   }
 
   /// Удаление транзакции

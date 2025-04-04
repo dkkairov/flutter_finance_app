@@ -16,15 +16,11 @@ class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget>
     super.initState();
 
     Future.microtask(() async {
-      final remote = ref.read(transactionRemoteDataSourceProvider);
       try {
-        final result = await remote.fetchTransactions();
-        debugPrint('✅ Получено ${result.length} транзакций:');
-        for (var tx in result) {
-          debugPrint('- ${tx.description ?? 'Без описания'}: ${tx.amount} ₸');
-        }
+        final result = await ref.read(transactionFetchProvider);
+        debugPrint('✅ Загружено ${result.length} транзакций и сохранено в базу.');
       } catch (e, st) {
-        debugPrint('❌ Ошибка при получении транзакций: $e\n$st');
+        debugPrint('❌ Ошибка при загрузке и сохранении транзакций: $e\n$st');
       }
     });
   }

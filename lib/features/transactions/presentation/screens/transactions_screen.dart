@@ -10,7 +10,7 @@ class TransactionsScreen extends StatelessWidget {
         child: Scaffold(
           body: const Column(
             children: [
-              TransactionsListWidget(),
+              Expanded(child: TransactionsListWidget()),
             ],
           )
         )

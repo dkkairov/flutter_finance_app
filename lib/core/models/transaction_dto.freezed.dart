@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TransactionDto {
 
- int get id;@JsonKey(name: 'userId') int get userId;@JsonKey(name: 'transactionType') String get transactionType;@JsonKey(name: 'transactionCategoryId') int get transactionCategoryId; double get amount;@JsonKey(name: 'accountId') int? get accountId;@JsonKey(name: 'projectId') int? get projectId; String? get description; DateTime get date;@JsonKey(name: 'isActive') bool get isActive;
+ int get id;@JsonKey(name: 'userId') int get userId;@JsonKey(name: 'transactionType') String get transactionType;@JsonKey(name: 'transactionCategoryId') int? get transactionCategoryId; double get amount;@JsonKey(name: 'accountId') int? get accountId;@JsonKey(name: 'projectId') int? get projectId; String? get description; DateTime get date;@JsonKey(name: 'isActive') bool get isActive;
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $TransactionDtoCopyWith<$Res>  {
   factory $TransactionDtoCopyWith(TransactionDto value, $Res Function(TransactionDto) _then) = _$TransactionDtoCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
+ int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int? transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
 });
 
 
@@ -66,13 +66,13 @@ class _$TransactionDtoCopyWithImpl<$Res>
 
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = null,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = freezed,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,transactionType: null == transactionType ? _self.transactionType : transactionType // ignore: cast_nullable_to_non_nullable
-as String,transactionCategoryId: null == transactionCategoryId ? _self.transactionCategoryId : transactionCategoryId // ignore: cast_nullable_to_non_nullable
-as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as String,transactionCategoryId: freezed == transactionCategoryId ? _self.transactionCategoryId : transactionCategoryId // ignore: cast_nullable_to_non_nullable
+as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int?,projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -89,13 +89,13 @@ as bool,
 @JsonSerializable()
 
 class _TransactionDto implements TransactionDto {
-  const _TransactionDto({required this.id, @JsonKey(name: 'userId') required this.userId, @JsonKey(name: 'transactionType') required this.transactionType, @JsonKey(name: 'transactionCategoryId') required this.transactionCategoryId, required this.amount, @JsonKey(name: 'accountId') this.accountId, @JsonKey(name: 'projectId') this.projectId, this.description, required this.date, @JsonKey(name: 'isActive') required this.isActive});
+  const _TransactionDto({required this.id, @JsonKey(name: 'userId') required this.userId, @JsonKey(name: 'transactionType') required this.transactionType, @JsonKey(name: 'transactionCategoryId') this.transactionCategoryId, required this.amount, @JsonKey(name: 'accountId') this.accountId, @JsonKey(name: 'projectId') this.projectId, this.description, required this.date, @JsonKey(name: 'isActive') required this.isActive});
   factory _TransactionDto.fromJson(Map<String, dynamic> json) => _$TransactionDtoFromJson(json);
 
 @override final  int id;
 @override@JsonKey(name: 'userId') final  int userId;
 @override@JsonKey(name: 'transactionType') final  String transactionType;
-@override@JsonKey(name: 'transactionCategoryId') final  int transactionCategoryId;
+@override@JsonKey(name: 'transactionCategoryId') final  int? transactionCategoryId;
 @override final  double amount;
 @override@JsonKey(name: 'accountId') final  int? accountId;
 @override@JsonKey(name: 'projectId') final  int? projectId;
@@ -136,7 +136,7 @@ abstract mixin class _$TransactionDtoCopyWith<$Res> implements $TransactionDtoCo
   factory _$TransactionDtoCopyWith(_TransactionDto value, $Res Function(_TransactionDto) _then) = __$TransactionDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
+ int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int? transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
 });
 
 
@@ -153,13 +153,13 @@ class __$TransactionDtoCopyWithImpl<$Res>
 
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = null,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = freezed,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,}) {
   return _then(_TransactionDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,transactionType: null == transactionType ? _self.transactionType : transactionType // ignore: cast_nullable_to_non_nullable
-as String,transactionCategoryId: null == transactionCategoryId ? _self.transactionCategoryId : transactionCategoryId // ignore: cast_nullable_to_non_nullable
-as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as String,transactionCategoryId: freezed == transactionCategoryId ? _self.transactionCategoryId : transactionCategoryId // ignore: cast_nullable_to_non_nullable
+as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int?,projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable

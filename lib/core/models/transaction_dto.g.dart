@@ -11,7 +11,7 @@ _TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       userId: (json['userId'] as num).toInt(),
       transactionType: json['transactionType'] as String,
-      transactionCategoryId: (json['transactionCategoryId'] as num).toInt(),
+      transactionCategoryId: (json['transactionCategoryId'] as num?)?.toInt(),
       amount: (json['amount'] as num).toDouble(),
       accountId: (json['accountId'] as num?)?.toInt(),
       projectId: (json['projectId'] as num?)?.toInt(),

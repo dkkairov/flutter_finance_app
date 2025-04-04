@@ -7,19 +7,20 @@ import '../../domain/models/transaction_entity.dart';
 
 class TransactionLocalDataSource {
   final AppDatabase db;
+  final int userId;
 
   TransactionLocalDataSource({
-    required this.db, required int userId,
+    required this.db,
+    required this.userId,
   });
 
-  /// Получение всех транзакций как потока (для StreamProvider)
+  /// Поток всех транзакций из локальной базы (для StreamProvider)
   Stream<List<TransactionEntity>> watchAllTransactions() {
     return db.watchAllTransactions().map((rows) {
       debugPrint('📦 Из базы пришло ${rows.length} записей');
       return rows.map(TransactionMapper.fromDb).toList();
     });
   }
-
 
   /// Получение всех транзакций единоразово
   Future<List<TransactionEntity>> getAllTransactions() async {
@@ -28,20 +29,20 @@ class TransactionLocalDataSource {
   }
 
   /// Вставка или обновление транзакции
-  Future<void> insertTransaction(TransactionEntity entity, {required int userId}) async {
-    final companion = TransactionMapper.toDb(entity, userId: userId);
+  Future<void> insertTransaction(TransactionEntity entity) async {
     debugPrint('💾 Сохраняю в локальную БД транзакцию: ${entity.id}');
-    await db.insertTransaction(entity, userId: userId);
+    final model = TransactionMapper.toFullDriftModel(entity, userId: userId);
+    await db.into(db.transactions).insertOnConflictUpdate(model);
+    await db.printAllTransactions(); // Временный вызов для отладки (можно оставить здесь)
   }
-
 
   /// Обновление транзакции
-  Future<bool> updateTransaction(TransactionEntity entity, {required int userId}) {
-    final updated = TransactionMapper.toFullDriftModel(entity, userId: userId);
-    return db.updateTransaction(updated);
+  Future<bool> updateTransaction(TransactionEntity entity) {
+    final model = TransactionMapper.toFullDriftModel(entity, userId: userId);
+    return db.updateTransaction(model, userId: userId);
   }
 
-  /// Удаление по ID
+  /// Удаление транзакции по ID
   Future<int> deleteTransaction(int id) {
     return db.deleteTransactionById(id);
   }

@@ -33,16 +33,24 @@ class AppDatabase extends _$AppDatabase {
       }
     },
     beforeOpen: (details) async {
-      // при необходимости можно сюда добавить seed-данные
-    },
+      debugPrint('📂 База открыта. Version: ${details.versionBefore} → ${details.versionNow}');
+    }
   );
 
   // ▸ Transactions
   Future<void> insertTransaction(TransactionEntity entity, {required int userId}) async {
     final companion = TransactionMapper.toDb(entity, userId: userId);
     debugPrint('💾 Сохраняю в локальную БД транзакцию: ${entity.id}');
-    await into(transactions).insertOnConflictUpdate(companion); // <-- именно insertOnConflictUpdate
+    await into(transactions).insertOnConflictUpdate(companion);
   }
+
+  Future<void> printAllTransactions() async {
+    final allTransactions = await select(transactions).get();
+    for (var txn in allTransactions) {
+      debugPrint('📝 Транзакция в базе: ${txn.toString()}');
+    }
+  }
+
 
 
   Future<List<Transaction>> getAllTransactions() =>
@@ -51,7 +59,7 @@ class AppDatabase extends _$AppDatabase {
   Stream<List<Transaction>> watchAllTransactions() =>
       select(transactions).watch();
 
-  Future<bool> updateTransaction(Transaction txn) =>
+  Future<bool> updateTransaction(Transaction txn, {required int userId}) =>
       update(transactions).replace(txn);
 
   Future<int> deleteTransactionById(int id) =>
