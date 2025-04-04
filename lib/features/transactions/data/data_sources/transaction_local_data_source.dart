@@ -32,7 +32,7 @@ class TransactionLocalDataSource {
   Future<void> insertTransaction(TransactionEntity entity) async {
     debugPrint('💾 Сохраняю в локальную БД транзакцию: ${entity.id}');
     final model = TransactionMapper.toFullDriftModel(entity, userId: userId);
-    await db.into(db.transactions).insertOnConflictUpdate(model);
+    await db.into(db.transactionsTable).insertOnConflictUpdate(model);
     await db.printAllTransactions(); // Временный вызов для отладки (можно оставить здесь)
   }
 

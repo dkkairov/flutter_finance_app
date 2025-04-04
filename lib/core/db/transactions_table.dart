@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-class Transactions extends Table {
+class TransactionsTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get userId => integer()();
   TextColumn get transactionType => text()();

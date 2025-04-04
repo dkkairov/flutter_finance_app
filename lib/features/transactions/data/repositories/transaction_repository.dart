@@ -85,7 +85,7 @@ class TransactionRepository {
       );
     }
 
-    await db.updateTransaction(entity as Transaction, userId: userId);
+    await db.updateTransaction(entity as TransactionsTableData, userId: userId);
   }
 
   /// Удаление транзакции

@@ -3,12 +3,12 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-class $TransactionsTable extends Transactions
-    with TableInfo<$TransactionsTable, Transaction> {
+class $TransactionsTableTable extends TransactionsTable
+    with TableInfo<$TransactionsTableTable, TransactionsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TransactionsTable(this.attachedDatabase, [this._alias]);
+  $TransactionsTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -135,10 +135,10 @@ class $TransactionsTable extends Transactions
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'transactions';
+  static const String $name = 'transactions_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Transaction> instance, {
+    Insertable<TransactionsTableData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -223,9 +223,9 @@ class $TransactionsTable extends Transactions
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
+  TransactionsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Transaction(
+    return TransactionsTableData(
       id:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -276,12 +276,13 @@ class $TransactionsTable extends Transactions
   }
 
   @override
-  $TransactionsTable createAlias(String alias) {
-    return $TransactionsTable(attachedDatabase, alias);
+  $TransactionsTableTable createAlias(String alias) {
+    return $TransactionsTableTable(attachedDatabase, alias);
   }
 }
 
-class Transaction extends DataClass implements Insertable<Transaction> {
+class TransactionsTableData extends DataClass
+    implements Insertable<TransactionsTableData> {
   final int id;
   final int userId;
   final String transactionType;
@@ -292,7 +293,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   final String? description;
   final DateTime date;
   final bool isActive;
-  const Transaction({
+  const TransactionsTableData({
     required this.id,
     required this.userId,
     required this.transactionType,
@@ -328,8 +329,8 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return map;
   }
 
-  TransactionsCompanion toCompanion(bool nullToAbsent) {
-    return TransactionsCompanion(
+  TransactionsTableCompanion toCompanion(bool nullToAbsent) {
+    return TransactionsTableCompanion(
       id: Value(id),
       userId: Value(userId),
       transactionType: Value(transactionType),
@@ -355,12 +356,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     );
   }
 
-  factory Transaction.fromJson(
+  factory TransactionsTableData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Transaction(
+    return TransactionsTableData(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<int>(json['userId']),
       transactionType: serializer.fromJson<String>(json['transactionType']),
@@ -392,7 +393,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     };
   }
 
-  Transaction copyWith({
+  TransactionsTableData copyWith({
     int? id,
     int? userId,
     String? transactionType,
@@ -403,7 +404,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     Value<String?> description = const Value.absent(),
     DateTime? date,
     bool? isActive,
-  }) => Transaction(
+  }) => TransactionsTableData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     transactionType: transactionType ?? this.transactionType,
@@ -418,8 +419,8 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     date: date ?? this.date,
     isActive: isActive ?? this.isActive,
   );
-  Transaction copyWithCompanion(TransactionsCompanion data) {
-    return Transaction(
+  TransactionsTableData copyWithCompanion(TransactionsTableCompanion data) {
+    return TransactionsTableData(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       transactionType:
@@ -442,7 +443,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
 
   @override
   String toString() {
-    return (StringBuffer('Transaction(')
+    return (StringBuffer('TransactionsTableData(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('transactionType: $transactionType, ')
@@ -473,7 +474,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Transaction &&
+      (other is TransactionsTableData &&
           other.id == this.id &&
           other.userId == this.userId &&
           other.transactionType == this.transactionType &&
@@ -486,7 +487,8 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           other.isActive == this.isActive);
 }
 
-class TransactionsCompanion extends UpdateCompanion<Transaction> {
+class TransactionsTableCompanion
+    extends UpdateCompanion<TransactionsTableData> {
   final Value<int> id;
   final Value<int> userId;
   final Value<String> transactionType;
@@ -497,7 +499,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String?> description;
   final Value<DateTime> date;
   final Value<bool> isActive;
-  const TransactionsCompanion({
+  const TransactionsTableCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.transactionType = const Value.absent(),
@@ -509,7 +511,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.date = const Value.absent(),
     this.isActive = const Value.absent(),
   });
-  TransactionsCompanion.insert({
+  TransactionsTableCompanion.insert({
     this.id = const Value.absent(),
     required int userId,
     required String transactionType,
@@ -524,7 +526,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
        transactionType = Value(transactionType),
        amount = Value(amount),
        date = Value(date);
-  static Insertable<Transaction> custom({
+  static Insertable<TransactionsTableData> custom({
     Expression<int>? id,
     Expression<int>? userId,
     Expression<String>? transactionType,
@@ -551,7 +553,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     });
   }
 
-  TransactionsCompanion copyWith({
+  TransactionsTableCompanion copyWith({
     Value<int>? id,
     Value<int>? userId,
     Value<String>? transactionType,
@@ -563,7 +565,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Value<DateTime>? date,
     Value<bool>? isActive,
   }) {
-    return TransactionsCompanion(
+    return TransactionsTableCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       transactionType: transactionType ?? this.transactionType,
@@ -618,7 +620,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
 
   @override
   String toString() {
-    return (StringBuffer('TransactionsCompanion(')
+    return (StringBuffer('TransactionsTableCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('transactionType: $transactionType, ')
@@ -1190,7 +1192,8 @@ class UserSettingsCompanion extends UpdateCompanion<UserSetting> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $TransactionsTable transactions = $TransactionsTable(this);
+  late final $TransactionsTableTable transactionsTable =
+      $TransactionsTableTable(this);
   late final $PendingRequestsTable pendingRequests = $PendingRequestsTable(
     this,
   );
@@ -1200,14 +1203,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-    transactions,
+    transactionsTable,
     pendingRequests,
     userSettings,
   ];
 }
 
-typedef $$TransactionsTableCreateCompanionBuilder =
-    TransactionsCompanion Function({
+typedef $$TransactionsTableTableCreateCompanionBuilder =
+    TransactionsTableCompanion Function({
       Value<int> id,
       required int userId,
       required String transactionType,
@@ -1219,8 +1222,8 @@ typedef $$TransactionsTableCreateCompanionBuilder =
       required DateTime date,
       Value<bool> isActive,
     });
-typedef $$TransactionsTableUpdateCompanionBuilder =
-    TransactionsCompanion Function({
+typedef $$TransactionsTableTableUpdateCompanionBuilder =
+    TransactionsTableCompanion Function({
       Value<int> id,
       Value<int> userId,
       Value<String> transactionType,
@@ -1233,9 +1236,9 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
       Value<bool> isActive,
     });
 
-class $$TransactionsTableFilterComposer
-    extends Composer<_$AppDatabase, $TransactionsTable> {
-  $$TransactionsTableFilterComposer({
+class $$TransactionsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $TransactionsTableTable> {
+  $$TransactionsTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1293,9 +1296,9 @@ class $$TransactionsTableFilterComposer
   );
 }
 
-class $$TransactionsTableOrderingComposer
-    extends Composer<_$AppDatabase, $TransactionsTable> {
-  $$TransactionsTableOrderingComposer({
+class $$TransactionsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $TransactionsTableTable> {
+  $$TransactionsTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1353,9 +1356,9 @@ class $$TransactionsTableOrderingComposer
   );
 }
 
-class $$TransactionsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $TransactionsTable> {
-  $$TransactionsTableAnnotationComposer({
+class $$TransactionsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TransactionsTableTable> {
+  $$TransactionsTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1399,36 +1402,50 @@ class $$TransactionsTableAnnotationComposer
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 }
 
-class $$TransactionsTableTableManager
+class $$TransactionsTableTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $TransactionsTable,
-          Transaction,
-          $$TransactionsTableFilterComposer,
-          $$TransactionsTableOrderingComposer,
-          $$TransactionsTableAnnotationComposer,
-          $$TransactionsTableCreateCompanionBuilder,
-          $$TransactionsTableUpdateCompanionBuilder,
+          $TransactionsTableTable,
+          TransactionsTableData,
+          $$TransactionsTableTableFilterComposer,
+          $$TransactionsTableTableOrderingComposer,
+          $$TransactionsTableTableAnnotationComposer,
+          $$TransactionsTableTableCreateCompanionBuilder,
+          $$TransactionsTableTableUpdateCompanionBuilder,
           (
-            Transaction,
-            BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>,
+            TransactionsTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $TransactionsTableTable,
+              TransactionsTableData
+            >,
           ),
-          Transaction,
+          TransactionsTableData,
           PrefetchHooks Function()
         > {
-  $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
-    : super(
+  $$TransactionsTableTableTableManager(
+    _$AppDatabase db,
+    $TransactionsTableTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer:
-              () => $$TransactionsTableFilterComposer($db: db, $table: table),
+              () => $$TransactionsTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
           createOrderingComposer:
-              () => $$TransactionsTableOrderingComposer($db: db, $table: table),
+              () => $$TransactionsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer:
-              () =>
-                  $$TransactionsTableAnnotationComposer($db: db, $table: table),
+              () => $$TransactionsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -1441,7 +1458,7 @@ class $$TransactionsTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
-              }) => TransactionsCompanion(
+              }) => TransactionsTableCompanion(
                 id: id,
                 userId: userId,
                 transactionType: transactionType,
@@ -1465,7 +1482,7 @@ class $$TransactionsTableTableManager
                 Value<String?> description = const Value.absent(),
                 required DateTime date,
                 Value<bool> isActive = const Value.absent(),
-              }) => TransactionsCompanion.insert(
+              }) => TransactionsTableCompanion.insert(
                 id: id,
                 userId: userId,
                 transactionType: transactionType,
@@ -1492,21 +1509,25 @@ class $$TransactionsTableTableManager
       );
 }
 
-typedef $$TransactionsTableProcessedTableManager =
+typedef $$TransactionsTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $TransactionsTable,
-      Transaction,
-      $$TransactionsTableFilterComposer,
-      $$TransactionsTableOrderingComposer,
-      $$TransactionsTableAnnotationComposer,
-      $$TransactionsTableCreateCompanionBuilder,
-      $$TransactionsTableUpdateCompanionBuilder,
+      $TransactionsTableTable,
+      TransactionsTableData,
+      $$TransactionsTableTableFilterComposer,
+      $$TransactionsTableTableOrderingComposer,
+      $$TransactionsTableTableAnnotationComposer,
+      $$TransactionsTableTableCreateCompanionBuilder,
+      $$TransactionsTableTableUpdateCompanionBuilder,
       (
-        Transaction,
-        BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>,
+        TransactionsTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $TransactionsTableTable,
+          TransactionsTableData
+        >,
       ),
-      Transaction,
+      TransactionsTableData,
       PrefetchHooks Function()
     >;
 typedef $$PendingRequestsTableCreateCompanionBuilder =
@@ -1874,8 +1895,8 @@ typedef $$UserSettingsTableProcessedTableManager =
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db, _db.transactions);
+  $$TransactionsTableTableTableManager get transactionsTable =>
+      $$TransactionsTableTableTableManager(_db, _db.transactionsTable);
   $$PendingRequestsTableTableManager get pendingRequests =>
       $$PendingRequestsTableTableManager(_db, _db.pendingRequests);
   $$UserSettingsTableTableManager get userSettings =>

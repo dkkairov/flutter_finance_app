@@ -66,4 +66,6 @@ class TransactionDto with _$TransactionDto {
   @override
   // TODO: implement userId
   int get userId => throw UnimplementedError();
+
+
 }

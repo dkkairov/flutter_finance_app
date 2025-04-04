@@ -33,7 +33,7 @@ class TransactionMapper {
   );
 
   /// DB row → Entity
-  static TransactionEntity fromDb(Transaction row) => TransactionEntity(
+  static TransactionEntity fromDb(TransactionsTableData row) => TransactionEntity(
     id: row.id,
     userId: row.userId,
     transactionType: row.transactionType,
@@ -47,8 +47,8 @@ class TransactionMapper {
   );
 
   /// Entity → Drift Companion
-  static TransactionsCompanion toDb(TransactionEntity entity, {required int userId}) {
-    return TransactionsCompanion(
+  static TransactionsTableCompanion toDb(TransactionEntity entity, {required int userId}) {
+    return TransactionsTableCompanion(
       id: Value(entity.id),
       userId: Value(userId),
       transactionType: Value(entity.transactionType),
@@ -71,8 +71,8 @@ class TransactionMapper {
   }
 
   /// Entity → полная Drift-модель (для обновления)
-  static Transaction toFullDriftModel(TransactionEntity entity, {required int userId}) {
-    return Transaction(
+  static TransactionsTableData toFullDriftModel(TransactionEntity entity, {required int userId}) {
+    return TransactionsTableData(
       id: entity.id,
       userId: userId,
       transactionType: entity.transactionType,

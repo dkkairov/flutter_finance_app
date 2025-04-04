@@ -2,25 +2,24 @@ import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart'; // только для debugPrint
-import 'package:flutter_app_1/core/db/transactions_table.dart';
 import 'package:flutter_app_1/core/db/pending_requests_table.dart';
+import 'package:flutter_app_1/core/db/transactions_table.dart';
 import 'package:flutter_app_1/core/db/user_settings_table.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-
 import '../../features/transactions/domain/models/transaction_entity.dart';
 import '../../features/transactions/utils/transaction_mapper.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [Transactions, PendingRequests, UserSettings],
+  tables: [TransactionsTable, PendingRequests, UserSettings],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2; // 🚨 увеличил версию с 1 на 2
+  int get schemaVersion => 3; // 🚨
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -41,11 +40,11 @@ class AppDatabase extends _$AppDatabase {
   Future<void> insertTransaction(TransactionEntity entity, {required int userId}) async {
     final companion = TransactionMapper.toDb(entity, userId: userId);
     debugPrint('💾 Сохраняю в локальную БД транзакцию: ${entity.id}');
-    await into(transactions).insertOnConflictUpdate(companion);
+    await into(transactionsTable).insertOnConflictUpdate(companion);
   }
 
   Future<void> printAllTransactions() async {
-    final allTransactions = await select(transactions).get();
+    final allTransactions = await select(transactionsTable).get();
     for (var txn in allTransactions) {
       debugPrint('📝 Транзакция в базе: ${txn.toString()}');
     }
@@ -53,17 +52,17 @@ class AppDatabase extends _$AppDatabase {
 
 
 
-  Future<List<Transaction>> getAllTransactions() =>
-      select(transactions).get();
+  Future<List<TransactionsTableData>> getAllTransactions() =>
+      select(transactionsTable).get();
 
-  Stream<List<Transaction>> watchAllTransactions() =>
-      select(transactions).watch();
+  Stream<List<TransactionsTableData>> watchAllTransactions() =>
+      select(transactionsTable).watch();
 
-  Future<bool> updateTransaction(Transaction txn, {required int userId}) =>
-      update(transactions).replace(txn);
+  Future<bool> updateTransaction(TransactionsTableData txn, {required int userId}) =>
+      update(transactionsTable).replace(txn);
 
   Future<int> deleteTransactionById(int id) =>
-      (delete(transactions)..where((t) => t.id.equals(id))).go();
+      (delete(transactionsTable)..where((t) => t.id.equals(id))).go();
 
   // ▸ Pending Requests
   Future<int> insertPendingRequest(PendingRequestsCompanion req) =>
