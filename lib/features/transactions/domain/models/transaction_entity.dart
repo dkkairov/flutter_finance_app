@@ -1,15 +1,25 @@
 class TransactionEntity {
   final int id;
-  final String type;
+  final int userId;
+  final String transactionType;
+  final int? transactionCategoryId;
   final double amount;
-  final DateTime date;
+  final int? accountId;
+  final int? projectId;
   final String? description;
+  final DateTime date;
+  final bool isActive;
 
-  const TransactionEntity({
+  TransactionEntity({
     required this.id,
-    required this.type,
+    required this.userId,
+    required this.transactionType,
+    required this.transactionCategoryId,
     required this.amount,
+    required this.accountId,
+    required this.projectId,
+    required this.description,
     required this.date,
-    this.description,
+    required this.isActive,
   });
 }

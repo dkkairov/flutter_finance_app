@@ -9,27 +9,27 @@ part of 'transaction_dto.dart';
 _TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
     _TransactionDto(
       id: (json['id'] as num).toInt(),
-      userId: (json['userId'] as num).toInt(),
-      transactionType: json['transactionType'] as String,
-      transactionCategoryId: (json['transactionCategoryId'] as num).toInt(),
-      amount: (json['amount'] as num).toDouble(),
-      accountId: (json['accountId'] as num).toInt(),
-      projectId: (json['projectId'] as num?)?.toInt(),
+      userId: _toInt(json['user_id']),
+      transactionType: _toTransactionType(json['transaction_type']),
+      transactionCategoryId: _toInt(json['transaction_category_id']),
+      amount: _toDouble(json['amount']),
+      accountId: _toIntNullable(json['account_id']),
+      projectId: _toIntNullable(json['project_id']),
       description: json['description'] as String?,
       date: DateTime.parse(json['date'] as String),
-      isActive: json['isActive'] as bool,
+      isActive: json['is_active'] as bool,
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(_TransactionDto instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'userId': instance.userId,
-      'transactionType': instance.transactionType,
-      'transactionCategoryId': instance.transactionCategoryId,
+      'user_id': instance.userId,
+      'transaction_type': instance.transactionType,
+      'transaction_category_id': instance.transactionCategoryId,
       'amount': instance.amount,
-      'accountId': instance.accountId,
-      'projectId': instance.projectId,
+      'account_id': instance.accountId,
+      'project_id': instance.projectId,
       'description': instance.description,
       'date': instance.date.toIso8601String(),
-      'isActive': instance.isActive,
+      'is_active': instance.isActive,
     };

@@ -45,7 +45,7 @@ class _TransactionsListWidgetState extends ConsumerState<TransactionsListWidget>
 
         final items = transactions.map((tx) {
           return SectionListItemModel(
-            title: tx.type,
+            title: tx.transactionType,
             subtitle: tx.date.toString(),
             trailing: Text(
               (tx.amount > 0 ? '+' : '') + tx.amount.toStringAsFixed(0) + ' ₸',

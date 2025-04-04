@@ -13,20 +13,29 @@ class TransactionFormScreen extends ConsumerStatefulWidget {
 }
 
 class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
+  final titleController = TextEditingController();
+  final amountController = TextEditingController();
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    amountController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final repository = ref.read(transactionRepositoryProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Добавить Транзакцию')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            CustomTextField(controller: titleController, hintText: 'Описание'),
+            CustomTextField(
+              controller: titleController,
+              hintText: 'Описание',
+            ),
             const SizedBox(height: 16),
             CustomTextField(
               controller: amountController,
@@ -38,22 +47,26 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               text: 'Сохранить',
               onPressed: () async {
                 try {
-                  final amount = double.tryParse(amountController.text.trim()) ?? 0.0;
-                  if (amount == 0.0) throw Exception('Введите корректную сумму');
+                  final amount = double.tryParse(amountController.text) ?? 0;
 
-                  final transaction = TransactionEntity(
-                    id: DateTime.now().millisecondsSinceEpoch,
-                    type: 'expense',
+                  final newTransaction = TransactionEntity(
+                    id: DateTime.now().millisecondsSinceEpoch, // Временно, Drift сам перезапишет
+                    userId: 1, // Пока заглушка
+                    transactionType: 'expense',
+                    transactionCategoryId: null,
                     amount: amount,
+                    accountId: 1,
+                    projectId: null,
+                    description: titleController.text,
                     date: DateTime.now(),
-                    description: titleController.text.trim(),
+                    isActive: true,
                   );
 
-                  await repository.create(transaction);
+                  await repository.create(newTransaction);
                   Navigator.pop(context);
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Ошибка: ${e.toString()}')),
+                    SnackBar(content: Text('Ошибка при сохранении: $e')),
                   );
                 }
               },

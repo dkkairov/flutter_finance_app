@@ -32,7 +32,7 @@ class TransactionLocalDataSource {
     final txn = Transaction(
       id: entity.id,
       userId: userId,
-      transactionType: entity.type,
+      transactionType: entity.transactionType,
       transactionCategoryId: null,
       amount: entity.amount,
       accountId: null,

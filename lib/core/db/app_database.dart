@@ -72,6 +72,7 @@ class AppDatabase extends _$AppDatabase {
           .map((row) => row?.value);
 }
 
+
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dir = await getApplicationDocumentsDirectory();
