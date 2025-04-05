@@ -20,8 +20,8 @@ class MainRouter {
         return MaterialPageRoute(builder: (_) => MainScreen());
       case '/transactions':
         return MaterialPageRoute(builder: (_) => TransactionsScreen());
-      case '/transactions/add':
-        return MaterialPageRoute(builder: (_) => AddScreen());
+      case '/transactions/create':
+        return MaterialPageRoute(builder: (_) => TransactionCreateScreen());
       case '/categories':
         return MaterialPageRoute(builder: (_) => CategoriesScreen());
       case '/accounts':
@@ -60,8 +60,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       return FadeRoute(page: MainScreen());
     case '/transactions':
       return FadeRoute(page: TransactionsScreen());
-    case '/transactions/add':
-      return MaterialPageRoute(builder: (_) => AddScreen());
+    case '/transactions/create':
+      return MaterialPageRoute(builder: (_) => TransactionCreateScreen());
     case '/categories':
       return FadeRoute(page: CategoriesScreen());
     case '/accounts':

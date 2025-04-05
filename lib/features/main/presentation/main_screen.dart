@@ -20,7 +20,7 @@ class MainScreen extends ConsumerWidget {
     final currentScreenIndex = ref.watch(bottomNavProvider);
 
     final List<Widget> screens = [
-      const AddScreen(),
+      const TransactionCreateScreen(),
       const AccountsScreen(),
       BudgetScreen(),
       const TransactionsScreen(),

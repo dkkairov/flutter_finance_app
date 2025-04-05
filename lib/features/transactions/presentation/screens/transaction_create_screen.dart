@@ -9,8 +9,8 @@ import '../widgets/numeric_keypad_widget.dart';
 
 enum TransactionType { expense, income, transfer}
 
-class AddScreen extends ConsumerWidget {
-  const AddScreen({super.key});
+class TransactionCreateScreen extends ConsumerWidget {
+  const TransactionCreateScreen ({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
