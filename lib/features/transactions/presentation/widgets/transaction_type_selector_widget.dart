@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_1/core/theme/app_colors.dart';
 import 'package:flutter_app_1/core/theme/app_text_styles.dart';
-import 'add_screen.dart';
+import '../screens/transaction_create_screen.dart';
 
 class TransactionTypeSelectorWidget extends StatelessWidget {
   final TransactionType selectedSegment;

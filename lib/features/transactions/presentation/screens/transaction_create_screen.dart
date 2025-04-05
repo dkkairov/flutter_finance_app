@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/add/presentation/sum_view_widget.dart';
-import 'package:flutter_app_1/features/add/presentation/transaction_type_selector_widget.dart';
+import 'package:flutter_app_1/features/transactions/presentation/widgets/sum_view_widget.dart';
+import 'package:flutter_app_1/features/transactions/presentation/widgets/transaction_type_selector_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../main.dart';
-import 'additional_fields_widget.dart';
-import 'category_picker_widget.dart';
-import 'numeric_keypad_widget.dart';
+import '../../../../main.dart';
+import '../widgets/additional_fields_widget.dart';
+import '../widgets/category_picker_widget.dart';
+import '../widgets/numeric_keypad_widget.dart';
 
 enum TransactionType { expense, income, transfer}
 
@@ -28,9 +28,7 @@ class AddScreen extends ConsumerWidget {
           CategoryPickerWidget(),
           AdditionalFieldsWidget(),
           SumViewWidget(),
-          NumericKeypadWidget(onKeyPressed: (value) {
-            print('Нажата клавиша: $value');
-          }),
+          NumericKeypadWidget(),
         ],
       ),
     );

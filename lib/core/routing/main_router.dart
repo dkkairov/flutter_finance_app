@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/accounts/presentation/accounts_screen.dart';
-import 'package:flutter_app_1/features/add/presentation/add_screen.dart';
+import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
 import 'package:flutter_app_1/features/transactions/presentation/screens/transactions_screen.dart';
 import '../../features/main/presentation/main_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';

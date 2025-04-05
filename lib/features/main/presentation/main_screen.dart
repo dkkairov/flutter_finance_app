@@ -7,8 +7,8 @@ import '../../../common/widgets/theme_toggle_button.dart';
 import '../../accounts/presentation/accounts_screen.dart';
 import '../../budget/presentation/budget_screen.dart';
 import '../../settings/presentation/settings_screen.dart';
-import '../../transactions/presentation/screens/transactions_list_widget.dart';
-import '../../add/presentation/add_screen.dart';
+import '../../transactions/presentation/widgets/transactions_list_widget.dart';
+import '../../transactions/presentation/screens/transaction_create_screen.dart';
 import '../../../main.dart';
 import '../../transactions/presentation/screens/transactions_screen.dart';
 

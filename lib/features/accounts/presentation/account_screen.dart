@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../transactions/presentation/screens/transactions_list_widget.dart';
+import '../../transactions/presentation/widgets/transactions_list_widget.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
