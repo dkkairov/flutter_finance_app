@@ -18,6 +18,7 @@ _TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String?,
       date: DateTime.parse(json['date'] as String),
       isActive: json['isActive'] as bool,
+      backendId: json['backendId'] as String?,
     );
 
 Map<String, dynamic> _$TransactionDtoToJson(_TransactionDto instance) =>
@@ -32,4 +33,5 @@ Map<String, dynamic> _$TransactionDtoToJson(_TransactionDto instance) =>
       'description': instance.description,
       'date': instance.date.toIso8601String(),
       'isActive': instance.isActive,
+      'backendId': instance.backendId,
     };

@@ -118,6 +118,17 @@ class $TransactionsTableTable extends TransactionsTable
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _backendIdMeta = const VerificationMeta(
+    'backendId',
+  );
+  @override
+  late final GeneratedColumn<String> backendId = GeneratedColumn<String>(
+    'backend_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -130,6 +141,7 @@ class $TransactionsTableTable extends TransactionsTable
     description,
     date,
     isActive,
+    backendId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -217,6 +229,12 @@ class $TransactionsTableTable extends TransactionsTable
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('backend_id')) {
+      context.handle(
+        _backendIdMeta,
+        backendId.isAcceptableOrUnknown(data['backend_id']!, _backendIdMeta),
+      );
+    }
     return context;
   }
 
@@ -272,6 +290,10 @@ class $TransactionsTableTable extends TransactionsTable
             DriftSqlType.bool,
             data['${effectivePrefix}is_active'],
           )!,
+      backendId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}backend_id'],
+      ),
     );
   }
 
@@ -293,6 +315,7 @@ class TransactionsTableData extends DataClass
   final String? description;
   final DateTime date;
   final bool isActive;
+  final String? backendId;
   const TransactionsTableData({
     required this.id,
     required this.userId,
@@ -304,6 +327,7 @@ class TransactionsTableData extends DataClass
     this.description,
     required this.date,
     required this.isActive,
+    this.backendId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -326,6 +350,9 @@ class TransactionsTableData extends DataClass
     }
     map['date'] = Variable<DateTime>(date);
     map['is_active'] = Variable<bool>(isActive);
+    if (!nullToAbsent || backendId != null) {
+      map['backend_id'] = Variable<String>(backendId);
+    }
     return map;
   }
 
@@ -353,6 +380,10 @@ class TransactionsTableData extends DataClass
               : Value(description),
       date: Value(date),
       isActive: Value(isActive),
+      backendId:
+          backendId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(backendId),
     );
   }
 
@@ -374,6 +405,7 @@ class TransactionsTableData extends DataClass
       description: serializer.fromJson<String?>(json['description']),
       date: serializer.fromJson<DateTime>(json['date']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      backendId: serializer.fromJson<String?>(json['backendId']),
     );
   }
   @override
@@ -390,6 +422,7 @@ class TransactionsTableData extends DataClass
       'description': serializer.toJson<String?>(description),
       'date': serializer.toJson<DateTime>(date),
       'isActive': serializer.toJson<bool>(isActive),
+      'backendId': serializer.toJson<String?>(backendId),
     };
   }
 
@@ -404,6 +437,7 @@ class TransactionsTableData extends DataClass
     Value<String?> description = const Value.absent(),
     DateTime? date,
     bool? isActive,
+    Value<String?> backendId = const Value.absent(),
   }) => TransactionsTableData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -418,6 +452,7 @@ class TransactionsTableData extends DataClass
     description: description.present ? description.value : this.description,
     date: date ?? this.date,
     isActive: isActive ?? this.isActive,
+    backendId: backendId.present ? backendId.value : this.backendId,
   );
   TransactionsTableData copyWithCompanion(TransactionsTableCompanion data) {
     return TransactionsTableData(
@@ -438,6 +473,7 @@ class TransactionsTableData extends DataClass
           data.description.present ? data.description.value : this.description,
       date: data.date.present ? data.date.value : this.date,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      backendId: data.backendId.present ? data.backendId.value : this.backendId,
     );
   }
 
@@ -453,7 +489,8 @@ class TransactionsTableData extends DataClass
           ..write('projectId: $projectId, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('isActive: $isActive')
+          ..write('isActive: $isActive, ')
+          ..write('backendId: $backendId')
           ..write(')'))
         .toString();
   }
@@ -470,6 +507,7 @@ class TransactionsTableData extends DataClass
     description,
     date,
     isActive,
+    backendId,
   );
   @override
   bool operator ==(Object other) =>
@@ -484,7 +522,8 @@ class TransactionsTableData extends DataClass
           other.projectId == this.projectId &&
           other.description == this.description &&
           other.date == this.date &&
-          other.isActive == this.isActive);
+          other.isActive == this.isActive &&
+          other.backendId == this.backendId);
 }
 
 class TransactionsTableCompanion
@@ -499,6 +538,7 @@ class TransactionsTableCompanion
   final Value<String?> description;
   final Value<DateTime> date;
   final Value<bool> isActive;
+  final Value<String?> backendId;
   const TransactionsTableCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
@@ -510,6 +550,7 @@ class TransactionsTableCompanion
     this.description = const Value.absent(),
     this.date = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.backendId = const Value.absent(),
   });
   TransactionsTableCompanion.insert({
     this.id = const Value.absent(),
@@ -522,6 +563,7 @@ class TransactionsTableCompanion
     this.description = const Value.absent(),
     required DateTime date,
     this.isActive = const Value.absent(),
+    this.backendId = const Value.absent(),
   }) : userId = Value(userId),
        transactionType = Value(transactionType),
        amount = Value(amount),
@@ -537,6 +579,7 @@ class TransactionsTableCompanion
     Expression<String>? description,
     Expression<DateTime>? date,
     Expression<bool>? isActive,
+    Expression<String>? backendId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -550,6 +593,7 @@ class TransactionsTableCompanion
       if (description != null) 'description': description,
       if (date != null) 'date': date,
       if (isActive != null) 'is_active': isActive,
+      if (backendId != null) 'backend_id': backendId,
     });
   }
 
@@ -564,6 +608,7 @@ class TransactionsTableCompanion
     Value<String?>? description,
     Value<DateTime>? date,
     Value<bool>? isActive,
+    Value<String?>? backendId,
   }) {
     return TransactionsTableCompanion(
       id: id ?? this.id,
@@ -577,6 +622,7 @@ class TransactionsTableCompanion
       description: description ?? this.description,
       date: date ?? this.date,
       isActive: isActive ?? this.isActive,
+      backendId: backendId ?? this.backendId,
     );
   }
 
@@ -615,6 +661,9 @@ class TransactionsTableCompanion
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (backendId.present) {
+      map['backend_id'] = Variable<String>(backendId.value);
+    }
     return map;
   }
 
@@ -630,7 +679,8 @@ class TransactionsTableCompanion
           ..write('projectId: $projectId, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('isActive: $isActive')
+          ..write('isActive: $isActive, ')
+          ..write('backendId: $backendId')
           ..write(')'))
         .toString();
   }
@@ -1221,6 +1271,7 @@ typedef $$TransactionsTableTableCreateCompanionBuilder =
       Value<String?> description,
       required DateTime date,
       Value<bool> isActive,
+      Value<String?> backendId,
     });
 typedef $$TransactionsTableTableUpdateCompanionBuilder =
     TransactionsTableCompanion Function({
@@ -1234,6 +1285,7 @@ typedef $$TransactionsTableTableUpdateCompanionBuilder =
       Value<String?> description,
       Value<DateTime> date,
       Value<bool> isActive,
+      Value<String?> backendId,
     });
 
 class $$TransactionsTableTableFilterComposer
@@ -1292,6 +1344,11 @@ class $$TransactionsTableTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get backendId => $composableBuilder(
+    column: $table.backendId,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1354,6 +1411,11 @@ class $$TransactionsTableTableOrderingComposer
     column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get backendId => $composableBuilder(
+    column: $table.backendId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TransactionsTableTableAnnotationComposer
@@ -1400,6 +1462,9 @@ class $$TransactionsTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<String> get backendId =>
+      $composableBuilder(column: $table.backendId, builder: (column) => column);
 }
 
 class $$TransactionsTableTableTableManager
@@ -1458,6 +1523,7 @@ class $$TransactionsTableTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<String?> backendId = const Value.absent(),
               }) => TransactionsTableCompanion(
                 id: id,
                 userId: userId,
@@ -1469,6 +1535,7 @@ class $$TransactionsTableTableTableManager
                 description: description,
                 date: date,
                 isActive: isActive,
+                backendId: backendId,
               ),
           createCompanionCallback:
               ({
@@ -1482,6 +1549,7 @@ class $$TransactionsTableTableTableManager
                 Value<String?> description = const Value.absent(),
                 required DateTime date,
                 Value<bool> isActive = const Value.absent(),
+                Value<String?> backendId = const Value.absent(),
               }) => TransactionsTableCompanion.insert(
                 id: id,
                 userId: userId,
@@ -1493,6 +1561,7 @@ class $$TransactionsTableTableTableManager
                 description: description,
                 date: date,
                 isActive: isActive,
+                backendId: backendId,
               ),
           withReferenceMapper:
               (p0) =>

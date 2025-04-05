@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app_1/features/transactions/data/repositories/transaction_repository.dart';
 import 'package:flutter_app_1/features/transactions/data/data_sources/transaction_local_data_source.dart';
@@ -60,6 +61,7 @@ final transactionStreamProvider = StreamProvider<List<TransactionEntity>>((ref) 
 
 /// Команда на обновление всех транзакций из API
 final transactionFetchProvider = Provider<Future<List<TransactionEntity>>>((ref) async {
+  debugPrint('➡️ Выполняется transactionFetchProvider');
   final repository = ref.watch(transactionRepositoryProvider);
   return repository.fetch();
 });

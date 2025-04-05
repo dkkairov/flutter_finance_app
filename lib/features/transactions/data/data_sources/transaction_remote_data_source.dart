@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_app_1/core/models/transaction_dto.dart';
 
 class TransactionRemoteDataSource {
@@ -8,12 +9,18 @@ class TransactionRemoteDataSource {
 
   /// Получение списка транзакций
   Future<List<TransactionDto>> fetchTransactions() async {
-    final response = await dio.get('/api/transactions');
-    final data = response.data as List;
-
-    return data
-        .map((json) => TransactionDto.fromJson(json as Map<String, dynamic>))
-        .toList();
+    debugPrint('➡️ TransactionRemoteDataSource.fetchTransactions() вызван');
+    try {
+      final response = await dio.get('/api/transactions');
+      debugPrint('⬅️ Ответ от API (статус ${response.statusCode}): ${response.data}'); // <--- Добавьте эту строку
+      final data = response.data as List;
+      return data
+          .map((json) => TransactionDto.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      debugPrint('❌ Ошибка в TransactionRemoteDataSource.fetchTransactions(): $e');
+      rethrow;
+    }
   }
 
   /// Создание транзакции

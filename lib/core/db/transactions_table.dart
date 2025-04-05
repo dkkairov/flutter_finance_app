@@ -11,4 +11,7 @@ class TransactionsTable extends Table {
   TextColumn get description => text().nullable()();
   DateTimeColumn get date => dateTime()();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  TextColumn get backendId => text().nullable()(); // Удалили .unique()
+
+// Primary key остается id
 }

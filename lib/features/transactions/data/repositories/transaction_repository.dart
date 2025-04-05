@@ -29,8 +29,11 @@ class TransactionRepository {
 
   /// Получение и кэширование всех транзакций с сервера
   Future<List<TransactionEntity>> fetch() async {
+    debugPrint('➡️ TransactionRepository.fetch() вызван');
     try {
+      debugPrint('➡️ Вызов remote.fetchTransactions()');
       final dtos = await remote.fetchTransactions();
+      debugPrint('⬅️ Получен ответ от API: ${dtos.length} элементов');
       final entities = dtos.map(TransactionMapper.fromDto).toList();
 
       for (final entity in entities) {
@@ -43,7 +46,8 @@ class TransactionRepository {
       }
 
       return entities;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('❌ Ошибка в TransactionRepository.fetch(): $e');
       return local.getAllTransactions();
     }
   }

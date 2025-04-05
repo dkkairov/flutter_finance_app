@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/core/theme/app_colors.dart';
 import 'package:flutter_app_1/features/add/presentation/sum_view_widget.dart';
 import 'package:flutter_app_1/features/add/presentation/transaction_type_selector_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

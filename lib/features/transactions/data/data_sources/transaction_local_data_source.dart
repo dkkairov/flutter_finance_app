@@ -33,7 +33,6 @@ class TransactionLocalDataSource {
     debugPrint('💾 Сохраняю в локальную БД транзакцию: ${entity.id}');
     final model = TransactionMapper.toFullDriftModel(entity, userId: userId);
     await db.into(db.transactionsTable).insertOnConflictUpdate(model);
-    await db.printAllTransactions(); // Временный вызов для отладки (можно оставить здесь)
   }
 
   /// Обновление транзакции

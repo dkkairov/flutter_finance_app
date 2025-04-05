@@ -9,6 +9,7 @@ class TransactionEntity {
   final String? description;
   final DateTime date;
   final bool isActive;
+  final String? backendId; // Добавляем это поле
 
   TransactionEntity({
     required this.id,
@@ -21,5 +22,6 @@ class TransactionEntity {
     required this.description,
     required this.date,
     required this.isActive,
+    this.backendId, // Добавляем в конструктор
   });
 }

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart'; // Import для kDebugMode и LogInterceptor
 
 import '../services/secure_storage_provider.dart';
 
@@ -24,6 +25,10 @@ final dioProvider = Provider<Dio>((ref) {
       return handler.next(options);
     },
   ));
+
+  if (kDebugMode) {
+    dio.interceptors.add(LogInterceptor());
+  }
 
   return dio;
 });

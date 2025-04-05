@@ -16,6 +16,7 @@ class TransactionMapper {
     description: dto.description,
     date: dto.date,
     isActive: dto.isActive,
+    backendId: dto.backendId,
   );
 
   /// Entity → DTO (userId можно передать, если нужно переопределить)
@@ -30,6 +31,7 @@ class TransactionMapper {
     description: entity.description,
     date: entity.date,
     isActive: entity.isActive,
+    backendId: entity.backendId,
   );
 
   /// DB row → Entity
@@ -44,6 +46,7 @@ class TransactionMapper {
     description: row.description,
     date: row.date,
     isActive: row.isActive,
+    backendId: row.backendId,
   );
 
   /// Entity → Drift Companion
@@ -67,6 +70,7 @@ class TransactionMapper {
           : const Value.absent(),
       date: Value(entity.date),
       isActive: Value(entity.isActive),
+      backendId: Value(entity.backendId),
     );
   }
 
@@ -83,6 +87,7 @@ class TransactionMapper {
       description: entity.description,
       date: entity.date,
       isActive: entity.isActive,
+      backendId: entity.backendId,
     );
   }
 }

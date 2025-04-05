@@ -16,6 +16,7 @@ class TransactionDto with _$TransactionDto {
     String? description,
     required DateTime date,
     @JsonKey(name: 'isActive') required bool isActive,
+    String? backendId, // Добавлено поле backendId
   }) = _TransactionDto;
 
   factory TransactionDto.fromJson(Map<String, dynamic> json) =>
@@ -28,6 +29,10 @@ class TransactionDto with _$TransactionDto {
   @override
   // TODO: implement amount
   double get amount => throw UnimplementedError();
+
+  @override
+  // TODO: implement backendId
+  String? get backendId => throw UnimplementedError();
 
   @override
   // TODO: implement date
@@ -66,6 +71,5 @@ class TransactionDto with _$TransactionDto {
   @override
   // TODO: implement userId
   int get userId => throw UnimplementedError();
-
 
 }

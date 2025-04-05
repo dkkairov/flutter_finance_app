@@ -19,21 +19,24 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3; // 🚨
+  int get schemaVersion => 5; // 🚨
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (Migrator m) async {
-      await m.createAll();
-    },
-    onUpgrade: (Migrator m, int from, int to) async {
-      if (from == 1) {
-        await m.createTable(userSettings); // добавили новую таблицу
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 4) {
+          await m.addColumn(transactionsTable, transactionsTable.backendId);
+        }
+        if (from == 1) {
+          await m.createTable(userSettings); // добавили новую таблицу
+        }
+      },
+      beforeOpen: (details) async {
+        debugPrint('📂 База открыта. Version: ${details.versionBefore} → ${details.versionNow}');
       }
-    },
-    beforeOpen: (details) async {
-      debugPrint('📂 База открыта. Version: ${details.versionBefore} → ${details.versionNow}');
-    }
   );
 
   // ▸ Transactions
