@@ -1,5 +1,3 @@
-// transaction_controller.dart
-
 import 'package:flutter_app_1/features/transactions/presentation/providers/transaction_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +7,12 @@ import 'package:flutter_app_1/features/transactions/data/repositories/transactio
 final transactionControllerProvider =
 StateNotifierProvider<TransactionController, TransactionEntity>((ref) {
   final repository = ref.read(transactionRepositoryProvider);
-
-  return TransactionController(
-    repository: repository,
-  );
+  return TransactionController(repository: repository);
 });
 
 class TransactionController extends StateNotifier<TransactionEntity> {
   final TransactionRepository repository;
+  String rawAmount = '';
 
   TransactionController({required this.repository})
       : super(TransactionEntity(
@@ -32,8 +28,17 @@ class TransactionController extends StateNotifier<TransactionEntity> {
     isActive: true,
   ));
 
-  void updateAmount(double newAmount) {
-    state = state.copyWith(amount: newAmount);
+  void updateRawAmount(String value) {
+    rawAmount = value;
+
+    final parsed = double.tryParse(value.replaceAll(',', '.')) ?? 0;
+    state = state.copyWith(amount: parsed);
+  }
+
+  void deleteLastDigit() {
+    if (rawAmount.isNotEmpty) {
+      updateRawAmount(rawAmount.substring(0, rawAmount.length - 1));
+    }
   }
 
   void updateCategory(int categoryId) {
@@ -42,7 +47,6 @@ class TransactionController extends StateNotifier<TransactionEntity> {
       _createTransaction();
     } else {
       debugPrint('⛔ Укажите сумму перед выбором категории');
-      // тут можно запустить анимацию/вибрацию
     }
   }
 
@@ -52,6 +56,7 @@ class TransactionController extends StateNotifier<TransactionEntity> {
   }
 
   void reset() {
+    rawAmount = '';
     state = TransactionEntity(
       id: null,
       serverId: null,
