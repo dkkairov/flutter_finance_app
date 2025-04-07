@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_app_1/core/db/app_database.dart';
-import 'package:flutter_app_1/core/models/transaction_dto.dart';
+import 'package:flutter_app_1/features/transactions/domain/models/transaction_dto.dart';
 import '../domain/models/transaction_entity.dart';
 
 class TransactionMapper {

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_app_1/core/models/transaction_dto.dart';
+import 'package:flutter_app_1/features/transactions/domain/models/transaction_dto.dart';
 
 class TransactionRemoteDataSource {
   final Dio dio;
