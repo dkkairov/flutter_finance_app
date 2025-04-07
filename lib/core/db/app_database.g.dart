@@ -22,6 +22,17 @@ class $TransactionsTableTable extends TransactionsTable
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _serverIdMeta = const VerificationMeta(
+    'serverId',
+  );
+  @override
+  late final GeneratedColumn<int> serverId = GeneratedColumn<int>(
+    'server_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<int> userId = GeneratedColumn<int>(
@@ -118,20 +129,10 @@ class $TransactionsTableTable extends TransactionsTable
     ),
     defaultValue: const Constant(true),
   );
-  static const VerificationMeta _backendIdMeta = const VerificationMeta(
-    'backendId',
-  );
-  @override
-  late final GeneratedColumn<String> backendId = GeneratedColumn<String>(
-    'backend_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    serverId,
     userId,
     transactionType,
     transactionCategoryId,
@@ -141,7 +142,6 @@ class $TransactionsTableTable extends TransactionsTable
     description,
     date,
     isActive,
-    backendId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -157,6 +157,12 @@ class $TransactionsTableTable extends TransactionsTable
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(
+        _serverIdMeta,
+        serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta),
+      );
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -229,12 +235,6 @@ class $TransactionsTableTable extends TransactionsTable
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
-    if (data.containsKey('backend_id')) {
-      context.handle(
-        _backendIdMeta,
-        backendId.isAcceptableOrUnknown(data['backend_id']!, _backendIdMeta),
-      );
-    }
     return context;
   }
 
@@ -249,6 +249,10 @@ class $TransactionsTableTable extends TransactionsTable
             DriftSqlType.int,
             data['${effectivePrefix}id'],
           )!,
+      serverId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_id'],
+      ),
       userId:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -290,10 +294,6 @@ class $TransactionsTableTable extends TransactionsTable
             DriftSqlType.bool,
             data['${effectivePrefix}is_active'],
           )!,
-      backendId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}backend_id'],
-      ),
     );
   }
 
@@ -306,6 +306,7 @@ class $TransactionsTableTable extends TransactionsTable
 class TransactionsTableData extends DataClass
     implements Insertable<TransactionsTableData> {
   final int id;
+  final int? serverId;
   final int userId;
   final String transactionType;
   final int? transactionCategoryId;
@@ -315,9 +316,9 @@ class TransactionsTableData extends DataClass
   final String? description;
   final DateTime date;
   final bool isActive;
-  final String? backendId;
   const TransactionsTableData({
     required this.id,
+    this.serverId,
     required this.userId,
     required this.transactionType,
     this.transactionCategoryId,
@@ -327,12 +328,14 @@ class TransactionsTableData extends DataClass
     this.description,
     required this.date,
     required this.isActive,
-    this.backendId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<int>(serverId);
+    }
     map['user_id'] = Variable<int>(userId);
     map['transaction_type'] = Variable<String>(transactionType);
     if (!nullToAbsent || transactionCategoryId != null) {
@@ -350,15 +353,16 @@ class TransactionsTableData extends DataClass
     }
     map['date'] = Variable<DateTime>(date);
     map['is_active'] = Variable<bool>(isActive);
-    if (!nullToAbsent || backendId != null) {
-      map['backend_id'] = Variable<String>(backendId);
-    }
     return map;
   }
 
   TransactionsTableCompanion toCompanion(bool nullToAbsent) {
     return TransactionsTableCompanion(
       id: Value(id),
+      serverId:
+          serverId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(serverId),
       userId: Value(userId),
       transactionType: Value(transactionType),
       transactionCategoryId:
@@ -380,10 +384,6 @@ class TransactionsTableData extends DataClass
               : Value(description),
       date: Value(date),
       isActive: Value(isActive),
-      backendId:
-          backendId == null && nullToAbsent
-              ? const Value.absent()
-              : Value(backendId),
     );
   }
 
@@ -394,6 +394,7 @@ class TransactionsTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TransactionsTableData(
       id: serializer.fromJson<int>(json['id']),
+      serverId: serializer.fromJson<int?>(json['serverId']),
       userId: serializer.fromJson<int>(json['userId']),
       transactionType: serializer.fromJson<String>(json['transactionType']),
       transactionCategoryId: serializer.fromJson<int?>(
@@ -405,7 +406,6 @@ class TransactionsTableData extends DataClass
       description: serializer.fromJson<String?>(json['description']),
       date: serializer.fromJson<DateTime>(json['date']),
       isActive: serializer.fromJson<bool>(json['isActive']),
-      backendId: serializer.fromJson<String?>(json['backendId']),
     );
   }
   @override
@@ -413,6 +413,7 @@ class TransactionsTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'serverId': serializer.toJson<int?>(serverId),
       'userId': serializer.toJson<int>(userId),
       'transactionType': serializer.toJson<String>(transactionType),
       'transactionCategoryId': serializer.toJson<int?>(transactionCategoryId),
@@ -422,12 +423,12 @@ class TransactionsTableData extends DataClass
       'description': serializer.toJson<String?>(description),
       'date': serializer.toJson<DateTime>(date),
       'isActive': serializer.toJson<bool>(isActive),
-      'backendId': serializer.toJson<String?>(backendId),
     };
   }
 
   TransactionsTableData copyWith({
     int? id,
+    Value<int?> serverId = const Value.absent(),
     int? userId,
     String? transactionType,
     Value<int?> transactionCategoryId = const Value.absent(),
@@ -437,9 +438,9 @@ class TransactionsTableData extends DataClass
     Value<String?> description = const Value.absent(),
     DateTime? date,
     bool? isActive,
-    Value<String?> backendId = const Value.absent(),
   }) => TransactionsTableData(
     id: id ?? this.id,
+    serverId: serverId.present ? serverId.value : this.serverId,
     userId: userId ?? this.userId,
     transactionType: transactionType ?? this.transactionType,
     transactionCategoryId:
@@ -452,11 +453,11 @@ class TransactionsTableData extends DataClass
     description: description.present ? description.value : this.description,
     date: date ?? this.date,
     isActive: isActive ?? this.isActive,
-    backendId: backendId.present ? backendId.value : this.backendId,
   );
   TransactionsTableData copyWithCompanion(TransactionsTableCompanion data) {
     return TransactionsTableData(
       id: data.id.present ? data.id.value : this.id,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
       userId: data.userId.present ? data.userId.value : this.userId,
       transactionType:
           data.transactionType.present
@@ -473,7 +474,6 @@ class TransactionsTableData extends DataClass
           data.description.present ? data.description.value : this.description,
       date: data.date.present ? data.date.value : this.date,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
-      backendId: data.backendId.present ? data.backendId.value : this.backendId,
     );
   }
 
@@ -481,6 +481,7 @@ class TransactionsTableData extends DataClass
   String toString() {
     return (StringBuffer('TransactionsTableData(')
           ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
           ..write('userId: $userId, ')
           ..write('transactionType: $transactionType, ')
           ..write('transactionCategoryId: $transactionCategoryId, ')
@@ -489,8 +490,7 @@ class TransactionsTableData extends DataClass
           ..write('projectId: $projectId, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('isActive: $isActive, ')
-          ..write('backendId: $backendId')
+          ..write('isActive: $isActive')
           ..write(')'))
         .toString();
   }
@@ -498,6 +498,7 @@ class TransactionsTableData extends DataClass
   @override
   int get hashCode => Object.hash(
     id,
+    serverId,
     userId,
     transactionType,
     transactionCategoryId,
@@ -507,13 +508,13 @@ class TransactionsTableData extends DataClass
     description,
     date,
     isActive,
-    backendId,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TransactionsTableData &&
           other.id == this.id &&
+          other.serverId == this.serverId &&
           other.userId == this.userId &&
           other.transactionType == this.transactionType &&
           other.transactionCategoryId == this.transactionCategoryId &&
@@ -522,13 +523,13 @@ class TransactionsTableData extends DataClass
           other.projectId == this.projectId &&
           other.description == this.description &&
           other.date == this.date &&
-          other.isActive == this.isActive &&
-          other.backendId == this.backendId);
+          other.isActive == this.isActive);
 }
 
 class TransactionsTableCompanion
     extends UpdateCompanion<TransactionsTableData> {
   final Value<int> id;
+  final Value<int?> serverId;
   final Value<int> userId;
   final Value<String> transactionType;
   final Value<int?> transactionCategoryId;
@@ -538,9 +539,9 @@ class TransactionsTableCompanion
   final Value<String?> description;
   final Value<DateTime> date;
   final Value<bool> isActive;
-  final Value<String?> backendId;
   const TransactionsTableCompanion({
     this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
     this.userId = const Value.absent(),
     this.transactionType = const Value.absent(),
     this.transactionCategoryId = const Value.absent(),
@@ -550,10 +551,10 @@ class TransactionsTableCompanion
     this.description = const Value.absent(),
     this.date = const Value.absent(),
     this.isActive = const Value.absent(),
-    this.backendId = const Value.absent(),
   });
   TransactionsTableCompanion.insert({
     this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
     required int userId,
     required String transactionType,
     this.transactionCategoryId = const Value.absent(),
@@ -563,13 +564,13 @@ class TransactionsTableCompanion
     this.description = const Value.absent(),
     required DateTime date,
     this.isActive = const Value.absent(),
-    this.backendId = const Value.absent(),
   }) : userId = Value(userId),
        transactionType = Value(transactionType),
        amount = Value(amount),
        date = Value(date);
   static Insertable<TransactionsTableData> custom({
     Expression<int>? id,
+    Expression<int>? serverId,
     Expression<int>? userId,
     Expression<String>? transactionType,
     Expression<int>? transactionCategoryId,
@@ -579,10 +580,10 @@ class TransactionsTableCompanion
     Expression<String>? description,
     Expression<DateTime>? date,
     Expression<bool>? isActive,
-    Expression<String>? backendId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
       if (userId != null) 'user_id': userId,
       if (transactionType != null) 'transaction_type': transactionType,
       if (transactionCategoryId != null)
@@ -593,12 +594,12 @@ class TransactionsTableCompanion
       if (description != null) 'description': description,
       if (date != null) 'date': date,
       if (isActive != null) 'is_active': isActive,
-      if (backendId != null) 'backend_id': backendId,
     });
   }
 
   TransactionsTableCompanion copyWith({
     Value<int>? id,
+    Value<int?>? serverId,
     Value<int>? userId,
     Value<String>? transactionType,
     Value<int?>? transactionCategoryId,
@@ -608,10 +609,10 @@ class TransactionsTableCompanion
     Value<String?>? description,
     Value<DateTime>? date,
     Value<bool>? isActive,
-    Value<String?>? backendId,
   }) {
     return TransactionsTableCompanion(
       id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
       userId: userId ?? this.userId,
       transactionType: transactionType ?? this.transactionType,
       transactionCategoryId:
@@ -622,7 +623,6 @@ class TransactionsTableCompanion
       description: description ?? this.description,
       date: date ?? this.date,
       isActive: isActive ?? this.isActive,
-      backendId: backendId ?? this.backendId,
     );
   }
 
@@ -631,6 +631,9 @@ class TransactionsTableCompanion
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<int>(serverId.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<int>(userId.value);
@@ -661,9 +664,6 @@ class TransactionsTableCompanion
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
-    if (backendId.present) {
-      map['backend_id'] = Variable<String>(backendId.value);
-    }
     return map;
   }
 
@@ -671,6 +671,7 @@ class TransactionsTableCompanion
   String toString() {
     return (StringBuffer('TransactionsTableCompanion(')
           ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
           ..write('userId: $userId, ')
           ..write('transactionType: $transactionType, ')
           ..write('transactionCategoryId: $transactionCategoryId, ')
@@ -679,8 +680,7 @@ class TransactionsTableCompanion
           ..write('projectId: $projectId, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('isActive: $isActive, ')
-          ..write('backendId: $backendId')
+          ..write('isActive: $isActive')
           ..write(')'))
         .toString();
   }
@@ -1262,6 +1262,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 typedef $$TransactionsTableTableCreateCompanionBuilder =
     TransactionsTableCompanion Function({
       Value<int> id,
+      Value<int?> serverId,
       required int userId,
       required String transactionType,
       Value<int?> transactionCategoryId,
@@ -1271,11 +1272,11 @@ typedef $$TransactionsTableTableCreateCompanionBuilder =
       Value<String?> description,
       required DateTime date,
       Value<bool> isActive,
-      Value<String?> backendId,
     });
 typedef $$TransactionsTableTableUpdateCompanionBuilder =
     TransactionsTableCompanion Function({
       Value<int> id,
+      Value<int?> serverId,
       Value<int> userId,
       Value<String> transactionType,
       Value<int?> transactionCategoryId,
@@ -1285,7 +1286,6 @@ typedef $$TransactionsTableTableUpdateCompanionBuilder =
       Value<String?> description,
       Value<DateTime> date,
       Value<bool> isActive,
-      Value<String?> backendId,
     });
 
 class $$TransactionsTableTableFilterComposer
@@ -1299,6 +1299,11 @@ class $$TransactionsTableTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverId => $composableBuilder(
+    column: $table.serverId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1346,11 +1351,6 @@ class $$TransactionsTableTableFilterComposer
     column: $table.isActive,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get backendId => $composableBuilder(
-    column: $table.backendId,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$TransactionsTableTableOrderingComposer
@@ -1364,6 +1364,11 @@ class $$TransactionsTableTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverId => $composableBuilder(
+    column: $table.serverId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1411,11 +1416,6 @@ class $$TransactionsTableTableOrderingComposer
     column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get backendId => $composableBuilder(
-    column: $table.backendId,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$TransactionsTableTableAnnotationComposer
@@ -1429,6 +1429,9 @@ class $$TransactionsTableTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
 
   GeneratedColumn<int> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
@@ -1462,9 +1465,6 @@ class $$TransactionsTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
-
-  GeneratedColumn<String> get backendId =>
-      $composableBuilder(column: $table.backendId, builder: (column) => column);
 }
 
 class $$TransactionsTableTableTableManager
@@ -1514,6 +1514,7 @@ class $$TransactionsTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
                 Value<int> userId = const Value.absent(),
                 Value<String> transactionType = const Value.absent(),
                 Value<int?> transactionCategoryId = const Value.absent(),
@@ -1523,9 +1524,9 @@ class $$TransactionsTableTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
-                Value<String?> backendId = const Value.absent(),
               }) => TransactionsTableCompanion(
                 id: id,
+                serverId: serverId,
                 userId: userId,
                 transactionType: transactionType,
                 transactionCategoryId: transactionCategoryId,
@@ -1535,11 +1536,11 @@ class $$TransactionsTableTableTableManager
                 description: description,
                 date: date,
                 isActive: isActive,
-                backendId: backendId,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
                 required int userId,
                 required String transactionType,
                 Value<int?> transactionCategoryId = const Value.absent(),
@@ -1549,9 +1550,9 @@ class $$TransactionsTableTableTableManager
                 Value<String?> description = const Value.absent(),
                 required DateTime date,
                 Value<bool> isActive = const Value.absent(),
-                Value<String?> backendId = const Value.absent(),
               }) => TransactionsTableCompanion.insert(
                 id: id,
+                serverId: serverId,
                 userId: userId,
                 transactionType: transactionType,
                 transactionCategoryId: transactionCategoryId,
@@ -1561,7 +1562,6 @@ class $$TransactionsTableTableTableManager
                 description: description,
                 date: date,
                 isActive: isActive,
-                backendId: backendId,
               ),
           withReferenceMapper:
               (p0) =>

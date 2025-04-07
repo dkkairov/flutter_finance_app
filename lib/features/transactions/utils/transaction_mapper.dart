@@ -7,6 +7,7 @@ class TransactionMapper {
   /// DTO → Entity
   static TransactionEntity fromDto(TransactionDto dto) => TransactionEntity(
     id: dto.id,
+    serverId: dto.serverId,
     userId: dto.userId,
     transactionType: dto.transactionType,
     transactionCategoryId: dto.transactionCategoryId,
@@ -16,27 +17,27 @@ class TransactionMapper {
     description: dto.description,
     date: dto.date,
     isActive: dto.isActive,
-    backendId: dto.backendId,
   );
 
-  /// Entity → DTO (userId можно передать, если нужно переопределить)
+  /// Entity → DTO (userId можно переопределить)
   static TransactionDto toDto(TransactionEntity entity, {required int userId}) => TransactionDto(
-    id: entity.id,
-    userId: userId ?? entity.userId,
+    id: entity.id ?? 0, // API требует id, даже если временный
+    serverId: entity.serverId,
+    userId: userId,
     transactionType: entity.transactionType,
-    transactionCategoryId: entity.transactionCategoryId!,
+    transactionCategoryId: entity.transactionCategoryId,
     amount: entity.amount,
     accountId: entity.accountId,
     projectId: entity.projectId,
     description: entity.description,
     date: entity.date,
     isActive: entity.isActive,
-    backendId: entity.backendId,
   );
 
   /// DB row → Entity
   static TransactionEntity fromDb(TransactionsTableData row) => TransactionEntity(
     id: row.id,
+    serverId: row.serverId,
     userId: row.userId,
     transactionType: row.transactionType,
     transactionCategoryId: row.transactionCategoryId,
@@ -46,38 +47,32 @@ class TransactionMapper {
     description: row.description,
     date: row.date,
     isActive: row.isActive,
-    backendId: row.backendId,
   );
 
-  /// Entity → Drift Companion
+  /// Entity → Drift Companion (для insert)
   static TransactionsTableCompanion toDb(TransactionEntity entity, {required int userId}) {
     return TransactionsTableCompanion(
-      id: Value(entity.id),
+      id: entity.id != null ? Value(entity.id!) : const Value.absent(),
+      serverId: entity.serverId != null ? Value(entity.serverId!) : const Value.absent(),
       userId: Value(userId),
       transactionType: Value(entity.transactionType),
       transactionCategoryId: entity.transactionCategoryId != null
           ? Value(entity.transactionCategoryId!)
           : const Value.absent(),
       amount: Value(entity.amount),
-      accountId: entity.accountId != null
-          ? Value(entity.accountId!)
-          : const Value.absent(),
-      projectId: entity.projectId != null
-          ? Value(entity.projectId!)
-          : const Value.absent(),
-      description: entity.description != null
-          ? Value(entity.description!)
-          : const Value.absent(),
+      accountId: entity.accountId != null ? Value(entity.accountId!) : const Value.absent(),
+      projectId: entity.projectId != null ? Value(entity.projectId!) : const Value.absent(),
+      description: entity.description != null ? Value(entity.description!) : const Value.absent(),
       date: Value(entity.date),
       isActive: Value(entity.isActive),
-      backendId: Value(entity.backendId),
     );
   }
 
-  /// Entity → полная Drift-модель (для обновления)
+  /// Entity → Drift Data Model (для update)
   static TransactionsTableData toFullDriftModel(TransactionEntity entity, {required int userId}) {
     return TransactionsTableData(
-      id: entity.id,
+      id: entity.id!,
+      serverId: entity.serverId,
       userId: userId,
       transactionType: entity.transactionType,
       transactionCategoryId: entity.transactionCategoryId,
@@ -87,7 +82,6 @@ class TransactionMapper {
       description: entity.description,
       date: entity.date,
       isActive: entity.isActive,
-      backendId: entity.backendId,
     );
   }
 }

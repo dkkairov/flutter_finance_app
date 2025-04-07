@@ -1,27 +1,27 @@
-class TransactionEntity {
-  final int id;
-  final int userId;
-  final String transactionType;
-  final int? transactionCategoryId;
-  final double amount;
-  final int? accountId;
-  final int? projectId;
-  final String? description;
-  final DateTime date;
-  final bool isActive;
-  final String? backendId; // Добавляем это поле
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  TransactionEntity({
-    required this.id,
-    required this.userId,
-    required this.transactionType,
-    required this.transactionCategoryId,
-    required this.amount,
-    required this.accountId,
-    required this.projectId,
-    required this.description,
-    required this.date,
-    required this.isActive,
-    this.backendId, // Добавляем в конструктор
-  });
+part 'transaction_entity.freezed.dart';
+part 'transaction_entity.g.dart';
+
+@freezed
+class TransactionEntity with _$TransactionEntity {
+  const factory TransactionEntity({
+    int? id, // локальный ID Drift
+    int? serverId, // серверный ID (Laravel)
+    required int userId,
+    required String transactionType,
+    int? transactionCategoryId,
+    required double amount,
+    int? accountId,
+    int? projectId,
+    String? description,
+    required DateTime date,
+    required bool isActive,
+  }) = _TransactionEntity;
+
+  factory TransactionEntity.fromJson(Map<String, dynamic> json) =>
+      _$TransactionEntityFromJson(json);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

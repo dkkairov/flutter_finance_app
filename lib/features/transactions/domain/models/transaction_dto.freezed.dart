@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TransactionDto {
 
- int get id;@JsonKey(name: 'userId') int get userId;@JsonKey(name: 'transactionType') String get transactionType;@JsonKey(name: 'transactionCategoryId') int? get transactionCategoryId; double get amount;@JsonKey(name: 'accountId') int? get accountId;@JsonKey(name: 'projectId') int? get projectId; String? get description; DateTime get date;@JsonKey(name: 'isActive') bool get isActive; String? get backendId;
+ int get id;@JsonKey(name: 'serverId') int? get serverId;@JsonKey(name: 'userId') int get userId;@JsonKey(name: 'transactionType') String get transactionType;@JsonKey(name: 'transactionCategoryId') int? get transactionCategoryId; double get amount;@JsonKey(name: 'accountId') int? get accountId;@JsonKey(name: 'projectId') int? get projectId; String? get description; DateTime get date;@JsonKey(name: 'isActive') bool get isActive;
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $TransactionDtoCopyWith<TransactionDto> get copyWith => _$TransactionDtoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransactionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.transactionType, transactionType) || other.transactionType == transactionType)&&(identical(other.transactionCategoryId, transactionCategoryId) || other.transactionCategoryId == transactionCategoryId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.description, description) || other.description == description)&&(identical(other.date, date) || other.date == date)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.backendId, backendId) || other.backendId == backendId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransactionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.transactionType, transactionType) || other.transactionType == transactionType)&&(identical(other.transactionCategoryId, transactionCategoryId) || other.transactionCategoryId == transactionCategoryId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.description, description) || other.description == description)&&(identical(other.date, date) || other.date == date)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,transactionType,transactionCategoryId,amount,accountId,projectId,description,date,isActive,backendId);
+int get hashCode => Object.hash(runtimeType,id,serverId,userId,transactionType,transactionCategoryId,amount,accountId,projectId,description,date,isActive);
 
 @override
 String toString() {
-  return 'TransactionDto(id: $id, userId: $userId, transactionType: $transactionType, transactionCategoryId: $transactionCategoryId, amount: $amount, accountId: $accountId, projectId: $projectId, description: $description, date: $date, isActive: $isActive, backendId: $backendId)';
+  return 'TransactionDto(id: $id, serverId: $serverId, userId: $userId, transactionType: $transactionType, transactionCategoryId: $transactionCategoryId, amount: $amount, accountId: $accountId, projectId: $projectId, description: $description, date: $date, isActive: $isActive)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $TransactionDtoCopyWith<$Res>  {
   factory $TransactionDtoCopyWith(TransactionDto value, $Res Function(TransactionDto) _then) = _$TransactionDtoCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int? transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive, String? backendId
+ int id,@JsonKey(name: 'serverId') int? serverId,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int? transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
 });
 
 
@@ -66,10 +66,11 @@ class _$TransactionDtoCopyWithImpl<$Res>
 
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = freezed,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,Object? backendId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? serverId = freezed,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = freezed,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as int,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
+as int?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,transactionType: null == transactionType ? _self.transactionType : transactionType // ignore: cast_nullable_to_non_nullable
 as String,transactionCategoryId: freezed == transactionCategoryId ? _self.transactionCategoryId : transactionCategoryId // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -78,8 +79,7 @@ as int?,projectId: freezed == projectId ? _self.projectId : projectId // ignore:
 as int?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
-as bool,backendId: freezed == backendId ? _self.backendId : backendId // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,
   ));
 }
 
@@ -90,10 +90,11 @@ as String?,
 @JsonSerializable()
 
 class _TransactionDto implements TransactionDto {
-  const _TransactionDto({required this.id, @JsonKey(name: 'userId') required this.userId, @JsonKey(name: 'transactionType') required this.transactionType, @JsonKey(name: 'transactionCategoryId') this.transactionCategoryId, required this.amount, @JsonKey(name: 'accountId') this.accountId, @JsonKey(name: 'projectId') this.projectId, this.description, required this.date, @JsonKey(name: 'isActive') required this.isActive, this.backendId});
+  const _TransactionDto({required this.id, @JsonKey(name: 'serverId') this.serverId, @JsonKey(name: 'userId') required this.userId, @JsonKey(name: 'transactionType') required this.transactionType, @JsonKey(name: 'transactionCategoryId') this.transactionCategoryId, required this.amount, @JsonKey(name: 'accountId') this.accountId, @JsonKey(name: 'projectId') this.projectId, this.description, required this.date, @JsonKey(name: 'isActive') required this.isActive});
   factory _TransactionDto.fromJson(Map<String, dynamic> json) => _$TransactionDtoFromJson(json);
 
 @override final  int id;
+@override@JsonKey(name: 'serverId') final  int? serverId;
 @override@JsonKey(name: 'userId') final  int userId;
 @override@JsonKey(name: 'transactionType') final  String transactionType;
 @override@JsonKey(name: 'transactionCategoryId') final  int? transactionCategoryId;
@@ -103,7 +104,6 @@ class _TransactionDto implements TransactionDto {
 @override final  String? description;
 @override final  DateTime date;
 @override@JsonKey(name: 'isActive') final  bool isActive;
-@override final  String? backendId;
 
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
@@ -118,16 +118,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransactionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.transactionType, transactionType) || other.transactionType == transactionType)&&(identical(other.transactionCategoryId, transactionCategoryId) || other.transactionCategoryId == transactionCategoryId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.description, description) || other.description == description)&&(identical(other.date, date) || other.date == date)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.backendId, backendId) || other.backendId == backendId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransactionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.transactionType, transactionType) || other.transactionType == transactionType)&&(identical(other.transactionCategoryId, transactionCategoryId) || other.transactionCategoryId == transactionCategoryId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.description, description) || other.description == description)&&(identical(other.date, date) || other.date == date)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,transactionType,transactionCategoryId,amount,accountId,projectId,description,date,isActive,backendId);
+int get hashCode => Object.hash(runtimeType,id,serverId,userId,transactionType,transactionCategoryId,amount,accountId,projectId,description,date,isActive);
 
 @override
 String toString() {
-  return 'TransactionDto(id: $id, userId: $userId, transactionType: $transactionType, transactionCategoryId: $transactionCategoryId, amount: $amount, accountId: $accountId, projectId: $projectId, description: $description, date: $date, isActive: $isActive, backendId: $backendId)';
+  return 'TransactionDto(id: $id, serverId: $serverId, userId: $userId, transactionType: $transactionType, transactionCategoryId: $transactionCategoryId, amount: $amount, accountId: $accountId, projectId: $projectId, description: $description, date: $date, isActive: $isActive)';
 }
 
 
@@ -138,7 +138,7 @@ abstract mixin class _$TransactionDtoCopyWith<$Res> implements $TransactionDtoCo
   factory _$TransactionDtoCopyWith(_TransactionDto value, $Res Function(_TransactionDto) _then) = __$TransactionDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int? transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive, String? backendId
+ int id,@JsonKey(name: 'serverId') int? serverId,@JsonKey(name: 'userId') int userId,@JsonKey(name: 'transactionType') String transactionType,@JsonKey(name: 'transactionCategoryId') int? transactionCategoryId, double amount,@JsonKey(name: 'accountId') int? accountId,@JsonKey(name: 'projectId') int? projectId, String? description, DateTime date,@JsonKey(name: 'isActive') bool isActive
 });
 
 
@@ -155,10 +155,11 @@ class __$TransactionDtoCopyWithImpl<$Res>
 
 /// Create a copy of TransactionDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = freezed,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,Object? backendId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? serverId = freezed,Object? userId = null,Object? transactionType = null,Object? transactionCategoryId = freezed,Object? amount = null,Object? accountId = freezed,Object? projectId = freezed,Object? description = freezed,Object? date = null,Object? isActive = null,}) {
   return _then(_TransactionDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as int,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
+as int?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,transactionType: null == transactionType ? _self.transactionType : transactionType // ignore: cast_nullable_to_non_nullable
 as String,transactionCategoryId: freezed == transactionCategoryId ? _self.transactionCategoryId : transactionCategoryId // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -167,8 +168,7 @@ as int?,projectId: freezed == projectId ? _self.projectId : projectId // ignore:
 as int?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
-as bool,backendId: freezed == backendId ? _self.backendId : backendId // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,
   ));
 }
 

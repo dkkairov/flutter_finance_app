@@ -1,3 +1,5 @@
+// lib/features/transactions/data/data_sources/transaction_remote_data_source.dart
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_app_1/features/transactions/domain/models/transaction_dto.dart';
@@ -12,7 +14,7 @@ class TransactionRemoteDataSource {
     debugPrint('➡️ TransactionRemoteDataSource.fetchTransactions() вызван');
     try {
       final response = await dio.get('/api/transactions');
-      debugPrint('⬅️ Ответ от API (статус ${response.statusCode}): ${response.data}'); // <--- Добавьте эту строку
+      debugPrint('⬅️ Ответ от API (статус ${response.statusCode}): ${response.data}');
       final data = response.data as List;
       return data
           .map((json) => TransactionDto.fromJson(json as Map<String, dynamic>))
@@ -25,18 +27,23 @@ class TransactionRemoteDataSource {
 
   /// Создание транзакции
   Future<TransactionDto> createTransaction(TransactionDto dto) async {
+    debugPrint('➡️ Создание транзакции на сервере: ${dto.toJson()}');
     final response = await dio.post('/api/transactions', data: dto.toJson());
+    debugPrint('⬅️ Ответ от сервера: ${response.data}');
     return TransactionDto.fromJson(response.data);
   }
 
-  /// Обновление транзакции
-  Future<TransactionDto> updateTransaction(int id, TransactionDto dto) async {
-    final response = await dio.put('/api/transactions/$id', data: dto.toJson());
+  /// Обновление транзакции по serverId
+  Future<TransactionDto> updateTransaction(int serverId, TransactionDto dto) async {
+    debugPrint('➡️ Обновление транзакции serverId=$serverId: ${dto.toJson()}');
+    final response = await dio.put('/api/transactions/$serverId', data: dto.toJson());
+    debugPrint('⬅️ Ответ от сервера: ${response.data}');
     return TransactionDto.fromJson(response.data);
   }
 
-  /// Удаление транзакции
-  Future<void> deleteTransaction(int id) async {
-    await dio.delete('/api/transactions/$id');
+  /// Удаление транзакции по serverId
+  Future<void> deleteTransaction(int serverId) async {
+    debugPrint('🗑️ Удаление транзакции serverId=$serverId');
+    await dio.delete('/api/transactions/$serverId');
   }
 }

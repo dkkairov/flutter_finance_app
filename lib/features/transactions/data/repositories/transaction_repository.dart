@@ -4,7 +4,6 @@ import 'package:flutter_app_1/core/services/offline_sync_service.dart';
 import 'package:flutter_app_1/features/transactions/data/data_sources/transaction_local_data_source.dart';
 import 'package:flutter_app_1/features/transactions/data/data_sources/transaction_remote_data_source.dart';
 import 'package:flutter_app_1/features/transactions/utils/transaction_mapper.dart';
-
 import '../../domain/models/transaction_entity.dart';
 
 class TransactionRepository {
@@ -31,15 +30,14 @@ class TransactionRepository {
   Future<List<TransactionEntity>> fetch() async {
     debugPrint('➡️ TransactionRepository.fetch() вызван');
     try {
-      debugPrint('➡️ Вызов remote.fetchTransactions()');
       final dtos = await remote.fetchTransactions();
       debugPrint('⬅️ Получен ответ от API: ${dtos.length} элементов');
       final entities = dtos.map(TransactionMapper.fromDto).toList();
 
       for (final entity in entities) {
         try {
-          await local.insertTransaction(entity); // Используем метод локального источника
-          await db.printAllTransactions(); // Временный вызов для отладки
+          await local.insertTransaction(entity);
+          await db.printAllTransactions();
         } catch (e) {
           debugPrint('Ошибка при вставке: $e');
         }
@@ -52,7 +50,7 @@ class TransactionRepository {
     }
   }
 
-  /// Создание транзакции (и офлайн-поддержка)
+  /// Создание транзакции
   Future<void> create(TransactionEntity entity) async {
     final dto = TransactionMapper.toDto(entity, userId: userId);
 
@@ -68,41 +66,52 @@ class TransactionRepository {
 
     try {
       await db.insertTransaction(entity, userId: userId);
-      await db.printAllTransactions(); // Временный вызов для отладки
+      await db.printAllTransactions();
     } catch (e) {
-      debugPrint('Ошибка при вставке: $e');
+      debugPrint('Ошибка при локальной вставке: $e');
     }
-
   }
 
   /// Обновление транзакции
   Future<void> update(TransactionEntity entity) async {
+    if (entity.serverId == null) {
+      debugPrint('⛔ Нельзя обновить: serverId отсутствует');
+      return;
+    }
+
     final dto = TransactionMapper.toDto(entity, userId: userId);
 
     try {
-      await remote.updateTransaction(entity.id, dto);
+      await remote.updateTransaction(entity.serverId!, dto);
     } catch (_) {
       await syncService.enqueueRequest(
         method: 'PUT',
-        endpoint: '/api/transactions/${entity.id}',
+        endpoint: '/api/transactions/${entity.serverId}',
         body: dto.toJson(),
       );
     }
 
-    await db.updateTransaction(entity as TransactionsTableData, userId: userId);
+    await db.updateTransaction(
+      TransactionMapper.toFullDriftModel(entity, userId: userId), userId: userId,
+    );
   }
 
   /// Удаление транзакции
-  Future<void> delete(int id) async {
+  Future<void> delete(TransactionEntity entity) async {
+    if (entity.serverId == null) {
+      debugPrint('⛔ Нельзя удалить: serverId отсутствует');
+      return;
+    }
+
     try {
-      await remote.deleteTransaction(id);
+      await remote.deleteTransaction(entity.serverId!);
     } catch (_) {
       await syncService.enqueueRequest(
         method: 'DELETE',
-        endpoint: '/api/transactions/$id',
+        endpoint: '/api/transactions/${entity.serverId}',
       );
     }
 
-    await local.deleteTransaction(id);
+    await local.deleteTransaction(entity.id!);
   }
 }

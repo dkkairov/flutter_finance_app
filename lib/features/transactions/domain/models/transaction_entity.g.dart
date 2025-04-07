@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transaction_dto.dart';
+part of 'transaction_entity.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
-    _TransactionDto(
-      id: (json['id'] as num).toInt(),
+_TransactionEntity _$TransactionEntityFromJson(Map<String, dynamic> json) =>
+    _TransactionEntity(
+      id: (json['id'] as num?)?.toInt(),
       serverId: (json['serverId'] as num?)?.toInt(),
       userId: (json['userId'] as num).toInt(),
       transactionType: json['transactionType'] as String,
@@ -21,7 +21,7 @@ _TransactionDto _$TransactionDtoFromJson(Map<String, dynamic> json) =>
       isActive: json['isActive'] as bool,
     );
 
-Map<String, dynamic> _$TransactionDtoToJson(_TransactionDto instance) =>
+Map<String, dynamic> _$TransactionEntityToJson(_TransactionEntity instance) =>
     <String, dynamic>{
       'id': instance.id,
       'serverId': instance.serverId,
