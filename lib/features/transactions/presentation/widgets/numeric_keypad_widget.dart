@@ -50,7 +50,7 @@ class NumericKeypadWidget extends ConsumerWidget {
                   Vibration.vibrate(duration: 30);
                 }
                 // Получаем доступ к контроллеру транзакций
-                final controller = ref.read(transactionControllerProvider.notifier);
+                final controller = ref.read(transactionCreateControllerProvider.notifier);
                 String raw = controller.rawAmount; // Получаем текущее введенное значение
                 if (key == ',') { // Если нажата запятая
                   // Запрещаем добавлять вторую запятую

@@ -9,8 +9,8 @@ class SumViewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final transaction = ref.watch(transactionControllerProvider);
-    final raw = ref.read(transactionControllerProvider.notifier).rawAmount;
+    final transaction = ref.watch(transactionCreateControllerProvider);
+    final raw = ref.read(transactionCreateControllerProvider.notifier).rawAmount;
     final formatted = _formatCurrency(raw);
 
     return Row(
@@ -27,7 +27,7 @@ class SumViewWidget extends ConsumerWidget {
           flex: 1,
           child: IconButton(
             onPressed: () {
-              ref.read(transactionControllerProvider.notifier).deleteLastDigit();
+              ref.read(transactionCreateControllerProvider.notifier).deleteLastDigit();
             },
             icon: const Icon(Icons.backspace),
           ),

@@ -4,18 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app_1/features/transactions/domain/models/transaction_entity.dart'; // Путь к вашей модели
 import 'package:flutter_app_1/features/transactions/data/repositories/transaction_repository.dart'; // Путь к вашему репозиторию
 
-// --- Провайдер для TransactionController ---
-// Он предоставляет экземпляр TransactionController и его состояние (TransactionEntity)
-final transactionControllerProvider =
-StateNotifierProvider<TransactionController, TransactionEntity>((ref) {
+// --- Провайдер для TransactionCreateController ---
+// Он предоставляет экземпляр TransactionCreateController и его состояние (TransactionEntity)
+final transactionCreateControllerProvider =
+StateNotifierProvider<TransactionCreateController, TransactionEntity>((ref) {
   // Получаем зависимость - репозиторий транзакций
   final repository = ref.read(transactionRepositoryProvider);
   // Создаем и возвращаем экземпляр контроллера
-  return TransactionController(repository: repository);
+  return TransactionCreateController(repository: repository);
 });
 
 // --- Контроллер управления состоянием транзакции ---
-class TransactionController extends StateNotifier<TransactionEntity> {
+class TransactionCreateController extends StateNotifier<TransactionEntity> {
   // Зависимость: репозиторий для сохранения данных
   final TransactionRepository repository;
 
@@ -24,7 +24,7 @@ class TransactionController extends StateNotifier<TransactionEntity> {
   String rawAmount = '';
 
   // --- Конструктор ---
-  TransactionController({required this.repository})
+  TransactionCreateController({required this.repository})
   // Инициализация начального состояния (пустая транзакция)
       : super(TransactionEntity(
     id: null, // ID будет присвоен базой данных при создании

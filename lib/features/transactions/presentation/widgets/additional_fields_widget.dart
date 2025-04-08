@@ -158,8 +158,8 @@ class AdditionalFieldsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final transactionState = ref.watch(transactionControllerProvider);
-    final transactionController = ref.read(transactionControllerProvider.notifier);
+    final transactionState = ref.watch(transactionCreateControllerProvider);
+    final transactionCreateController = ref.read(transactionCreateControllerProvider.notifier);
 
     // --- Подготовка данных для пикеров ---
 
@@ -217,7 +217,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
               items: accountPickerItems,
               currentItemId: transactionState.accountId ?? 1,
               onSelectedItemChanged: (selectedAccountId) {
-                transactionController.updateAccount(selectedAccountId);
+                transactionCreateController.updateAccount(selectedAccountId);
               },
             ),
           ),
@@ -235,7 +235,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
               items: projectPickerItems,
               currentItemId: transactionState.projectId ?? 1,
               onSelectedItemChanged: (selectedProjectId) {
-                transactionController.updateProject(selectedProjectId);
+                transactionCreateController.updateProject(selectedProjectId);
               },
             ),
           ),
@@ -263,7 +263,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
                     selectedDate.year, selectedDate.month, selectedDate.day,
                     currentTime.hour, currentTime.minute
                 );
-                transactionController.updateDate(newDateTime);
+                transactionCreateController.updateDate(newDateTime);
               },
             ),
           ),
