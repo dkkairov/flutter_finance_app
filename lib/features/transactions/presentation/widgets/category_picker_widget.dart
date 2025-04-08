@@ -56,7 +56,7 @@ class CategoryPickerWidget extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 320,
+          height: 300,
           child: PageView.builder(
             controller: _pageController,
             itemCount: pageCount,

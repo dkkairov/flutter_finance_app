@@ -13,28 +13,26 @@ class SumViewWidget extends ConsumerWidget {
     final raw = ref.read(transactionControllerProvider.notifier).rawAmount;
     final formatted = _formatCurrency(raw);
 
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Expanded(flex: 1, child: SizedBox()),
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(formatted, style: AppTextStyles.normalLarge),
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Expanded(flex: 1, child: SizedBox()),
+        Expanded(
+          flex: 2,
+          child: Center(
+            child: Text(formatted, style: AppTextStyles.normalLarge),
           ),
-          Expanded(
-            flex: 1,
-            child: IconButton(
-              onPressed: () {
-                ref.read(transactionControllerProvider.notifier).deleteLastDigit();
-              },
-              icon: const Icon(Icons.backspace),
-            ),
+        ),
+        Expanded(
+          flex: 1,
+          child: IconButton(
+            onPressed: () {
+              ref.read(transactionControllerProvider.notifier).deleteLastDigit();
+            },
+            icon: const Icon(Icons.backspace),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
