@@ -66,7 +66,7 @@ class TransactionCreateController extends StateNotifier<TransactionEntity> {
 
   /// Обновляет ID категории транзакции.
   /// Если сумма уже введена (> 0), пытается создать транзакцию.
-  void updateCategory(int categoryId) {
+  void updateTransactionCategory(int categoryId) {
     state = state.copyWith(transactionCategoryId: categoryId);
     debugPrint('State updated - Category ID: ${state.transactionCategoryId}'); // Для отладки
     // Проверяем, есть ли сумма, прежде чем сохранять

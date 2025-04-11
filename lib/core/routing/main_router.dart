@@ -5,7 +5,7 @@ import 'package:flutter_app_1/features/transactions/presentation/screens/transac
 import '../../features/main/presentation/main_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
-import '../../features/categories/presentation/categories_screen.dart';
+import '../../features/transaction_categories/presentation/transaction_categories_screen.dart';
 
 class MainRouter {
   static const String initialRoute = '/';
@@ -22,8 +22,8 @@ class MainRouter {
         return MaterialPageRoute(builder: (_) => TransactionsScreen());
       case '/transactions/create':
         return MaterialPageRoute(builder: (_) => TransactionCreateScreen());
-      case '/categories':
-        return MaterialPageRoute(builder: (_) => CategoriesScreen());
+      case '/transaction_categories':
+        return MaterialPageRoute(builder: (_) => TransactionCategoriesScreen());
       case '/accounts':
         return FadeRoute(page: AccountsScreen());
       default:
@@ -62,8 +62,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       return FadeRoute(page: TransactionsScreen());
     case '/transactions/create':
       return MaterialPageRoute(builder: (_) => TransactionCreateScreen());
-    case '/categories':
-      return FadeRoute(page: CategoriesScreen());
+    case '/transaction_categories':
+      return FadeRoute(page: TransactionCategoriesScreen());
     case '/accounts':
       return FadeRoute(page: AccountsScreen());
     default:

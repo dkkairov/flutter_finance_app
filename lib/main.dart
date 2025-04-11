@@ -83,7 +83,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     final themeMode = themeModeAsync.value ?? ThemeMode.system;
 
     return MaterialApp(
-      title: 'Финансовый учёт',
+      title: 'Fin16',
       theme: ThemeManager.lightTheme,
       darkTheme: ThemeManager.darkTheme,
       themeMode: themeMode,

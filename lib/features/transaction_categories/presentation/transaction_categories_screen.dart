@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../features/categories/data/category_provider.dart';
 
-class CategoriesScreen extends ConsumerWidget {
+import '../data/transaction_category_provider.dart';
+
+class TransactionCategoriesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = ref.watch(categoriesProvider);
-    final categoriesNotifier = ref.read(categoriesProvider.notifier);
+    final transactionCategories = ref.watch(transactionCategoriesProvider);
+    final categoriesNotifier = ref.read(transactionCategoriesProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -15,21 +16,21 @@ class CategoriesScreen extends ConsumerWidget {
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () async {
-              await categoriesNotifier.fetchCategories();
+              await categoriesNotifier.fetchTransactionCategories();
             },
           ),
         ],
       ),
       body: ListView.builder(
-        itemCount: categories.length,
+        itemCount: transactionCategories.length,
         itemBuilder: (context, index) {
-          final category = categories[index];
+          final category = transactionCategories[index];
           return ListTile(
             title: Text(category),
             trailing: IconButton(
               icon: Icon(Icons.delete),
               onPressed: () async {
-                await categoriesNotifier.deleteCategory(category);
+                await categoriesNotifier.deleteTransactionCategory(category);
               },
             ),
           );
