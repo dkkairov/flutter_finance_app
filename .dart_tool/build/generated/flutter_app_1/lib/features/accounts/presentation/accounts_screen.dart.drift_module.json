@@ -1,0 +1,16 @@
+{
+  "elements": {},
+  "imports": [
+    "package:easy_localization/easy_localization.dart",
+    "package:flutter/material.dart",
+    "package:flutter_app_1/common/widgets/custom_divider.dart",
+    "package:flutter_app_1/common/widgets/custom_list_view/custom_list_view_separated.dart",
+    "package:flutter_app_1/common/widgets/custom_list_view/custom_list_item.dart",
+    "package:flutter_app_1/common/widgets/custom_floating_action_button.dart",
+    "package:flutter_app_1/features/accounts/domain/models/account.dart",
+    "package:flutter_app_1/core/theme/custom_colors.dart",
+    "package:flutter_app_1/core/theme/custom_text_styles.dart",
+    "package:flutter_app_1/features/accounts/presentation/account_screen.dart",
+    "package:flutter_app_1/generated/locale_keys.g.dart"
+  ]
+}

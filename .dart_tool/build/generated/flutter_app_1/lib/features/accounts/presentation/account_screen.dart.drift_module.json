@@ -1,0 +1,14 @@
+{
+  "elements": {},
+  "imports": [
+    "package:easy_localization/easy_localization.dart",
+    "package:flutter/material.dart",
+    "package:flutter_app_1/features/accounts/presentation/widgets/edit_account_bottom_sheet.dart",
+    "package:flutter_app_1/core/theme/custom_colors.dart",
+    "package:flutter_app_1/core/theme/custom_text_styles.dart",
+    "package:flutter_app_1/common/widgets/custom_divider.dart",
+    "package:flutter_app_1/features/transactions/presentation/widgets/transaction_list_widget.dart",
+    "package:flutter_app_1/features/accounts/domain/models/account.dart",
+    "package:flutter_app_1/generated/locale_keys.g.dart"
+  ]
+}

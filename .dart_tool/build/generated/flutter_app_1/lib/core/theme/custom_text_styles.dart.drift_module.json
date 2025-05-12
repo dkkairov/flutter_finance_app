@@ -1,0 +1,7 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/material.dart",
+    "package:flutter_app_1/core/theme/custom_colors.dart"
+  ]
+}

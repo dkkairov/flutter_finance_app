@@ -1,0 +1,15 @@
+{
+  "elements": {},
+  "imports": [
+    "package:easy_localization/easy_localization.dart",
+    "package:flutter/material.dart",
+    "package:flutter_app_1/common/widgets/custom_floating_action_button.dart",
+    "package:flutter_app_1/features/teams/presentation/screens/show_team_screen.dart",
+    "package:flutter_riverpod/flutter_riverpod.dart",
+    "package:flutter_app_1/common/widgets/custom_list_view/custom_list_item.dart",
+    "package:flutter_app_1/common/widgets/custom_list_view/custom_list_view_separated.dart",
+    "package:flutter_app_1/generated/locale_keys.g.dart",
+    "package:flutter_app_1/features/teams/presentation/providers/team_provider.dart",
+    "package:flutter_app_1/features/teams/presentation/screens/create_team_screen.dart"
+  ]
+}

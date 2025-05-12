@@ -1,0 +1,14 @@
+{
+  "elements": {},
+  "imports": [
+    "package:easy_localization/easy_localization.dart",
+    "package:flutter/material.dart",
+    "package:flutter_riverpod/flutter_riverpod.dart",
+    "package:flutter_app_1/common/widgets/custom_floating_action_button.dart",
+    "package:flutter_app_1/common/widgets/custom_list_view/custom_list_item.dart",
+    "package:flutter_app_1/common/widgets/custom_list_view/custom_list_view_separated.dart",
+    "package:flutter_app_1/features/projects/data/domain/project.dart",
+    "package:flutter_app_1/features/projects/presentation/edit_project_screen.dart",
+    "package:flutter_app_1/generated/locale_keys.g.dart"
+  ]
+}

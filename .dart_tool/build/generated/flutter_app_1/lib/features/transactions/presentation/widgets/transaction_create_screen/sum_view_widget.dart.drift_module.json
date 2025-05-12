@@ -1,0 +1,10 @@
+{
+  "elements": {},
+  "imports": [
+    "package:easy_localization/easy_localization.dart",
+    "package:flutter/material.dart",
+    "package:flutter_riverpod/flutter_riverpod.dart",
+    "package:flutter_app_1/core/theme/custom_text_styles.dart",
+    "package:flutter_app_1/features/transactions/presentation/providers/transaction_controller.dart"
+  ]
+}

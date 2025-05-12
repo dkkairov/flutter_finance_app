@@ -1,0 +1,15 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/foundation.dart",
+    "package:flutter_riverpod/flutter_riverpod.dart",
+    "package:flutter_app_1/features/transactions/data/repositories/transaction_repository.dart",
+    "package:flutter_app_1/features/transactions/data/data_sources/transaction_local_data_source.dart",
+    "package:flutter_app_1/features/transactions/data/data_sources/transaction_remote_data_source.dart",
+    "package:flutter_app_1/core/services/offline_sync_service.dart",
+    "package:flutter_app_1/features/transactions/domain/models/transaction_entity.dart",
+    "package:flutter_app_1/core/api/dio_provider.dart",
+    "package:flutter_app_1/core/db/app_database.dart",
+    "package:flutter_app_1/core/network/network_status_notifier.dart"
+  ]
+}

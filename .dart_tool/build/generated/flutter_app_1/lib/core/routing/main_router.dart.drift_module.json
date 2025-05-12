@@ -1,0 +1,12 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/material.dart",
+    "package:flutter_app_1/features/accounts/presentation/accounts_screen.dart",
+    "package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart",
+    "package:flutter_app_1/features/main/presentation/main_screen.dart",
+    "package:flutter_app_1/features/auth/presentation/login_screen.dart",
+    "package:flutter_app_1/features/auth/presentation/register_screen.dart",
+    "package:flutter_app_1/features/transaction_categories/presentation/transaction_categories_screen.dart"
+  ]
+}

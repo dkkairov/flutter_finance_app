@@ -1,0 +1,9 @@
+{
+  "elements": {},
+  "imports": [
+    "package:dio/dio.dart",
+    "package:drift/drift.dart",
+    "package:flutter_app_1/core/db/app_database.dart",
+    "package:flutter_app_1/core/network/network_status_notifier.dart"
+  ]
+}

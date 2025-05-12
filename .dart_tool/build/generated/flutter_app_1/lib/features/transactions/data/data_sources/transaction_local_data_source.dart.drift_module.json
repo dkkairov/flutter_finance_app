@@ -1,0 +1,9 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/foundation.dart",
+    "package:flutter_app_1/core/db/app_database.dart",
+    "package:flutter_app_1/features/transactions/utils/transaction_mapper.dart",
+    "package:flutter_app_1/features/transactions/domain/models/transaction_entity.dart"
+  ]
+}

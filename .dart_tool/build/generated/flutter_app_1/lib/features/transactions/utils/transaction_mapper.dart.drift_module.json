@@ -1,0 +1,11 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/material.dart",
+    "package:drift/drift.dart",
+    "package:flutter_app_1/core/db/app_database.dart",
+    "package:flutter_app_1/features/transactions/domain/models/transaction_dto.dart",
+    "package:flutter_app_1/features/transactions/domain/models/transaction_entity.dart",
+    "package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart"
+  ]
+}
