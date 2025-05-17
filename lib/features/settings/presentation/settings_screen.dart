@@ -7,6 +7,8 @@ import '../../../common/widgets/custom_picker_fields/picker_item.dart';
 import '../../../common/widgets/custom_show_modal_bottom_sheet.dart';
 import '../../../core/theme/custom_colors.dart';
 import '../../../generated/locale_keys.g.dart';
+import '../../currencies/data/models/currency_model.dart';
+import '../../currencies/presentation/providers/currency_providers.dart';
 import '../../teams/presentation/screens/teams_screen.dart';
 import 'categories_screen.dart';
 import 'delete_options_screen.dart';
@@ -17,7 +19,8 @@ final settingsProvider = Provider((ref) => SettingsNotifier());
 final themeModeProvider = StateProvider((ref) => ThemeMode.system);
 final themeModeControllerProvider = Provider((ref) => ThemeModeController(ref));
 final selectedLocaleProvider = StateProvider<Locale>((ref) => const Locale('ru', 'RU'));
-final selectedCurrencyProvider = StateProvider((ref) => '₸ Тенге (KZT)');
+final selectedCurrencyProvider = StateProvider<CurrencyModel?>((ref) => null);
+
 
 class ThemeModeController {
   final Ref ref;
@@ -61,25 +64,23 @@ class SettingsNotifier {
   }
 
   Future<void> showCurrencySelectionBottomSheet(BuildContext context, WidgetRef ref) async {
-    print('Показать BottomSheet выбора валюты');
-    final availableCurrencies = [
-      '₸ ${LocaleKeys.tenge.tr()} (KZT)',
-      '\$ ${LocaleKeys.dollar.tr()} (USD)',
-      '€ ${LocaleKeys.euro.tr()} (EUR)'
-    ]; // Заглушка
+    final currenciesAsync = await ref.read(currenciesProvider.future);
 
-    final pickedCurrency = await customShowModalBottomSheet<String>(
+    final pickedCurrency = await customShowModalBottomSheet<CurrencyModel>(
       context: context,
       title: LocaleKeys.selectCurrency.tr(),
       type: 'line',
-      items: availableCurrencies
-          .map((currency) => PickerItem<String>(id: currency, displayValue: currency))
+      items: currenciesAsync
+          .map((c) => PickerItem<CurrencyModel>(
+        id: c,
+        displayValue: '${c.symbol} ${c.name} (${c.code})',
+      ))
           .toList(),
     );
 
     if (pickedCurrency != null) {
       ref.read(selectedCurrencyProvider.notifier).state = pickedCurrency.id;
-      // TODO: Здесь будет логика сохранения валюты в настройки
+      // TODO: сохранить валюту в SharedPreferences, если нужно
     }
   }
 
@@ -158,7 +159,9 @@ class SettingsScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              selectedCurrency,
+              selectedCurrency != null
+                  ? '${selectedCurrency.symbol} ${selectedCurrency.name} (${selectedCurrency.code})'
+                  : '-',
             ),
             const Icon(Icons.chevron_right, color: CustomColors.mainGrey),
           ],
