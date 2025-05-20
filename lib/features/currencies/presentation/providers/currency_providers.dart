@@ -1,15 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/data_sources/currency_api.dart';
-import '../../data/models/currency_model.dart';
-import '../../../../core/api/dio_provider.dart';
-import '../../data/repositories/currency_repository_impl.dart';
-import '../../domain/currency_repository.dart'; // Провайдер Dio
+import 'package:dio/dio.dart';
 
-final currencyApiProvider = Provider((ref) => CurrencyApi(ref.read(dioProvider)));
-final currencyRepositoryProvider = Provider<CurrencyRepository>(
-      (ref) => CurrencyRepositoryImpl(ref.read(currencyApiProvider)),
+import '../../data/models/currency_model.dart';
+import '../../data/repositories/currency_repository.dart';
+
+final dioProvider = Provider((ref) => Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8000')));
+
+final currencyRepositoryProvider = Provider(
+      (ref) => CurrencyRepository(ref.watch(dioProvider)),
 );
 
+// Возвращает Future<List<CurrencyModel>>
 final currenciesProvider = FutureProvider<List<CurrencyModel>>((ref) async {
-  return ref.read(currencyRepositoryProvider).getCurrencies();
+  final repo = ref.watch(currencyRepositoryProvider);
+  final token = '2|veKU80pgY9vElZi64CwVzU9Zb7i6nEfSEDNnlVaJ84b30191'; // Лучше получать из secure storage/authProvider
+  return await repo.fetchCurrencies(token: token);
 });

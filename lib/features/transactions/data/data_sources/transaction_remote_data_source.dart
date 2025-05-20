@@ -13,7 +13,7 @@ class TransactionRemoteDataSource {
   Future<List<TransactionDto>> fetchTransactions() async {
     debugPrint('➡️ TransactionRemoteDataSource.fetchTransactions() вызван');
     try {
-      final response = await dio.get('/api/transactions');
+      final response = await dio.get('/api/currencies');
       debugPrint('⬅️ Ответ от API (статус ${response.statusCode}): ${response.data}');
       final data = response.data as List;
       return data

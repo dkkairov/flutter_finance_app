@@ -84,6 +84,7 @@ class SettingsNotifier {
     }
   }
 
+
   void navigateToProjectsScreen(BuildContext context) {
     Navigator.push(
       context,

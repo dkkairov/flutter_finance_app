@@ -18,7 +18,7 @@ void main() async {
   const storage = FlutterSecureStorage();
 
   // 🟡 ← вставь свой рабочий токен здесь:
-  const token = '1|SMlTOss7dXtAcl7AlVGGS6BtLoVhyz1DWdhVq6Lyd6f63529';
+  const token = '2|veKU80pgY9vElZi64CwVzU9Zb7i6nEfSEDNnlVaJ84b30191';
   await storage.write(key: 'token', value: token);
 
   final check = await storage.read(key: 'token');
