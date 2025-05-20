@@ -1,9 +1,17 @@
 // lib/features/auth/presentation/providers/auth_providers.dart
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/auth_repository.dart';
 
+// Провайдер Dio
+final dioProvider = Provider<Dio>((ref) {
+  return Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8000')); // или твой реальный baseUrl
+});
+
 // Провайдер репозитория авторизации
-final authRepositoryProvider = Provider<AuthRepository>((ref) => AuthRepository());
+final authRepositoryProvider = Provider<AuthRepository>(
+      (ref) => AuthRepository(dio: ref.read(dioProvider)),
+);
 
 // Провайдер состояния токена
 final authTokenProvider = StateProvider<String?>((ref) => null);

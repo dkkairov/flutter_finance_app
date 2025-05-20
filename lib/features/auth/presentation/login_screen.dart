@@ -28,16 +28,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      // 1. Вызови реальный login из репозитория
+      // Вызов реального login
       final token = await ref.read(authRepositoryProvider).login(
-        email: _emailController.text,
+        email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-
-      // 2. Сохрани токен
+      // Сохрани токен в хранилище (и в Riverpod, если нужно)
       await ref.read(authRepositoryProvider).saveToken(token);
-
-      // 3. Установи токен в Riverpod — теперь будет подставляться в Dio
       ref.read(authTokenProvider.notifier).state = token;
 
       if (context.mounted) {
@@ -53,6 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
