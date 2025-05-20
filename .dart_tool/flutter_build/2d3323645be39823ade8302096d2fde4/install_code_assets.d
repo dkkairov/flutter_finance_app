@@ -1,1 +1,0 @@
- C:\\Users\\d.kairov\\projects\\flutter_finance_app\\.dart_tool\\flutter_build\\2d3323645be39823ade8302096d2fde4\\native_assets.json: 

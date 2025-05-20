@@ -1,8 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:dio/dio.dart",
-    "package:flutter_riverpod/flutter_riverpod.dart",
-    "package:flutter_app_1/core/api/api_service.dart"
-  ]
-}

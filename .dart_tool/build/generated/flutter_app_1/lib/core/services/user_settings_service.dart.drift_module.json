@@ -1,9 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:flutter/material.dart",
-    "package:flutter_riverpod/flutter_riverpod.dart",
-    "package:flutter_app_1/features/transactions/presentation/providers/transaction_provider.dart",
-    "package:flutter_app_1/core/db/app_database.dart"
-  ]
-}

@@ -1,9 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:easy_localization/easy_localization.dart",
-    "package:flutter/material.dart",
-    "package:flutter_riverpod/flutter_riverpod.dart",
-    "package:flutter_app_1/generated/locale_keys.g.dart"
-  ]
-}

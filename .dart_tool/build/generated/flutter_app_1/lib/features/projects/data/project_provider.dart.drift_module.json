@@ -1,7 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:flutter_riverpod/flutter_riverpod.dart",
-    "package:flutter_app_1/features/projects/data/domain/project.dart"
-  ]
-}

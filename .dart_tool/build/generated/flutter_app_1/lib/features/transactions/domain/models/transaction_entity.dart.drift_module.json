@@ -1,7 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:freezed_annotation/freezed_annotation.dart",
-    "package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart"
-  ]
-}

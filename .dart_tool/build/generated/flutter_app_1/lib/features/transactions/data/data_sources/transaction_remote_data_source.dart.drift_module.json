@@ -1,8 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:dio/dio.dart",
-    "package:flutter/foundation.dart",
-    "package:flutter_app_1/features/transactions/domain/models/transaction_dto.dart"
-  ]
-}
