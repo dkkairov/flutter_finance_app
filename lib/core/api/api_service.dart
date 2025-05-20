@@ -2,7 +2,9 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
-import '../api/dio_provider.dart';
+import '../network/dio_provider.dart';
+
+
 
 final apiServiceProvider = Provider<ApiService>((ref) {
   final dio = ref.watch(dioProvider);

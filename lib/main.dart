@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'core/network/network_status_notifier.dart';
 import 'core/routing/main_router.dart';
+import 'features/auth/presentation/login_screen.dart';
+import 'features/auth/presentation/providers/auth_providers.dart';
 import 'features/common/providers/theme_provider.dart';
 import 'features/transactions/presentation/providers/transaction_provider.dart';
 import 'features/transactions/presentation/screens/transaction_create_screen.dart';
@@ -67,17 +69,27 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     final themeModeAsync = ref.watch(themeModeProvider);
     final themeMode = themeModeAsync.value ?? ThemeMode.system;
+    final init = ref.watch(authInitProvider);
 
-    return MaterialApp(
-      title: 'Fin16',
-      theme: ThemeManager.lightTheme,
-      darkTheme: ThemeManager.darkTheme,
-      themeMode: themeMode,
-      initialRoute: MainRouter.initialRoute,
-      onGenerateRoute: MainRouter.generateRoute,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
+    return init.when(
+      data: (_) {
+        final token = ref.watch(authTokenProvider);
+        return MaterialApp(
+          title: 'Fin16',
+          theme: ThemeManager.lightTheme,
+          darkTheme: ThemeManager.darkTheme,
+          themeMode: themeMode,
+          initialRoute: token == null ? MainRouter.loginRoute : MainRouter.initialRoute,
+          onGenerateRoute: MainRouter.generateRoute,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+        );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (e, _) => Center(child: Text('Ошибка запуска: $e')),
     );
+
+
   }
 }

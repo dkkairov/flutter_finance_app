@@ -8,6 +8,7 @@ import '../../features/transactions/presentation/screens/transaction_create_scre
 
 class MainRouter {
   static const String initialRoute = '/';
+  static const String loginRoute = '/login';
 
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {

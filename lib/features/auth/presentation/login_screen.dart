@@ -1,6 +1,7 @@
 // lib/features/auth/features/login_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
@@ -27,12 +28,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      // В реальном приложении: запрос к API
-      final token = 'mocked_token'; // Заглушка
+      // 1. Вызови реальный login из репозитория
+      final token = await ref.read(authRepositoryProvider).login(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      // 2. Сохрани токен
       await ref.read(authRepositoryProvider).saveToken(token);
 
+      // 3. Установи токен в Riverpod — теперь будет подставляться в Dio
+      ref.read(authTokenProvider.notifier).state = token;
+
       if (context.mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {
       setState(() {

@@ -4,6 +4,7 @@ import '../../../generated/locale_keys.g.dart';
 import '../../../features/common/theme/custom_colors.dart';
 import '../../../features/common/widgets/custom_list_view/custom_list_item.dart';
 import '../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
+import '../../auth/presentation/providers/auth_providers.dart';
 import '../../common/widgets/custom_picker_fields/picker_item.dart';
 import '../../common/widgets/custom_show_modal_bottom_sheet.dart';
 import '../../currencies/data/models/currency_model.dart';
@@ -61,6 +62,33 @@ class SettingsNotifier {
       print('Выбранный язык: ${pickedLocaleItem.id.languageCode}');
       // Здесь будет логика сохранения языка в настройки (например, в SharedPreferences)
     }
+
+    // --- Главный метод Logout ---
+    Future<void> logout(BuildContext context, WidgetRef ref) async {
+      // Подтверждение выхода
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Выйти из аккаунта?'),
+          content: const Text('Вы уверены, что хотите выйти из аккаунта?'),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
+            TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Выйти')),
+          ],
+        ),
+      );
+      if (confirm == true) {
+        await performLogout(ref);
+        if (context.mounted) {
+          // Очищаем стек и переходим на экран логина
+          Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+          // Можно добавить SnackBar:
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Вы вышли из аккаунта.')),
+          );
+        }
+      }
+    }
   }
 
   Future<void> showCurrencySelectionBottomSheet(BuildContext context, WidgetRef ref) async {
@@ -108,6 +136,32 @@ class SettingsNotifier {
       MaterialPageRoute(builder: (context) => const DeleteOptionsScreen()),
     );
     // Launch app store
+  }
+  // --- Главный метод Logout ---
+  Future<void> logout(BuildContext context, WidgetRef ref) async {
+    // Подтверждение выхода
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Выйти из аккаунта?'),
+        content: const Text('Вы уверены, что хотите выйти из аккаунта?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Выйти')),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      await performLogout(ref);
+      if (context.mounted) {
+        // Очищаем стек и переходим на экран логина
+        Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+        // Можно добавить SnackBar:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Вы вышли из аккаунта.')),
+        );
+      }
+    }
   }
 }
 
@@ -187,6 +241,27 @@ class SettingsScreen extends ConsumerWidget {
         'trailing': const Icon(Icons.chevron_right, color: CustomColors.mainGrey),
         'onTap': () => settings.navigateToDeleteProfileAndData(context),
       },
+      {
+      'icon': Icons.logout,
+      'title': 'Выйти из аккаунта',
+      'trailing': const Icon(Icons.chevron_right, color: CustomColors.mainGrey),
+        'onTap': () async {
+          final confirm = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Выйти из аккаунта?'),
+              content: const Text('Вы уверены, что хотите выйти из аккаунта?'),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
+                TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Выйти')),
+              ],
+            ),
+          );
+          if (confirm == true) {
+            await settings.logout(context, ref);
+          }
+        },
+      }
     ];
 
     return CustomListViewSeparated(

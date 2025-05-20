@@ -1,30 +1,25 @@
 // lib/features/auth/data/auth_repository.dart
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepository();
-});
-
 class AuthRepository {
-  static const _tokenKey = '2|veKU80pgY9vElZi64CwVzU9Zb7i6nEfSEDNnlVaJ84b30191';
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
 
   Future<void> saveToken(String token) async {
-    await _storage.write(key: _tokenKey, value: token);
+    await _storage.write(key: 'auth_token', value: token);
   }
 
   Future<String?> getToken() async {
-    return await _storage.read(key: _tokenKey);
+    return await _storage.read(key: 'auth_token');
   }
 
   Future<void> deleteToken() async {
-    await _storage.delete(key: _tokenKey);
+    await _storage.delete(key: 'auth_token');
   }
 
-  Future<bool> isAuthenticated() async {
-    final token = await getToken();
-    return token != null && token.isNotEmpty;
+  Future<String> login({required String email, required String password}) async {
+    // Тут вызов к API через Dio, возвращающий токен
+    // Для MVP-заглушки:
+    await Future.delayed(const Duration(seconds: 1));
+    return 'mocked_token';
   }
 }
