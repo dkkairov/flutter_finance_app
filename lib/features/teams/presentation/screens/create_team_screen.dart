@@ -1,10 +1,10 @@
-// lib/features/teams/presentation/screens/create_team_screen.dart
+// lib/features/teams/features/screens/create_team_screen.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../common/widgets/custom_buttons/custom_primary_button.dart';
-import '../../../../common/widgets/custom_text_form_field.dart';
 import '../../../../generated/locale_keys.g.dart';
+import '../../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../../common/widgets/custom_text_form_field.dart';
 import '../providers/team_provider.dart';
 
 class CreateTeamScreen extends ConsumerStatefulWidget {

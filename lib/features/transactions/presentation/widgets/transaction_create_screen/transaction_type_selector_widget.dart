@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/core/theme/custom_colors.dart';
-import 'package:flutter_app_1/core/theme/custom_text_styles.dart';
 import 'package:flutter_app_1/generated/locale_keys.g.dart';
+import '../../../../../features/common/theme/custom_colors.dart';
+import '../../../../../features/common/theme/custom_text_styles.dart';
 import '../../screens/transaction_create_screen.dart';
 
 class TransactionTypeSelectorWidget extends StatelessWidget {

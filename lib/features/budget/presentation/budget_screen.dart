@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app_1/core/theme/custom_colors.dart';
-
-import '../../../common/widgets/custom_draggable_scrollable_sheet.dart';
-import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
-import '../../../common/widgets/custom_text_form_field.dart';
-import '../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
+import '../../../generated/locale_keys.g.dart';
+import '../../../features/common/theme/custom_colors.dart';
+import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../common/widgets/custom_draggable_scrollable_sheet.dart';
+import '../../common/widgets/custom_text_form_field.dart'; // Импорт LocaleKeys
 
 class BudgetScreen extends StatefulWidget {
   @override

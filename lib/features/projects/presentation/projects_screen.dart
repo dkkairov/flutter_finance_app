@@ -1,10 +1,10 @@
-// lib/features/projects/presentation/screens/projects_screen.dart
+// lib/features/projects/features/screens/projects_screen.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/widgets/custom_floating_action_button.dart';
-import '../../../common/widgets/custom_list_view/custom_list_item.dart';
-import '../../../common/widgets/custom_list_view/custom_list_view_separated.dart';
+import '../../common/widgets/custom_floating_action_button.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
 import '../data/domain/project.dart';
 import 'edit_project_screen.dart';
 import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys

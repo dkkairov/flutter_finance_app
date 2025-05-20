@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/custom_colors.dart';
-import '../../../core/theme/custom_text_styles.dart';
+import '../../theme/custom_colors.dart';
+import '../../theme/custom_text_styles.dart';
 
 class CustomPrimaryPickerField extends StatelessWidget {
   final BuildContext context;

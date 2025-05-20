@@ -1,12 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_divider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Если используете Riverpod
-
-// Предполагается, что стили и цвета доступны
-import '../../../../common/widgets/custom_draggable_scrollable_sheet.dart';
-import '../../../../common/widgets/custom_buttons/custom_primary_button.dart';
-import '../../../../common/widgets/custom_text_form_field.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../../common/widgets/custom_draggable_scrollable_sheet.dart';
+import '../../../common/widgets/custom_text_form_field.dart';
 import '../../domain/models/account.dart';
 import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
 

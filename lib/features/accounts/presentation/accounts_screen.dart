@@ -1,14 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_divider.dart';
-import 'package:flutter_app_1/common/widgets/custom_list_view/custom_list_view_separated.dart';
-import 'package:flutter_app_1/common/widgets/custom_list_view/custom_list_item.dart';
 // !!! ИМПОРТИРУЕМ ОБЩУЮ МОДЕЛЬ Account из доменного слоя
 // !!! Импортируем AccountScreen
-import '../../../common/widgets/custom_floating_action_button.dart';
+import '../../../features/common/theme/custom_colors.dart';
+import '../../../features/common/theme/custom_text_styles.dart';
+import '../../common/widgets/custom_divider.dart';
+import '../../common/widgets/custom_floating_action_button.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
 import '../domain/models/account.dart';
-import '../../../core/theme/custom_colors.dart'; // Убедитесь, что путь правильный
-import '../../../core/theme/custom_text_styles.dart';
 import 'account_screen.dart'; // Убедитесь, что путь правильный
 import '../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
 

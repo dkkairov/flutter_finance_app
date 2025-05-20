@@ -1,11 +1,11 @@
-// lib/features/accounts/presentation/account_screen.dart
+// lib/features/accounts/features/account_screen.dart
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/accounts/presentation/widgets/edit_account_bottom_sheet.dart';
-import '../../../../core/theme/custom_colors.dart';
-import '../../../../core/theme/custom_text_styles.dart';
-import '../../../../common/widgets/custom_divider.dart';
+import '../../common/theme/custom_colors.dart';
+import '../../common/theme/custom_text_styles.dart';
+import '../../common/widgets/custom_divider.dart';
 import '../../transactions/presentation/widgets/transaction_list_widget.dart';
 import '../domain/models/account.dart';
 import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys

@@ -1,13 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_list_view/custom_list_view_separated.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
-import '../../../common/widgets/custom_floating_action_button.dart';
-import '../../../common/widgets/custom_list_view/custom_list_item.dart';
-import '../../../common/widgets/custom_text_form_field.dart';
-import '../../../../generated/locale_keys.g.dart'; // Import LocaleKeys
+import '../../../../generated/locale_keys.g.dart';
+import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../common/widgets/custom_floating_action_button.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
+import '../../common/widgets/custom_text_form_field.dart'; // Import LocaleKeys
 
 // --- Riverpod Providers (Stubs) ---
 final expenseCategoriesProvider = Provider((ref) => ExpenseCategoriesNotifier());

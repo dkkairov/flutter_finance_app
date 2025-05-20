@@ -1,7 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/transactions/presentation/widgets/transaction_create_screen/sum_view_widget.dart';
-import 'package:flutter_app_1/features/transactions/presentation/widgets/transaction_create_screen/transaction_type_selector_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../../main.dart'; // Убедитесь, что этот импорт правильный для transactionTypeProvider
@@ -10,6 +8,8 @@ import '../providers/transaction_controller.dart';
 import '../widgets/transaction_create_screen/additional_fields_widget.dart';
 import '../widgets/transaction_create_screen/category_picker_widget.dart';
 import '../widgets/transaction_create_screen/numeric_keypad_widget.dart';
+import '../widgets/transaction_create_screen/sum_view_widget.dart';
+import '../widgets/transaction_create_screen/transaction_type_selector_widget.dart';
 import '../widgets/transaction_create_screen/transfer_accounts_selector_widget.dart'; // Импортируем новый виджет
 
 enum TransactionType { expense, income, transfer}

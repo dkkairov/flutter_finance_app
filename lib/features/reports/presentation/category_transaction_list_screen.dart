@@ -1,26 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-// Убедитесь, что путь к bottom sheet'у правильный (если он используется)
-import 'package:flutter_app_1/features/accounts/presentation/widgets/edit_account_bottom_sheet.dart';
-// Убедитесь, что пути к темам и разделителю правильные
-import '../../../../core/theme/custom_colors.dart';
-import '../../../../core/theme/custom_text_styles.dart';
-import '../../../../common/widgets/custom_divider.dart'; // Предполагается, что CustomDivider доступен
-import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
-
-// !!! ИМПОРТИРУЕМ ОБЩУЮ МОДЕЛЬ Account из доменного слоя
-
-
-// !!! ИМПОРТИРУЕМ ЭКРАН ДЕТАЛЕЙ ТРАНЗАКЦИИ (ЗАГЛУШКА)
-// Убедитесь, что путь правильный.
-
-import '../../../common/widgets/custom_amount_text.dart';
-import '../../transactions/presentation/screens/transaction_detail_screen.dart';
+import '../../../../generated/locale_keys.g.dart';
+import '../../../features/common/theme/custom_colors.dart';
+import '../../../features/common/theme/custom_text_styles.dart';
+import '../../../features/common/widgets/custom_divider.dart';
 import '../../transactions/presentation/widgets/transaction_list_widget.dart';
-
-
-
-
 
 // Экран деталей счета
 class CategoryTransactionListScreen extends StatelessWidget {

@@ -1,15 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_picker_fields/custom_primary_picker_field.dart';
-import 'package:flutter_app_1/common/widgets/custom_buttons/custom_primary_button.dart';
-import 'package:flutter_app_1/common/widgets/custom_text_form_field.dart';
-import 'package:flutter_app_1/common/widgets/custom_picker_fields/picker_item.dart';
-// Убедитесь, что пути к темам правильные
-import '../../../../core/theme/custom_colors.dart';
-import '../../../../core/theme/custom_text_styles.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../../accounts/presentation/account_screen.dart';
-import '../../../../common/widgets/custom_show_modal_bottom_sheet.dart';
+import '../../../../features/common/theme/custom_colors.dart';
+import '../../../../features/common/theme/custom_text_styles.dart';
+import '../../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../../common/widgets/custom_picker_fields/custom_primary_picker_field.dart';
+import '../../../common/widgets/custom_picker_fields/picker_item.dart';
+import '../../../common/widgets/custom_show_modal_bottom_sheet.dart';
+import '../../../common/widgets/custom_text_form_field.dart';
 import '../widgets/transaction_list_widget.dart';
 
 // !!! ИМПОРТИРУЕМ ОБЩУЮ МОДЕЛЬ ТРАНЗАКЦИИ (ЗАГЛУШКА), которую мы создали ранее

@@ -1,14 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/core/theme/custom_colors.dart';
-import 'package:flutter_app_1/core/theme/custom_text_styles.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../../../../../features/common/theme/custom_colors.dart';
+import '../../../../../features/common/theme/custom_text_styles.dart';
+import '../../../../common/widgets/custom_picker_fields/picker_item.dart';
+import '../../../../common/widgets/custom_show_modal_bottom_sheet.dart';
 import '../../../../accounts/domain/models/account.dart';
-import '../../../../../common/widgets/custom_picker_fields/picker_item.dart'; // Импортируем PickerItem
-import '../../../../../common/widgets/custom_show_modal_bottom_sheet.dart'; // Импортируем showItemPickerBottomSheet
 import '../../../../../generated/locale_keys.g.dart';
-import '../../providers/transaction_controller.dart'; // Импортируем контроллер транзакций
+import '../../providers/transaction_controller.dart';
 
 // Предполагаемая модель счета. Замените на вашу реальную модель!
 // class Account {

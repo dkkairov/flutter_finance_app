@@ -1,10 +1,10 @@
-// lib/features/settings/presentation/screens/delete_options_screen.dart
+// lib/features/settings/features/screens/delete_options_screen.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/widgets/custom_list_view/custom_list_item.dart';
-import '../../../common/widgets/custom_list_view/custom_list_view_separated.dart';
-import '../../../../generated/locale_keys.g.dart'; // Import LocaleKeys
+import '../../../../generated/locale_keys.g.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart'; // Import LocaleKeys
 
 class DeleteOptionsScreen extends ConsumerWidget {
   const DeleteOptionsScreen({super.key});

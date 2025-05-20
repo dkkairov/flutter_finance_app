@@ -1,12 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_list_view/custom_list_view_separated.dart';
-// Убедитесь, что пути к темам правильные
-import '../../../../core/theme/custom_colors.dart';
-import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
-
-// !!! ИМПОРТИРУЕМ ЭКРАН ОТЧЕТА ПО КАТЕГОРИЯМ
-import '../../../common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../../generated/locale_keys.g.dart';
+import '../../../features/common/theme/custom_colors.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
 import 'category_report_screen.dart'; // Убедитесь, что путь правильный
 
 // TODO: Создать и импортировать экран отчета по проектам (заглушку)

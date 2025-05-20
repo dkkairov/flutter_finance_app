@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/accounts/presentation/accounts_screen.dart';
-import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
-import '../../features/main_screen.dart';
+import '../../features/accounts/presentation/accounts_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
+import '../../features/main_screen.dart';
 import '../../features/transaction_categories/presentation/transaction_categories_screen.dart';
+import '../../features/transactions/presentation/screens/transaction_create_screen.dart';
 
 class MainRouter {
   static const String initialRoute = '/';

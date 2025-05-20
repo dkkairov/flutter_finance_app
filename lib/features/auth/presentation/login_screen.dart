@@ -1,9 +1,9 @@
-// lib/features/auth/presentation/login_screen.dart
+// lib/features/auth/features/login_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_buttons/custom_primary_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
 import '../data/auth_repository.dart';
 // import '../../../core/repository/auth_repository.dart';
 

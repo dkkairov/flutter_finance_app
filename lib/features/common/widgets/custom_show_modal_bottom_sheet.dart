@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_list_view/custom_list_view_separated.dart';
+import 'custom_list_view/custom_list_view_separated.dart';
 import 'custom_picker_fields/picker_item.dart';
 import 'custom_list_view/custom_list_item.dart';
 

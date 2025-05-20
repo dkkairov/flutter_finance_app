@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-// Убедитесь, что пути к стилям и цветам правильные
-import '../../../core/theme/custom_text_styles.dart';
-import '../../../core/theme/custom_colors.dart';
+
+import '../../theme/custom_colors.dart';
+import '../../theme/custom_text_styles.dart';
 
 /// A reusable widget for displaying a standard list item with consistent styling.
 ///

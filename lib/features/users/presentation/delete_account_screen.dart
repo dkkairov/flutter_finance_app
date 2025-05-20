@@ -1,9 +1,8 @@
-// lib/features/settings/presentation/screens/delete_account_screen.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
 import '../../../../generated/locale_keys.g.dart';
+import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
 
 class DeleteAccountScreen extends ConsumerWidget {
   const DeleteAccountScreen({super.key});

@@ -1,15 +1,13 @@
-// lib/features/teams/presentation/widgets/team_selector_bottom_sheet.dart
+// lib/features/teams/features/widgets/team_selector_bottom_sheet.dart
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../common/widgets/custom_divider.dart';
-import '../../../../core/theme/custom_colors.dart';
-import '../../../../core/theme/custom_text_styles.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../../teams/domain/models/team.dart'; // Импорт модели Team
-import '../../../teams/presentation/providers/team_provider.dart'; // Импорт teamProvider и selectedTeamProvider
-// Убедитесь, что пути к AppColors и AppTextStyles правильные
+import '../../../../features/common/theme/custom_colors.dart';
+import '../../../../features/common/theme/custom_text_styles.dart';
+import '../../../../features/common/widgets/custom_divider.dart';
+import '../providers/team_provider.dart';
 
 
 // Этот виджет будет содержимым DraggableScrollableSheet

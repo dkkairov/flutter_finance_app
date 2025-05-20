@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
+import 'package:flutter_app_1/features/common/theme/theme_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'common/providers/theme_provider.dart';
 import 'core/network/network_status_notifier.dart';
 import 'core/routing/main_router.dart';
-import 'core/theme/theme_manager.dart';
+import 'features/common/providers/theme_provider.dart';
 import 'features/transactions/presentation/providers/transaction_provider.dart';
+import 'features/transactions/presentation/screens/transaction_create_screen.dart';
 import 'generated/codegen_loader.g.dart';
 
 

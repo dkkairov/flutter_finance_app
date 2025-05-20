@@ -1,15 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/transactions/presentation/widgets/transaction_list_widget.dart';
-// Убедитесь, что пути к темам правильные
-import '../../../../core/theme/custom_colors.dart';
-import '../../../../core/theme/custom_text_styles.dart';
 import 'package:intl/intl.dart'; // Потребуется для форматирования даты
 import 'package:fl_chart/fl_chart.dart'; // Импорт fl_chart
 import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
 
 // TODO: Импортировать экран списка транзакций по категории (заглушку)
+import '../../../features/common/theme/custom_colors.dart';
+import '../../../features/common/theme/custom_text_styles.dart';
 import 'category_transaction_list_screen.dart'; // Убедитесь, что путь правильный
 
 

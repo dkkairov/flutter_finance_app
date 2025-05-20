@@ -1,5 +1,5 @@
 class CurrencyModel {
-  final int id; // TODO: Поменять на UUID (String)
+  final String id;
   final String code;
   final String name;
   final String symbol;
@@ -13,7 +13,7 @@ class CurrencyModel {
 
   factory CurrencyModel.fromJson(Map<String, dynamic> json) {
     return CurrencyModel(
-      id: json['id'],
+      id: json['id'] as String,
       code: json['code'] as String,
       name: json['name'] as String,
       symbol: json['symbol'] as String,

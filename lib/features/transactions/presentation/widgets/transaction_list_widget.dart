@@ -1,11 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../common/widgets/custom_amount_text.dart';
-import '../../../../common/widgets/custom_divider.dart';
-import '../../../../core/theme/custom_colors.dart';
-import '../../../../core/theme/custom_text_styles.dart';
-import '../../../../generated/locale_keys.g.dart';
+import '../../../../features/common/theme/custom_colors.dart';
+import '../../../../features/common/theme/custom_text_styles.dart';
+import '../../../common/widgets/custom_amount_text.dart';
+import '../../../common/widgets/custom_divider.dart';
 import '../screens/transaction_detail_screen.dart';
 
 

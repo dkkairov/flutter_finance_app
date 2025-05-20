@@ -1,13 +1,13 @@
-// lib/features/teams/presentation/screens/user_details_screen.dart
+// lib/features/teams/features/screens/user_details_screen.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
-import '../../../common/widgets/custom_picker_fields/custom_primary_picker_field.dart';
-import '../../../common/widgets/custom_show_modal_bottom_sheet.dart';
-import '../../../common/widgets/custom_picker_fields/picker_item.dart';
 import '../../../core/models/user.dart';
 import '../../../../generated/locale_keys.g.dart';
+import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../common/widgets/custom_picker_fields/custom_primary_picker_field.dart';
+import '../../common/widgets/custom_picker_fields/picker_item.dart';
+import '../../common/widgets/custom_show_modal_bottom_sheet.dart';
 
 class UserDetailsScreen extends ConsumerStatefulWidget {
   final User user;

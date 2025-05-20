@@ -1,7 +1,8 @@
-// lib/features/auth/presentation/register_screen.dart
+// lib/features/auth/features/register_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_buttons/custom_primary_button.dart';
+
+import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

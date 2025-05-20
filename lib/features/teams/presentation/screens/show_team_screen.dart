@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../common/widgets/custom_list_view/custom_list_item.dart';
-import '../../../../common/widgets/custom_list_view/custom_list_view_separated.dart';
 import '../../../../core/models/user.dart';
 import '../../../../generated/locale_keys.g.dart';
+import '../../../../features/common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
 import '../../../users/presentation/user_details_screen.dart';
 import '../../domain/models/team.dart';
 import 'edit_team_screen.dart';

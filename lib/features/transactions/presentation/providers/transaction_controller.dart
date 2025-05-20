@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart'; // Для debugPrint
+import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/transactions/presentation/providers/transaction_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// !!! Убедитесь, что импорты моделей и репозитория правильные
 import 'package:flutter_app_1/features/transactions/domain/models/transaction_entity.dart'; // Путь к вашей ОБНОВЛЕННОЙ модели
 import 'package:flutter_app_1/features/transactions/data/repositories/transaction_repository.dart'; // Путь к вашему репозиторию
-// !!! Убедитесь, что импорт TransactionType правильный
 import '../screens/transaction_create_screen.dart'; // Путь к вашему enum TransactionType
 
 

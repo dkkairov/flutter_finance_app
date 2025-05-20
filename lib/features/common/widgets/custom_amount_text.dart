@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Для форматирования чисел
-
-import '../../core/theme/custom_colors.dart';
-import '../../core/theme/custom_text_styles.dart';
+import 'package:intl/intl.dart';
+import '../theme/custom_colors.dart';
+import '../theme/custom_text_styles.dart';
 
 class CustomAmountText extends StatelessWidget {
   final double amount;

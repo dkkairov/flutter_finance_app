@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../core/theme/custom_text_styles.dart';
+import '../theme/custom_text_styles.dart';
 import 'custom_divider.dart';
 
 class CustomDraggableScrollableSheet extends StatelessWidget {

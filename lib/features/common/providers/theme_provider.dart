@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/services/user_settings_service.dart';
+import '../../../core/services/user_settings_service.dart';
 
 /// Провайдер, стримит текущий режим темы из базы Drift
 final themeModeProvider = StreamProvider<ThemeMode>((ref) {

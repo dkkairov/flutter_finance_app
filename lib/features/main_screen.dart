@@ -1,21 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/common/widgets/custom_divider.dart';
+import 'package:flutter_app_1/features/reports/presentation/reports_screen.dart';
+import 'package:flutter_app_1/features/settings/presentation/settings_screen.dart';
+import 'package:flutter_app_1/features/teams/presentation/providers/team_provider.dart';
+import 'package:flutter_app_1/features/teams/presentation/widgets/team_selector_bottom_sheet.dart';
+import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
 import 'package:flutter_app_1/generated/locale_keys.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/theme/custom_colors.dart';
-import '../core/theme/custom_text_styles.dart';
 import 'accounts/presentation/accounts_screen.dart';
-import 'budget/presentation/budget_screen.dart'; // Убедитесь, что BudgetScreen может быть const если возможно
-import 'reports/presentation/reports_screen.dart';
-import 'settings/presentation/settings_screen.dart'; // Убедитесь, что SettingsScreen может быть const если возможно
-import 'transactions/presentation/screens/transaction_create_screen.dart';
-import '../main.dart'; // Убедитесь, что bottomNavProvider здесь
-
-// !!! ИМПОРТИРУЕМ Provider'ы команд и функцию показа листа
-import 'teams/presentation/providers/team_provider.dart';
-import 'teams/presentation/widgets/team_selector_bottom_sheet.dart';
+import 'budget/presentation/budget_screen.dart';
+import 'common/theme/custom_colors.dart';
+import 'common/theme/custom_text_styles.dart';
+import 'common/widgets/custom_divider.dart';
+import '../main.dart';
 
 
 class MainScreen extends ConsumerWidget {
@@ -33,7 +30,6 @@ class MainScreen extends ConsumerWidget {
       BudgetScreen(),
       const TransactionCreateScreen(),
       const ReportsScreen(),
-      // const TransactionsScreen(),
       SettingsScreen(),
     ];
 

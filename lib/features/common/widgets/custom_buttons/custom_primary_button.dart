@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/core/theme/custom_colors.dart';
+import '../../theme/custom_colors.dart';
 
 // Basic button widget for primary actions
 class CustomPrimaryButton extends StatelessWidget {
