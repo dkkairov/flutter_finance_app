@@ -8,15 +8,21 @@ import '../../data/models/transaction_category_model.dart'; // Путь к мо�
 /// Использует `Family`, чтобы можно было отфильтровать по типу ('expense' или 'income').
 final transactionCategoriesProvider = FutureProvider.family
     .autoDispose<List<TransactionCategoryModel>, String?>((ref, type) async {
-  // Смотрим за изменением selectedTeamIdProvider, так как категории зависят от команды.
-  final teamId = ref.watch(selectedTeamIdProvider); // from auth_providers.dart
+  final teamId = ref.watch(selectedTeamIdProvider);
+  print('DEBUG: transactionCategoriesProvider: teamId=$teamId, type=$type'); // <--- ДОБАВЬ ЭТО
 
   if (teamId == null) {
-    // Если teamId null, возвращаем пустой список
+    print('DEBUG: transactionCategoriesProvider: teamId is null, returning empty list.');
     return [];
   }
 
   final categoryRepository = ref.watch(transactionCategoryRepositoryProvider);
-  // Передаем тип для фильтрации категорий (expense, income, или null для всех)
-  return categoryRepository.fetchTransactionCategories(type: type);
+  try {
+    final categories = await categoryRepository.fetchTransactionCategories(type: type);
+    print('DEBUG: Fetched ${categories.length} categories for type $type'); // <--- И ЭТО
+    return categories;
+  } catch (e) {
+    print('ERROR: Failed to fetch categories in provider: $e'); // <--- И ЭТО
+    rethrow;
+  }
 });

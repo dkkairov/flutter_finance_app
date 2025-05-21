@@ -16,6 +16,7 @@ class TransactionCategoryRepository {
   Future<List<TransactionCategoryModel>> fetchTransactionCategories({String? type}) async {
     try {
       final teamId = _ref.read(selectedTeamIdProvider); // Получаем ID выбранной команды
+      print('DEBUG: fetchTransactionCategories: teamId = $teamId'); // <--- ДОБАВЬ ЭТО
 
       if (teamId == null) {
         throw Exception('Team ID is not selected. Cannot fetch transaction categories.');
@@ -34,6 +35,7 @@ class TransactionCategoryRepository {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
+        print('Categories API response: $data');
         return data.map((json) => TransactionCategoryModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load transaction categories: ${response.statusCode}');

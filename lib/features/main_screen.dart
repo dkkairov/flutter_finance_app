@@ -7,13 +7,15 @@ import 'package:flutter_app_1/features/teams/presentation/widgets/team_selector_
 import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
 import 'package:flutter_app_1/generated/locale_keys.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import '../main.dart'; // <--- ЭТОТ ИМПОРТ ТОЖЕ НЕ НУЖЕН ЗДЕСЬ
+
 import '../main.dart';
 import 'accounts/presentation/accounts_screen.dart';
+import 'auth/presentation/providers/auth_providers.dart';
 import 'budget/presentation/budget_screen.dart';
 import 'common/theme/custom_colors.dart';
 import 'common/theme/custom_text_styles.dart';
 import 'common/widgets/custom_divider.dart';
-// import '../main.dart'; // <--- ЭТОТ ИМПОРТ ТОЖЕ НЕ НУЖЕН ЗДЕСЬ
 
 
 class MainScreen extends ConsumerWidget {
@@ -24,23 +26,43 @@ class MainScreen extends ConsumerWidget {
     final currentScreenIndex = ref.watch(bottomNavProvider);
     final selectedTeam = ref.watch(selectedTeamProvider);
     final teamsAsyncValue = ref.watch(teamsProvider); // Watch для получения данных
-    final selectedTeamInitAsyncValue = ref.watch(selectedTeamInitProvider); // Watch для получения данных
 
-    // Пример отображения состояния:
-    if (teamsAsyncValue.isLoading) {
-      // Можно показать небольшой индикатор загрузки внутри AppBar или где-то ещё
-      print('MainScreen: teamsProvider is still loading. This should not happen if AuthChecker finished.');
-    }
-    if (teamsAsyncValue.hasError) {
-      // Можно показать SnackBar или сообщение в углу, но не блокировать экран.
-      print('MainScreen: teamsProvider has error: ${teamsAsyncValue.error}.');
-    }
+    // НОВОЕ: Отслеживаем изменение teamsAsyncValue, чтобы установить selectedTeamIdProvider
+    // Используем .when, чтобы обработать состояния загрузки/ошибки/данных
+    teamsAsyncValue.when(
+      data: (teams) {
+        if (teams.isNotEmpty) {
+          final currentSelectedTeamId = ref.read(selectedTeamIdProvider);
+          // Если текущий выбранный ID null ИЛИ выбранной команды нет в списке
+          // (например, была удалена или изменился пользователь)
+          if (currentSelectedTeamId == null || !teams.any((t) => t.id == currentSelectedTeamId)) {
+            // Устанавливаем ID первой команды как выбранный по умолчанию
+            // В реальном приложении здесь может быть логика сохранения последней выбранной команды
+            // или запрос у пользователя
+            ref.read(selectedTeamIdProvider.notifier).state = teams.first.id;
+            print('DEBUG: selectedTeamIdProvider updated to: ${teams.first.id}');
+          }
+        } else {
+          // Если команд нет, убеждаемся, что teamId сброшен на null
+          ref.read(selectedTeamIdProvider.notifier).state = null;
+          print('DEBUG: No teams found, selectedTeamIdProvider set to null.');
+        }
+      },
+      loading: () {
+        // Пока загружаются команды, selectedTeamIdProvider остается в своем текущем состоянии (возможно, null)
+        print('MainScreen: teamsProvider is still loading...');
+      },
+      error: (error, stack) {
+        // При ошибке загрузки команд, также можно сбросить selectedTeamIdProvider
+        ref.read(selectedTeamIdProvider.notifier).state = null;
+        print('MainScreen: teamsProvider has error: $error. selectedTeamIdProvider set to null.');
+      },
+    );
 
 
     // Список экранов (остается без изменений)
     final List<Widget> screens = [
-      const AccountsScreen(), // Раскомментируй, если AccountScreen это первый экран
-      // BudgetScreen(),
+      const AccountsScreen(),
       BudgetScreen(),
       const TransactionCreateScreen(),
       const ReportsScreen(),
@@ -56,7 +78,7 @@ class MainScreen extends ConsumerWidget {
       4: LocaleKeys.settings.tr(),
     };
 
-    final double bottomNavigationBarIconsSize = 30.0;
+    // final double bottomNavigationBarIconsSize = 30.0; // Эта переменная не используется, можно удалить
 
     return SafeArea(
       child: Scaffold(
@@ -72,8 +94,9 @@ class MainScreen extends ConsumerWidget {
               : null,
 
           actions: [
+            // Теперь selectedTeam может быть null, если команд нет или они еще не загрузились
             selectedTeam == null
-                ? const SizedBox()
+                ? const SizedBox() // Пустой виджет, пока команда не выбрана/загружена
                 : InkWell(
               onTap: () => showTeamSelectorBottomSheet(context),
               child: Padding(

@@ -26,18 +26,24 @@ class TransactionCategoryModel {
   });
 
   factory TransactionCategoryModel.fromJson(Map<String, dynamic> json) {
-    return TransactionCategoryModel(
-      id: json['id'] as String,
-      teamId: json['teamId'] as String,
-      name: json['name'] as String,
-      icon: json['icon'] as String,
-      type: json['type'] as String,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      deletedAt: json['deletedAt'] != null ? DateTime.tryParse(json['deletedAt']) : null,
-      updatedBy: json['updatedBy'] as String?,
-      syncedAt: DateTime.parse(json['syncedAt']),
-    );
+    print('DEBUG: Parsing category JSON: $json'); // <--- ДОБАВЬ ЭТО
+    try {
+      return TransactionCategoryModel(
+        id: json['id'] as String,
+        teamId: json['teamId'] as String,
+        name: json['name'] as String,
+        icon: json['icon'] as String,
+        type: json['type'] as String,
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']),
+        deletedAt: json['deletedAt'] != null ? DateTime.tryParse(json['deletedAt']) : null,
+        updatedBy: json['updatedBy'] as String?,
+        syncedAt: DateTime.parse(json['syncedAt']),
+      );
+    } catch (e) {
+      print('ERROR: Failed to parse TransactionCategoryModel: $e, JSON: $json'); // <--- И ЭТО
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() => {

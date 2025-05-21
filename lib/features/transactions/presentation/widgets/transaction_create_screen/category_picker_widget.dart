@@ -30,28 +30,33 @@ class CategoryPickerWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // НОВОЕ: Наблюдаем за transactionCategoriesProvider, передавая тип транзакции
     final categoriesAsyncValue = ref.watch(transactionCategoriesProvider(
       transactionType == TransactionType.expense ? 'expense' : 'income',
     ));
 
     return categoriesAsyncValue.when(
-      loading: () => const SizedBox(
-        height: 300, // Сохраняем высоту для согласованности
-        child: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, stack) => SizedBox(
-        height: 300,
-        child: Center(
-          child: Text('Ошибка загрузки категорий: ${error.toString()}'),
-        ),
-      ),
+      loading: () {
+        print('DEBUG: CategoryPickerWidget loading categories...');
+        return const SizedBox(
+          height: 300,
+          child: Center(child: CircularProgressIndicator()),
+        );
+      },
+      error: (error, stack) {
+        print('DEBUG: CategoryPickerWidget error: $error');
+        return SizedBox(
+          height: 300,
+          child: Center(
+            child: Text('Ошибка загрузки категорий: ${error.toString()}'),
+          ),
+        );
+      },
       data: (categories) {
-        // Теперь `categories` это List<TransactionCategoryModel>
-        // Фильтруем категории по типу, если вдруг API вернул все
+        print('DEBUG: CategoryPickerWidget received ${categories.length} categories.'); // <--- ДОБАВЬ ЭТО
         final List<TransactionCategoryModel> categoriesToShow = categories
             .where((category) => category.type == (transactionType == TransactionType.expense ? 'expense' : 'income'))
             .toList();
+        print('DEBUG: CategoryPickerWidget showing ${categoriesToShow.length} categories after filtering.'); // <--- И ЭТО
 
 
         int itemsPerPage = 16;
