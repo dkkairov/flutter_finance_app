@@ -3,7 +3,12 @@
 // ignore_for_file: constant_identifier_names
 
 abstract class  LocaleKeys {
-  static const login = 'login';
+  static const transactionAmountInvalid = 'transactionAmountInvalid';
+  static const transferFromAccountRequired = 'transferFromAccountRequired';
+  static const transferToAccountRequired = 'transferToAccountRequired';
+  static const transferSameAccountError = 'transferSameAccountError';
+  static const accountRequired = 'accountRequired';
+  static const categoryRequired = 'categoryRequired';
   static const team = 'team';
   static const teams = 'teams';
   static const language = 'language';
@@ -117,8 +122,8 @@ abstract class  LocaleKeys {
   static const fromAccount = 'fromAccount';
   static const toAccount = 'toAccount';
   static const notSelected = 'notSelected';
-  static const selectRole = 'selectRole';
   static const noTeamsFound = 'noTeamsFound';
+  static const selectRole = 'selectRole';
   static const confirmDeleteAllDataConfirmation = 'confirmDeleteAllDataConfirmation';
 
 }

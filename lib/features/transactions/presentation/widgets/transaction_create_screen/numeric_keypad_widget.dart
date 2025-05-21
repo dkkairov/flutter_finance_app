@@ -58,7 +58,10 @@ class NumericKeypadWidget extends ConsumerWidget {
                     }
                     // Получаем доступ к контроллеру транзакций
                     final controller = ref.read(transactionCreateControllerProvider.notifier);
-                    String raw = controller.rawAmount; // Получаем текущее введенное значение
+                    print('DEBUG: Keypad - Key pressed: "$key"'); // Добавьте этот print
+
+                    String raw = controller.rawAmount;
+                    print('DEBUG: Keypad - rawAmount BEFORE update: "$raw"'); // Добавьте этот print
                     String newRaw = raw;
 
                     if (key == ',') { // Если нажата запятая
@@ -87,6 +90,7 @@ class NumericKeypadWidget extends ConsumerWidget {
                     }
                     // Обновляем значение в контроллере
                     controller.updateRawAmount(newRaw);
+                    print('DEBUG: Keypad - rawAmount AFTER update: "${controller.rawAmount}"'); // Добавьте этот print
                   }, // Убедись, что стиль текста определен
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero), // Убираем скругление углов

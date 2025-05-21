@@ -52,14 +52,13 @@ class TransactionCreateScreen extends ConsumerWidget {
                     ?
                 TransferAccountsSelectorWidget(
                   key: const ValueKey('transfer_selector'),
-                  accounts: accounts, // ИСПОЛЬЗУЕМ РЕАЛЬНЫЕ СЧЕТА
                 )
                     :
                 Column(
                   key: const ValueKey('category_fields'),
                   children: [
                     // CategoryPickerWidget теперь будет получать категории сам через свой провайдер
-                    CategoryPickerWidget(transactionType: selectedSegment),
+                    CategoryPickerWidget(),
                     AdditionalFieldsWidget(accounts: accounts), // ИСПОЛЬЗУЕМ РЕАЛЬНЫЕ СЧЕТА
                   ],
                 ),

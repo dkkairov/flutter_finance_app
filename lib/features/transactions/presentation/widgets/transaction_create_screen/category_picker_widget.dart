@@ -1,35 +1,26 @@
+// lib/features/transactions/presentation/widgets/transaction_create_screen/category_picker_widget.dart
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+// import '../../../../common/widgets/custom_show_bottom_sheet.dart'; // УДАЛЯЕМ этот импорт
 import '../../../../../core/utils/icon_helper.dart';
-import '../../../../../features/common/theme/custom_colors.dart';
-import '../../../../../features/common/theme/custom_text_styles.dart';
+import '../../../../../generated/locale_keys.g.dart';
+import '../../../../transaction_categories/data/models/transaction_category_model.dart';
+import '../../../../transaction_categories/presentation/providers/transaction_category_provider.dart';
 import '../../providers/transaction_controller.dart';
 import '../../screens/transaction_create_screen.dart'; // Для TransactionType enum
-import '../../../../transaction_categories/data/models/transaction_category_model.dart'; // <--- ИМПОРТ ТВОЕЙ МОДЕЛИ КАТЕГОРИИ
-import '../../../../transaction_categories/presentation/providers/transaction_category_provider.dart'; // <--- ИМПОРТ ПРОВАЙДЕРА КАТЕГОРИЙ
-
-
-// 1. УДАЛИТЬ КЛАСС TransactionCategoryItem! Теперь мы используем TransactionCategoryModel.
-// class TransactionCategoryItem {
-//   final int id;
-//   final String name;
-//   final IconData icon;
-//   TransactionCategoryItem({required this.id, required this.name, required this.icon});
-// }
-
-// 2. УДАЛИТЬ ХАРДКОДНЫЕ СПИСКИ КАТЕГОРИЙ! Теперь мы получаем их из API.
-// final List<TransactionCategoryItem> expenseTransactionCategories = [...];
-// final List<TransactionCategoryItem> incomeTransactionCategories = [...];
-
 
 class CategoryPickerWidget extends ConsumerWidget {
-  final TransactionType transactionType;
-
-  const CategoryPickerWidget({super.key, required this.transactionType});
+  const CategoryPickerWidget({super.key});
 
   @override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final transactionType = ref.watch(transactionTypeProvider);
+    final transactionCreateController = ref.read(transactionCreateControllerProvider.notifier);
+    final rawAmount = transactionCreateController.rawAmount; // Получаем текущую сумму
+
     final categoriesAsyncValue = ref.watch(transactionCategoriesProvider(
       transactionType == TransactionType.expense ? 'expense' : 'income',
     ));
@@ -38,126 +29,110 @@ class CategoryPickerWidget extends ConsumerWidget {
       loading: () {
         print('DEBUG: CategoryPickerWidget loading categories...');
         return const SizedBox(
-          height: 300,
+          height: 300, // Минимальная высота для индикатора загрузки
           child: Center(child: CircularProgressIndicator()),
         );
       },
       error: (error, stack) {
         print('DEBUG: CategoryPickerWidget error: $error');
         return SizedBox(
-          height: 300,
+          height: 300, // Минимальная высота для сообщения об ошибке
           child: Center(
             child: Text('Ошибка загрузки категорий: ${error.toString()}'),
           ),
         );
       },
       data: (categories) {
-        print('DEBUG: CategoryPickerWidget received ${categories.length} categories.'); // <--- ДОБАВЬ ЭТО
+        print('DEBUG: CategoryPickerWidget received ${categories.length} categories.');
         final List<TransactionCategoryModel> categoriesToShow = categories
-            .where((category) => category.type == (transactionType == TransactionType.expense ? 'expense' : 'income'))
+            .where((category) =>
+        category.type ==
+            (transactionType == TransactionType.expense ? 'expense' : 'income'))
             .toList();
-        print('DEBUG: CategoryPickerWidget showing ${categoriesToShow.length} categories after filtering.'); // <--- И ЭТО
+        print('DEBUG: CategoryPickerWidget showing ${categoriesToShow.length} categories after filtering.');
 
-
-        int itemsPerPage = 16;
-        int pageCount = (categoriesToShow.length / itemsPerPage).ceil();
-        final PageController pageController = PageController();
-
-        return Column(
-          children: [
-            SizedBox(
-              height: 300,
-              child: PageView.builder(
-                controller: pageController,
-                itemCount: pageCount,
-                itemBuilder: (context, pageIndex) {
-                  int start = pageIndex * itemsPerPage;
-                  int end = (start + itemsPerPage).clamp(0, categoriesToShow.length);
-                  List<TransactionCategoryModel> pageCategories = categoriesToShow.sublist(start, end);
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0),
-                    child: GridView.count(
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 4,
-                      childAspectRatio: 1,
-                      mainAxisSpacing: 4,
-                      crossAxisSpacing: 4,
-                      children: pageCategories.map((transactionCategoryModel) {
-                        return TransactionCategoryTile(
-                          // Передаем TransactionCategoryModel
-                          transactionCategory: transactionCategoryModel,
-                          onTap: () {
-                            final controller = ref.read(transactionCreateControllerProvider.notifier);
-                            // Важно: ID категории теперь String!
-                            controller.updateTransactionCategory(transactionCategoryModel.id);
-                            debugPrint('Category tapped: ${transactionCategoryModel.name} (ID: ${transactionCategoryModel.id})');
-                          },
-                        );
-                      }).toList(),
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 4,
+          childAspectRatio: 1.0,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+          children: categoriesToShow.map((category) {
+            // final isSelected = transactionCreateController.state.categoryId == category.id; // Это можно использовать для визуального выделения
+            return InkWell(
+              onTap: () async {
+                // ПОЛУЧАЕМ ТЕКУЩУЮ СУММУ ВНУТРИ onTap, а не при build
+                final freshController = ref.read(transactionCreateControllerProvider.notifier);
+                final freshRawAmount = freshController.rawAmount;
+                print('DEBUG: CategoryPickerWidget - rawAmount before parsing: "$freshRawAmount"');
+                final cleanedRawAmount = freshRawAmount.replaceAll(' ', '').replaceAll(',', '.');
+                print('DEBUG: CategoryPickerWidget - cleanedRawAmount: "$cleanedRawAmount"');
+                final parsedAmount = double.tryParse(cleanedRawAmount); // Временно сохраним результат парсинга
+                print('DEBUG: CategoryPickerWidget - parsed amount: $parsedAmount');
+                if (parsedAmount == null || parsedAmount <= 0) {
+                  // Показываем SnackBar, если сумма недействительна
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(LocaleKeys.transactionAmountInvalid.tr()),
+                      backgroundColor: Colors.red,
                     ),
                   );
-                },
+                  return; // Не создаем транзакцию
+                }
+
+                // Обновляем категорию в состоянии
+                freshController.updateTransactionCategory(category.id);
+
+                // Вызываем метод создания транзакции
+                final errorMessage = await freshController.createTransaction();
+
+                if (errorMessage == null) {
+                  freshController.resetForm();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('transactionCreatedSuccessfully'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  // TODO: Навигация или обновление списка
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(errorMessage),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.grey.shade200, // Убрал isSelected для простоты, если не требуется визуальное выделение
+                    child: Icon(
+                      iconFromString(category.icon),
+                      color: Colors.grey.shade600,
+                      size: 30,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    category.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            if (pageCount > 1) ...[
-              const SizedBox(height: 6),
-              SmoothPageIndicator(
-                controller: pageController,
-                count: pageCount,
-                effect: const ExpandingDotsEffect(
-                  dotHeight: 6,
-                  dotWidth: 6,
-                  activeDotColor: CustomColors.primary,
-                  dotColor: CustomColors.mainLightGrey,
-                ),
-              ),
-              const SizedBox(height: 6),
-            ] else ... [
-              const SizedBox(height: 20)
-            ]
-          ],
+            );
+          }).toList(),
         );
       },
-    );
-  }
-}
-
-// 3. Модифицируем TransactionCategoryTile для работы с TransactionCategoryModel
-class TransactionCategoryTile extends StatelessWidget {
-  // Теперь принимает TransactionCategoryModel
-  final TransactionCategoryModel transactionCategory;
-  final VoidCallback onTap;
-
-  const TransactionCategoryTile({
-    super.key,
-    required this.transactionCategory,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // ИСПОЛЬЗУЕМ iconFromString ДЛЯ ПОЛУЧЕНИЯ IconData
-            Icon(iconFromString(transactionCategory.icon), size: 36, color: CustomColors.primary),
-            const SizedBox(height: 6),
-            Text(
-              transactionCategory.name,
-              textAlign: TextAlign.center,
-              style: CustomTextStyles.normalSmall,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

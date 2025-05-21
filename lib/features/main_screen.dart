@@ -7,7 +7,6 @@ import 'package:flutter_app_1/features/teams/presentation/widgets/team_selector_
 import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
 import 'package:flutter_app_1/generated/locale_keys.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../main.dart'; // <--- ЭТОТ ИМПОРТ ТОЖЕ НЕ НУЖЕН ЗДЕСЬ
 
 import '../main.dart';
 import 'accounts/presentation/accounts_screen.dart';
@@ -18,6 +17,17 @@ import 'common/theme/custom_text_styles.dart';
 import 'common/widgets/custom_divider.dart';
 
 
+// Определяем список экранов вне метода build,
+// чтобы экземпляры виджетов сохранялись и не пересоздавались при каждом перестроении MainScreen.
+final List<Widget> _screens = [
+  const AccountsScreen(),
+  BudgetScreen(),
+  const TransactionCreateScreen(),
+  const ReportsScreen(),
+  SettingsScreen(),
+];
+
+
 class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
@@ -25,51 +35,34 @@ class MainScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentScreenIndex = ref.watch(bottomNavProvider);
     final selectedTeam = ref.watch(selectedTeamProvider);
-    final teamsAsyncValue = ref.watch(teamsProvider); // Watch для получения данных
+    final teamsAsyncValue = ref.watch(teamsProvider);
 
-    // НОВОЕ: Отслеживаем изменение teamsAsyncValue, чтобы установить selectedTeamIdProvider
-    // Используем .when, чтобы обработать состояния загрузки/ошибки/данных
     teamsAsyncValue.when(
       data: (teams) {
-        if (teams.isNotEmpty) {
-          final currentSelectedTeamId = ref.read(selectedTeamIdProvider);
-          // Если текущий выбранный ID null ИЛИ выбранной команды нет в списке
-          // (например, была удалена или изменился пользователь)
-          if (currentSelectedTeamId == null || !teams.any((t) => t.id == currentSelectedTeamId)) {
-            // Устанавливаем ID первой команды как выбранный по умолчанию
-            // В реальном приложении здесь может быть логика сохранения последней выбранной команды
-            // или запрос у пользователя
-            ref.read(selectedTeamIdProvider.notifier).state = teams.first.id;
-            print('DEBUG: selectedTeamIdProvider updated to: ${teams.first.id}');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (teams.isNotEmpty) {
+            final currentSelectedTeamId = ref.read(selectedTeamIdProvider);
+            if (currentSelectedTeamId == null || !teams.any((t) => t.id == currentSelectedTeamId)) {
+              ref.read(selectedTeamIdProvider.notifier).state = teams.first.id;
+              print('DEBUG: selectedTeamIdProvider updated to: ${teams.first.id}');
+            }
+          } else {
+            ref.read(selectedTeamIdProvider.notifier).state = null;
+            print('DEBUG: No teams found, selectedTeamIdProvider set to null.');
           }
-        } else {
-          // Если команд нет, убеждаемся, что teamId сброшен на null
-          ref.read(selectedTeamIdProvider.notifier).state = null;
-          print('DEBUG: No teams found, selectedTeamIdProvider set to null.');
-        }
+        });
       },
       loading: () {
-        // Пока загружаются команды, selectedTeamIdProvider остается в своем текущем состоянии (возможно, null)
         print('MainScreen: teamsProvider is still loading...');
       },
       error: (error, stack) {
-        // При ошибке загрузки команд, также можно сбросить selectedTeamIdProvider
-        ref.read(selectedTeamIdProvider.notifier).state = null;
-        print('MainScreen: teamsProvider has error: $error. selectedTeamIdProvider set to null.');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(selectedTeamIdProvider.notifier).state = null;
+          print('MainScreen: teamsProvider has error: $error. selectedTeamIdProvider set to null.');
+        });
       },
     );
 
-
-    // Список экранов (остается без изменений)
-    final List<Widget> screens = [
-      const AccountsScreen(),
-      BudgetScreen(),
-      const TransactionCreateScreen(),
-      const ReportsScreen(),
-      SettingsScreen(),
-    ];
-
-    // !!! Карта для хранения заголовков AppBar для каждого экрана
     Map<int, String> appBarTitles = {
       0: LocaleKeys.accounts.tr(),
       1: LocaleKeys.budget.tr(),
@@ -77,8 +70,6 @@ class MainScreen extends ConsumerWidget {
       3: LocaleKeys.reports.tr(),
       4: LocaleKeys.settings.tr(),
     };
-
-    // final double bottomNavigationBarIconsSize = 30.0; // Эта переменная не используется, можно удалить
 
     return SafeArea(
       child: Scaffold(
@@ -94,9 +85,8 @@ class MainScreen extends ConsumerWidget {
               : null,
 
           actions: [
-            // Теперь selectedTeam может быть null, если команд нет или они еще не загрузились
             selectedTeam == null
-                ? const SizedBox() // Пустой виджет, пока команда не выбрана/загружена
+                ? const SizedBox()
                 : InkWell(
               onTap: () => showTeamSelectorBottomSheet(context),
               child: Padding(
@@ -119,7 +109,11 @@ class MainScreen extends ConsumerWidget {
             ),
           ],
         ),
-        body: screens[currentScreenIndex],
+        // Используем IndexedStack для сохранения состояния экранов
+        body: IndexedStack(
+          index: currentScreenIndex,
+          children: _screens, // Теперь _screens используется как дочерние элементы IndexedStack
+        ),
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
