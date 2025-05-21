@@ -1,44 +1,54 @@
+// lib/features/teams/presentation/providers/team_provider.dart
+
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/models/team.dart'; // Импорт модели Team
+import '../../../../core/services/local_storage_service.dart';
+import '../../data/models/team_model.dart';
+import '../../data/repositories/team_repository.dart';
+import '../../../../core/network/dio_provider.dart'; // <--- НОВЫЙ ИМПОРТ
 
-class TeamsNotifier extends StateNotifier<List<Team>> {
-  TeamsNotifier([List<Team>? initialTeams]) : super(initialTeams ?? []);
 
-  void addTeam(String name) {
-    final newId = state.isEmpty ? 1 : state.last.id + 1;
-    final newTeam = Team(id: newId, name: name);
-    state = [...state, newTeam];
-    print('Added team: $name with id: $newId');
-  }
+// Провайдер TeamRepository (ВАЖНО!)
+final teamRepositoryProvider = Provider<TeamRepository>(
+      (ref) => TeamRepository(
+    dio: ref.watch(dioProvider), // <--- Используем централизованный dioProvider
+  ),
+);
 
-  void editTeam(int id, String newName) {
-    state = state.map((team) {
-      if (team.id == id) {
-        return team.copyWith(name: newName);
-      }
-      return team;
-    }).toList();
-    print('Edited team $id to $newName');
-  }
-
-  void deleteTeam(int id) {
-    state = state.where((team) => team.id != id).toList();
-    print('Deleted team: $id');
-  }
-}
-
-// Provider, предоставляющий экземпляр TeamsNotifier
-final teamsProvider = StateNotifierProvider<TeamsNotifier, List<Team>>((ref) {
-  // !!! ЗАГЛУШКА: Замените на загрузку реальных данных, если необходимо
-  return TeamsNotifier([
-    Team(id: 1, name: 'Private'),
-    Team(id: 2, name: 'Team 1'),
-    Team(id: 3, name: 'Team 2'),
-  ]);
+// teamsProvider (список по API)
+final teamsProvider = FutureProvider<List<TeamModel>>((ref) async {
+  // Используем .future для teamsProvider, чтобы избежать рекурсивной зависимости с selectedTeamInitProvider,
+  // который также watch'ит teamsProvider
+  // В данном случае, watch() здесь правилен, так как он ждет изменений в teamsProvider
+  return ref.watch(teamRepositoryProvider).fetchTeams();
 });
 
-// Provider для хранения текущей выбранной команды (может использоваться в других частях приложения)
-final selectedTeamProvider = StateProvider<Team?>((ref) {
-  final teams = ref.watch(teamsProvider);
-  return teams.isNotEmpty ? teams.first : null; // Выбираем первый элемент, если список не пуст
+// StateProvider выбранной команды
+final selectedTeamProvider = StateProvider<TeamModel?>((ref) => null);
+
+// AsyncNotifier, который инициализирует выбранную команду при старте
+final selectedTeamInitProvider = FutureProvider<void>((ref) async {
+  // ВНИМАНИЕ: здесь очень важно использовать .future,
+  // чтобы дождаться ЗАВЕРШЕНИЯ загрузки команд
+  final teams = await ref.watch(teamsProvider.future);
+  final storedTeamId = await LocalStorageService.loadSelectedTeamId();
+
+  if (teams.isEmpty) {
+    ref.read(selectedTeamProvider.notifier).state = null;
+    return;
+  }
+
+  // Сначала ищем сохранённую
+  if (storedTeamId != null) {
+    final selected = teams.firstWhere(
+          (t) => t.id == storedTeamId,
+      orElse: () => teams.firstWhere((t) => t.isActive, orElse: () => teams.first),
+    );
+    ref.read(selectedTeamProvider.notifier).state = selected;
+    return;
+  }
+
+  // Если не было сохранено — по дефолту первая активная
+  final selected = teams.firstWhere((t) => t.isActive, orElse: () => teams.first);
+  ref.read(selectedTeamProvider.notifier).state = selected;
 });

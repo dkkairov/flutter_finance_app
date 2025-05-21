@@ -118,6 +118,7 @@ abstract class  LocaleKeys {
   static const toAccount = 'toAccount';
   static const notSelected = 'notSelected';
   static const selectRole = 'selectRole';
+  static const noTeamsFound = 'noTeamsFound';
   static const confirmDeleteAllDataConfirmation = 'confirmDeleteAllDataConfirmation';
 
 }

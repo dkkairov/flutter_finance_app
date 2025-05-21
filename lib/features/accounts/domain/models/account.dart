@@ -1,40 +1,34 @@
-// lib/features/transactions/domain/entities/account.dart
+// lib/features/accounts/domain/models/account.dart (или твой текущий путь)
 
 /// Represents an account in the application.
 class Account {
   /// The unique identifier of the account.
-  final int id;
+  final String id; // Изменено на String для UUID
 
   /// The name of the account.
   final String name;
   final double? balance;
-
-  // Вы можете добавить другие поля из вашей бэкенд-модели, если они необходимы для UI:
-  // final int? currencyId;
-  // final bool? isActive;
-
+  final String? currencyId; // Добавлено, если есть в API
+  final bool? isActive; // Добавлено, если есть в API
 
   Account({
     required this.id,
     required this.name,
     this.balance,
-    // Добавьте сюда другие поля, если вы решили их включить
-    // this.currencyId,
-    // this.isActive,
+    this.currencyId, // Включено
+    this.isActive,   // Включено
   });
 
-  // Для работы с данными из бэкенда вам, вероятно, потребуется factory конструктор
-  // для создания экземпляра Account из Map (JSON).
-  // factory Account.fromJson(Map<String, dynamic> json) {
-  //   return Account(
-  //     id: json['id'] as int,
-  //     name: json['name'] as String,
-  //     // Пример маппинга других полей (убедитесь в правильности типов)
-  //     // balance: (json['balance'] as num?)?.toDouble(),
-  //     // currencyId: json['currency_id'] as int?,
-  //     // isActive: json['is_active'] as bool?,
-  //   );
-  // }
+  // Factory конструктор для создания экземпляра Account из Map (JSON).
+  factory Account.fromJson(Map<String, dynamic> json) {
+    return Account(
+      id: json['id'] as String, // Парсим как String
+      name: json['name'] as String,
+      balance: (json['balance'] as num?)?.toDouble(), // Может быть null
+      currencyId: json['currency_id'] as String?, // Предполагаем, что это UUID
+      isActive: json['is_active'] as bool?, // Предполагаем, что это bool
+    );
+  }
 
   // Также полезно переопределить equals и hashCode для сравнения объектов Account
   @override
@@ -49,6 +43,6 @@ class Account {
 
   @override
   String toString() {
-    return 'Account{id: $id, name: $name}';
+    return 'Account{id: $id, name: $name, balance: $balance, currencyId: $currencyId, isActive: $isActive}';
   }
 }

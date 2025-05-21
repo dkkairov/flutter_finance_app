@@ -1,4 +1,5 @@
 // lib/features/teams/features/screens/teams_screen.dart
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/teams/presentation/screens/show_team_screen.dart';
@@ -16,33 +17,45 @@ class TeamsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final teams = ref.watch(teamsProvider);
+    final teamsAsync = ref.watch(teamsProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(LocaleKeys.teams.tr()),
       ),
-      body: CustomListViewSeparated(
-        items: teams,
-        itemBuilder: (context, team) {
-          return CustomListItem(
-            titleText: team.name,
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ShowTeamScreen(team: team),
-                ),
+      body: teamsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text('Ошибка: $err')),
+        data: (teams) {
+          if (teams.isEmpty) {
+            return Center(child: Text('Нет команд'));
+            // Можно заменить на локализацию: LocaleKeys.noTeamsFound.tr()
+          }
+          return CustomListViewSeparated(
+            items: teams,
+            itemBuilder: (context, team) {
+              return CustomListItem(
+                titleText: team.name,
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowTeamScreen(team: team),
+                    ),
+                  );
+                },
               );
             },
           );
         },
       ),
-      floatingActionButton: CustomFloatingActionButton(onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CreateTeamScreen()),
-      )),
+      floatingActionButton: CustomFloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CreateTeamScreen()),
+        ),
+      ),
     );
   }
 }

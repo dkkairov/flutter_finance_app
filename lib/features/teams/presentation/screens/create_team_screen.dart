@@ -1,4 +1,5 @@
 // lib/features/teams/features/screens/create_team_screen.dart
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,11 +18,35 @@ class CreateTeamScreen extends ConsumerStatefulWidget {
 class _CreateTeamScreenState extends ConsumerState<CreateTeamScreen> {
   final _formKey = GlobalKey<FormState>();
   final _teamNameController = TextEditingController();
+  bool _isLoading = false;
+  String? _error;
 
   @override
   void dispose() {
     _teamNameController.dispose();
     super.dispose();
+  }
+
+  Future<void> _createTeam() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    final teamName = _teamNameController.text.trim();
+    try {
+      final repo = ref.read(teamRepositoryProvider);
+      await repo.createTeam(teamName);
+
+      if (mounted) Navigator.pop(context, true); // Можно вернуть true, чтобы в списке команд обновиться
+    } catch (e) {
+      setState(() {
+        _error = 'Ошибка: $e';
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -37,22 +62,22 @@ class _CreateTeamScreenState extends ConsumerState<CreateTeamScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if (_error != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                ),
               CustomTextFormField(
                 labelText: LocaleKeys.teamName.tr(),
                 controller: _teamNameController,
                 validator: (value) => value?.trim().isEmpty == true ? LocaleKeys.teamNameCannotBeEmpty.tr() : null,
               ),
               const SizedBox(height: 24),
-              CustomPrimaryButton(
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : CustomPrimaryButton(
                 text: LocaleKeys.create.tr(),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final teamName = _teamNameController.text.trim();
-                    // !!! ЗАГЛУШКА: Реализуйте логику добавления новой команды
-                    ref.read(teamsProvider.notifier).addTeam(teamName);
-                    Navigator.pop(context);
-                  }
-                },
+                onPressed: _createTeam,
               ),
             ],
           ),

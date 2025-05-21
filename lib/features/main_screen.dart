@@ -7,12 +7,13 @@ import 'package:flutter_app_1/features/teams/presentation/widgets/team_selector_
 import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
 import 'package:flutter_app_1/generated/locale_keys.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../main.dart';
 import 'accounts/presentation/accounts_screen.dart';
 import 'budget/presentation/budget_screen.dart';
 import 'common/theme/custom_colors.dart';
 import 'common/theme/custom_text_styles.dart';
 import 'common/widgets/custom_divider.dart';
-import '../main.dart';
+// import '../main.dart'; // <--- ЭТОТ ИМПОРТ ТОЖЕ НЕ НУЖЕН ЗДЕСЬ
 
 
 class MainScreen extends ConsumerWidget {
@@ -21,12 +22,25 @@ class MainScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentScreenIndex = ref.watch(bottomNavProvider);
-    // !!! Смотрим за выбранной командой для отображения в AppBar
     final selectedTeam = ref.watch(selectedTeamProvider);
+    final teamsAsyncValue = ref.watch(teamsProvider); // Watch для получения данных
+    final selectedTeamInitAsyncValue = ref.watch(selectedTeamInitProvider); // Watch для получения данных
 
-    // Список экранов (остается без изменений, убедитесь, что все const, где возможно)
+    // Пример отображения состояния:
+    if (teamsAsyncValue.isLoading) {
+      // Можно показать небольшой индикатор загрузки внутри AppBar или где-то ещё
+      print('MainScreen: teamsProvider is still loading. This should not happen if AuthChecker finished.');
+    }
+    if (teamsAsyncValue.hasError) {
+      // Можно показать SnackBar или сообщение в углу, но не блокировать экран.
+      print('MainScreen: teamsProvider has error: ${teamsAsyncValue.error}.');
+    }
+
+
+    // Список экранов (остается без изменений)
     final List<Widget> screens = [
-      const AccountsScreen(),
+      const AccountsScreen(), // Раскомментируй, если AccountScreen это первый экран
+      // BudgetScreen(),
       BudgetScreen(),
       const TransactionCreateScreen(),
       const ReportsScreen(),
@@ -44,10 +58,9 @@ class MainScreen extends ConsumerWidget {
 
     final double bottomNavigationBarIconsSize = 30.0;
 
-    return SafeArea( // SafeArea обычно оборачивает Scaffold, а не его body
+    return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          // !!! ИЗМЕНЕНО: Условный заголовок AppBar
           title: appBarTitles.containsKey(currentScreenIndex)
               ? Text(
             appBarTitles[currentScreenIndex]!,
@@ -56,25 +69,18 @@ class MainScreen extends ConsumerWidget {
               fontWeight: FontWeight.bold,
             ),
           )
-              : null, // Если нет заголовка по умолчанию, можно оставить null
+              : null,
 
           actions: [
             selectedTeam == null
                 ? const SizedBox()
                 : InkWell(
-              onTap: () {
-                // При нажатии показываем bottom sheet выбора команды
-                showTeamSelectorBottomSheet(context);
-              },
+              onTap: () => showTeamSelectorBottomSheet(context),
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 20,
-                      color: CustomColors.onPrimary,
-                    ),
+                    const Icon(Icons.keyboard_arrow_down, size: 20, color: CustomColors.onPrimary),
                     const SizedBox(width: 4),
                     Text(
                       selectedTeam.name,
@@ -90,7 +96,7 @@ class MainScreen extends ConsumerWidget {
             ),
           ],
         ),
-        body: screens[currentScreenIndex], // Отображаем выбранный экран
+        body: screens[currentScreenIndex],
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -109,13 +115,12 @@ class MainScreen extends ConsumerWidget {
               elevation: 1.5,
               currentIndex: currentScreenIndex,
               onTap: (index) {
-                // Обновляем выбранный индекс навигационной панели
                 ref.read(bottomNavProvider.notifier).state = index;
               },
               items: [
                 BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: LocaleKeys.accounts.tr()),
                 BottomNavigationBarItem(icon: Icon(Icons.account_balance), label: LocaleKeys.budget.tr()),
-                BottomNavigationBarItem(icon: Icon(Icons.add_circle_outlined, size: 40,), label: LocaleKeys.add.tr()), // "Add" -> LocaleKeys.add
+                BottomNavigationBarItem(icon: Icon(Icons.add_circle_outlined, size: 40,), label: LocaleKeys.add.tr()),
                 BottomNavigationBarItem(icon: Icon(Icons.analytics),label: LocaleKeys.reports.tr()),
                 BottomNavigationBarItem(icon: Icon(Icons.settings), label: LocaleKeys.settings.tr()),
               ],

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
 import '../data/auth_repository.dart';
-// import '../../../core/repository/auth_repository.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -33,11 +32,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      // Сохрани токен в хранилище (и в Riverpod, если нужно)
+      // Сохрани токен в хранилище
       await ref.read(authRepositoryProvider).saveToken(token);
+
+      // ИЗМЕНЕНИЕ ЗДЕСЬ: Обновляем StateProvider токена
       ref.read(authTokenProvider.notifier).state = token;
 
       if (context.mounted) {
+        // Убедись, что навигация идет на основной экран после успешного входа
         Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {

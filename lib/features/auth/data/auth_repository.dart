@@ -2,22 +2,24 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../../core/services/token_service.dart';
+
 class AuthRepository {
   final Dio dio;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final TokenService tokenService;
 
-  AuthRepository({required this.dio});
+  AuthRepository({required this.dio, required this.tokenService});
 
   Future<void> saveToken(String token) async {
-    await _storage.write(key: 'auth_token', value: token);
+    await tokenService.saveToken(token);
   }
 
   Future<String?> getToken() async {
-    return await _storage.read(key: 'auth_token');
+    return await tokenService.getToken();
   }
 
   Future<void> deleteToken() async {
-    await _storage.delete(key: 'auth_token');
+    await tokenService.deleteToken();
   }
 
   /// Реальная авторизация — отправка email и password на /api/login
@@ -32,14 +34,14 @@ class AuthRepository {
         options: Options(
           headers: {
             'Accept': 'application/json',
-            // Возможно, потребуется: 'Content-Type': 'application/json',
+            // 'Content-Type': 'application/json', // <-- Добавь это
           },
         ),
       );
 
       // Парсим токен из ответа
       final data = response.data;
-      if (data['access_token'] != null && data['access_token'] is String) {
+      if (data != null && data['access_token'] != null && data['access_token'] is String) {
         return data['access_token'];
       } else {
         throw Exception('Ошибка авторизации: не найден токен в ответе сервера.');
@@ -50,11 +52,12 @@ class AuthRepository {
       if (e.response != null && e.response?.data != null) {
         final err = e.response!.data;
         if (err is Map && err['message'] != null) {
-          message = err['message'];
+          message = err['message'].toString(); // Убедимся, что это строка
         } else if (err is String) {
           message = err;
         }
       }
+      // Перебрасываем ошибку, чтобы она была поймана в _LoginScreenState
       throw Exception(message);
     } catch (e) {
       throw Exception('Ошибка авторизации: $e');
