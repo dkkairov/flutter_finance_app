@@ -4,11 +4,15 @@
 
 abstract class  LocaleKeys {
   static const transactionAmountInvalid = 'transactionAmountInvalid';
+  static const accountRequired = 'accountRequired';
+  static const categoryRequired = 'categoryRequired';
+  static const transactionCreatedSuccessfully = 'transactionCreatedSuccessfully';
   static const transferFromAccountRequired = 'transferFromAccountRequired';
   static const transferToAccountRequired = 'transferToAccountRequired';
   static const transferSameAccountError = 'transferSameAccountError';
-  static const accountRequired = 'accountRequired';
-  static const categoryRequired = 'categoryRequired';
+  static const transferAmountInvalid = 'transferAmountInvalid';
+  static const transferCreatedSuccessfully = 'transferCreatedSuccessfully';
+  static const createTransfer = 'createTransfer';
   static const team = 'team';
   static const teams = 'teams';
   static const language = 'language';
@@ -125,5 +129,13 @@ abstract class  LocaleKeys {
   static const noTeamsFound = 'noTeamsFound';
   static const selectRole = 'selectRole';
   static const confirmDeleteAllDataConfirmation = 'confirmDeleteAllDataConfirmation';
+  static const addIncomeCategory = 'addIncomeCategory';
+  static const selectIcon = 'selectIcon';
+  static const pleaseSelectAnIcon = 'pleaseSelectAnIcon';
+  static const failedToCreateCategory = 'failedToCreateCategory';
+  static const categoryCreatedSuccessfully = 'categoryCreatedSuccessfully';
+  static const noTeamSelectedError = 'noTeamSelectedError';
+  static const addExpenseCategory = 'addExpenseCategory';
+  static const test = 'test';
 
 }

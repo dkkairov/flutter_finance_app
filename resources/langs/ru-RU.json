@@ -125,5 +125,13 @@
   "notSelected": "Не выбран",
   "noTeamsFound": "Команда не выбрана",
   "selectRole": "Выберите роль",
-  "confirmDeleteAllDataConfirmation": "Подтверждение удаления всех данных"
+  "confirmDeleteAllDataConfirmation": "Подтверждение удаления всех данных",
+  "addIncomeCategory": "Добавить категорию доходов",
+  "selectIcon": "Выберите иконку",
+  "pleaseSelectAnIcon": "Пожалуйста, выберите иконку",
+  "failedToCreateCategory": "Не удалось создать категорию",
+  "categoryCreatedSuccessfully": "Категория успешно создана",
+  "noTeamSelectedError": "Не выбрана команда",
+  "addExpenseCategory": "Добавить категорию расходов",
+  "test": "Тест"
 }

@@ -30,13 +30,13 @@ class _UserDetailsScreenState extends ConsumerState<UserDetailsScreen> {
       title: LocaleKeys.selectRole.tr(),
       type: 'line',
       items: _availableRoles
-          .map((role) => PickerItem<String>(id: role, displayValue: role.tr()))
+          .map((role) => PickerItem<String>(value: role, displayValue: role.tr()))
           .toList(),
     );
 
     if (pickedRoleItem != null) {
       setState(() {
-        _selectedRole = pickedRoleItem.id;
+        _selectedRole = pickedRoleItem.value;
       });
     }
   }

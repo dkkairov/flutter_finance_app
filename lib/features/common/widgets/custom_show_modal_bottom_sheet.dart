@@ -231,9 +231,11 @@ class _IconWithTextPickerItem<T> extends StatelessWidget {
           CircleAvatar(
             radius: 30,
             backgroundColor: Colors.grey[300],
-            child: item.imageUrl != null
+            child: item.imageUrl != null // Если есть URL изображения
                 ? ClipOval(child: Image.network(item.imageUrl!, fit: BoxFit.cover, width: 50, height: 50))
-                : const Icon(Icons.folder, size: 30),
+                : (item.iconData != null // Если есть IconData
+                ? Icon(item.iconData, size: 30, color: Colors.black54) // Используем IconData
+                : const Icon(Icons.folder, size: 30)), // Дефолтная иконка
           ),
           const SizedBox(height: 8),
           Text(

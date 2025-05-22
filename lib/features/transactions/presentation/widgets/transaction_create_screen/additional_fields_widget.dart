@@ -44,7 +44,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
 
     // Подготовка данных для пикера Счетов из переданного списка accounts
     final List<PickerItem<String>> accountPickerItems = accounts // <--- PickerItem теперь с String ID
-        .map((account) => PickerItem<String>(id: account.id, displayValue: account.name))
+        .map((account) => PickerItem<String>(value: account.id, displayValue: account.name))
         .toList();
     // Ищем текущее название счета в переданном списке accounts
     final String currentAccountDisplay = accounts
@@ -56,7 +56,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
 
     // Подготовка данных для пикера Проектов
     final List<PickerItem<String>> projectPickerItems = _projectOptions.entries // <--- PickerItem теперь с String ID
-        .map((entry) => PickerItem<String>(id: entry.key, displayValue: entry.value))
+        .map((entry) => PickerItem<String>(value: entry.key, displayValue: entry.value))
         .toList();
     final String currentProjectDisplay = _projectOptions[transactionState.projectId] ?? LocaleKeys.notSelected.tr();
 
@@ -67,9 +67,9 @@ class AdditionalFieldsWidget extends ConsumerWidget {
     final dayBeforeYesterday = today.subtract(const Duration(days: 2));
 
     final List<PickerItem<DateTime>> datePickerItems = [
-      PickerItem(id: today, displayValue: LocaleKeys.today.tr()),
-      PickerItem(id: yesterday, displayValue: LocaleKeys.yesterday.tr()),
-      PickerItem(id: dayBeforeYesterday, displayValue: LocaleKeys.theDayBeforeYesterday.tr()),
+      PickerItem(value: today, displayValue: LocaleKeys.today.tr()),
+      PickerItem(value: yesterday, displayValue: LocaleKeys.yesterday.tr()),
+      PickerItem(value: dayBeforeYesterday, displayValue: LocaleKeys.theDayBeforeYesterday.tr()),
     ];
 
     // Убедимся, что transactionState.date инициализирована
@@ -108,7 +108,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
                   type: 'line'
               );
               if (selected != null) {
-                transactionCreateController.updateAccount(selected.id); // <--- ID теперь String
+                transactionCreateController.updateAccount(selected.value); // <--- ID теперь String
               }
             },
           ),
@@ -127,7 +127,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
                   type: 'line'
               );
               if (selected != null) {
-                transactionCreateController.updateProject(selected.id); // <--- ID теперь String
+                transactionCreateController.updateProject(selected.value); // <--- ID теперь String
               }
             },
           ),

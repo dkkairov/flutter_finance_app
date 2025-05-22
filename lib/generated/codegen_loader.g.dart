@@ -16,11 +16,15 @@ class CodegenLoader extends AssetLoader{
 
   static const Map<String,dynamic> _en_US = {
   "transactionAmountInvalid": "Сумма транзакции недействительна",
-  "transferFromAccountRequired": "Требуется перевод со счета",
-  "transferToAccountRequired": "Требуется перевод на счет",
-  "transferSameAccountError": "Перевод на тот же счёт невозможен",
-  "accountRequired": "Требуется счёт",
-  "categoryRequired": "Требуется категория",
+  "accountRequired": "Счет обязателен",
+  "categoryRequired": "Категория обязательна",
+  "transactionCreatedSuccessfully": "Транзакция успешно создана!",
+  "transferFromAccountRequired": "Счет \"Откуда\" обязателен",
+  "transferToAccountRequired": "Счет \"Куда\" обязателен",
+  "transferSameAccountError": "Счета \"Откуда\" и \"Куда\" не могут быть одинаковыми",
+  "transferAmountInvalid": "Сумма перевода недействительна",
+  "transferCreatedSuccessfully": "Перевод успешно создан!",
+  "createTransfer": "Создать перевод",
   "team": "Команда",
   "teams": "Команды",
   "language": "Язык",
@@ -136,7 +140,15 @@ class CodegenLoader extends AssetLoader{
   "notSelected": "Не выбран",
   "noTeamsFound": "Команда не выбрана",
   "selectRole": "Выберите роль",
-  "confirmDeleteAllDataConfirmation": "Подтверждение удаления всех данных"
+  "confirmDeleteAllDataConfirmation": "Подтверждение удаления всех данных",
+  "addIncomeCategory": "Добавить категорию доходов",
+  "selectIcon": "Выберите иконку",
+  "pleaseSelectAnIcon": "Пожалуйста, выберите иконку",
+  "failedToCreateCategory": "Не удалось создать категорию",
+  "categoryCreatedSuccessfully": "Категория успешно создана",
+  "noTeamSelectedError": "Не выбрана команда",
+  "addExpenseCategory": "Добавить категорию расходов",
+  "test": "Тест"
 };
 static const Map<String,dynamic> _ru_RU = {
   "transactionAmountInvalid": "Сумма транзакции недействительна",
@@ -264,7 +276,15 @@ static const Map<String,dynamic> _ru_RU = {
   "notSelected": "Не выбран",
   "noTeamsFound": "Команда не выбрана",
   "selectRole": "Выберите роль",
-  "confirmDeleteAllDataConfirmation": "Подтверждение удаления всех данных"
+  "confirmDeleteAllDataConfirmation": "Подтверждение удаления всех данных",
+  "addIncomeCategory": "Добавить категорию доходов",
+  "selectIcon": "Выберите иконку",
+  "pleaseSelectAnIcon": "Пожалуйста, выберите иконку",
+  "failedToCreateCategory": "Не удалось создать категорию",
+  "categoryCreatedSuccessfully": "Категория успешно создана",
+  "noTeamSelectedError": "Не выбрана команда",
+  "addExpenseCategory": "Добавить категорию расходов",
+  "test": "Тест"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": _en_US, "ru_RU": _ru_RU};
 }

@@ -25,7 +25,7 @@ class TransferAccountsSelectorWidget extends ConsumerWidget {
     return accountsAsync.when(
       data: (accounts) {
         final List<PickerItem<String>> accountPickerItems = accounts
-            .map((account) => PickerItem<String>(id: account.id, displayValue: account.name))
+            .map((account) => PickerItem<String>(value: account.id, displayValue: account.name))
             .toList();
 
         // Отображение выбранного счета "Откуда"
@@ -65,7 +65,7 @@ class TransferAccountsSelectorWidget extends ConsumerWidget {
                         type: 'line',
                       );
                       if (selected != null) {
-                        transactionCreateController.updateFromAccount(selected.id);
+                        transactionCreateController.updateFromAccount(selected.value);
                       }
                     },
                   ),
@@ -82,7 +82,7 @@ class TransferAccountsSelectorWidget extends ConsumerWidget {
                         type: 'line',
                       );
                       if (selected != null) {
-                        transactionCreateController.updateToAccount(selected.id);
+                        transactionCreateController.updateToAccount(selected.value);
                       }
                     },
                   ),

@@ -1,17 +1,17 @@
-// transaction_categories_screen.dart
+// lib/features/transaction_categories/features/screens/transaction_categories_screen.dart
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_1/features/transaction_categories/presentation/screens/add_category_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/icon_helper.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../common/widgets/custom_floating_action_button.dart';
 import '../../common/widgets/custom_list_view/custom_list_item.dart';
 import '../../common/widgets/custom_list_view/custom_list_view_separated.dart';
-import '../../auth/presentation/providers/auth_providers.dart'; // <--- Импорт selectedTeamIdProvider (если не было)
-import '../data/models/transaction_category_model.dart';
-import 'providers/transaction_category_provider.dart'; // <--- Исправленный импорт общего провайдера категорий
+import '../../auth/presentation/providers/auth_providers.dart';
+import 'providers/transaction_category_provider.dart';
 
 class CategoriesScreen extends ConsumerWidget {
   const CategoriesScreen(this.type, {super.key});
@@ -19,19 +19,13 @@ class CategoriesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Используем selectedTeamIdProvider вместо currentTeamIdProvider,
-    // так как мы договорились использовать его для получения teamId
     final teamId = ref.watch(selectedTeamIdProvider);
 
     if (teamId == null) {
-      // Если teamId равен null, показываем индикатор загрузки или сообщение
-      return const Center(child: CircularProgressIndicator()); // Или Text('Выберите команду')
+      return const Center(child: CircularProgressIndicator());
     }
 
-    // Вместо отдельных expenseTransactionCategoriesProvider и incomeTransactionCategoriesProvider,
-    // используем один transactionCategoriesProvider.family
     final categoriesAsync = ref.watch(transactionCategoriesProvider(type));
-
 
     return Scaffold(
       appBar: AppBar(
@@ -46,10 +40,9 @@ class CategoriesScreen extends ConsumerWidget {
           items: categories,
           itemBuilder: (context, item) => CustomListItem(
             titleText: item.name,
-            leading: Icon(iconFromString(item.icon)), // Использование iconFromString
+            leading: Icon(iconFromString(item.icon)), // Использование iconFromString - БЕЗ ИЗМЕНЕНИЙ
             onTap: () {
               // TODO: Открыть bottom sheet для редактирования item
-              // Для редактирования, возможно, понадобится передать item.id
             },
           ),
         ),
@@ -58,7 +51,13 @@ class CategoriesScreen extends ConsumerWidget {
       ),
       floatingActionButton: CustomFloatingActionButton(
         onPressed: () {
-          // TODO: Открыть bottom sheet для добавления категории
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return AddCategoryBottomSheet(type: type);
+            },
+          );
         },
       ),
     );

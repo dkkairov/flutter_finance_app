@@ -114,15 +114,15 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
     // !!! Форматируем выбранную дату для отображения в поле "Дата"
     final formattedDate = '${_selectedDate.day.toString().padLeft(2, '0')}.${_selectedDate.month.toString().padLeft(2, '0')}.${_selectedDate.year}';
     final List<PickerItem<num>> transactionCategories = [
-      PickerItem(id: 1, displayValue: 'Category 1'),
-      PickerItem(id: 2, displayValue: 'Category 2'),
-      PickerItem(id: 3, displayValue: 'Category 3'),
+      PickerItem(value: 1, displayValue: 'Category 1'),
+      PickerItem(value: 2, displayValue: 'Category 2'),
+      PickerItem(value: 3, displayValue: 'Category 3'),
     ];
 
     final List<PickerItem<int>> accountPickerItems = [
-      PickerItem(id: 1, displayValue: 'Account 1'),
-      PickerItem(id: 2, displayValue: 'Account 2'),
-      PickerItem(id: 3, displayValue: 'Account 3'),
+      PickerItem(value: 1, displayValue: 'Account 1'),
+      PickerItem(value: 2, displayValue: 'Account 2'),
+      PickerItem(value: 3, displayValue: 'Account 3'),
     ]; // Заглушка для списка счетов
     return Scaffold(
       appBar: AppBar(
