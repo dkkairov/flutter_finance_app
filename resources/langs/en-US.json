@@ -142,5 +142,10 @@
   "editCategory": "Edit Category",
   "categoryUpdatedSuccessfully": "Category updated successfully!",
   "failedToUpdateCategory": "Failed to update category",
+  "confirmDeleteCategoryTitle": "Delete Category",
+  "confirmDeleteCategoryMessage": "Are you sure you want to delete the category '{0}'? This action cannot be undone.",
+  "delete": "Delete",
+  "categoryDeletedSuccessfully": "Category deleted successfully!",
+  "failedToDeleteCategory": "Failed to delete category",
   "test": "Тест"
 }

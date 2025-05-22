@@ -145,6 +145,11 @@ abstract class  LocaleKeys {
   static const editCategory = 'editCategory';
   static const categoryUpdatedSuccessfully = 'categoryUpdatedSuccessfully';
   static const failedToUpdateCategory = 'failedToUpdateCategory';
+  static const confirmDeleteCategoryTitle = 'confirmDeleteCategoryTitle';
+  static const confirmDeleteCategoryMessage = 'confirmDeleteCategoryMessage';
+  static const delete = 'delete';
+  static const categoryDeletedSuccessfully = 'categoryDeletedSuccessfully';
+  static const failedToDeleteCategory = 'failedToDeleteCategory';
   static const test = 'test';
 
 }

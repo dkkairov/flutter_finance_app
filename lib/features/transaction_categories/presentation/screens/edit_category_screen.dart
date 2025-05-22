@@ -9,12 +9,11 @@ import '../../../../generated/locale_keys.g.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
 import '../../../common/widgets/custom_text_form_field.dart';
-import '../../../common/widgets/custom_show_modal_bottom_sheet.dart'; // Still needed for icon picker
-import '../../../common/widgets/custom_picker_fields/picker_item.dart'; // Still needed for icon picker
-import '../../data/models/transaction_category_model.dart'; // <--- Импортируем модель категории
+import '../../../common/widgets/custom_show_modal_bottom_sheet.dart';
+import '../../../common/widgets/custom_picker_fields/picker_item.dart';
+import '../../data/models/transaction_category_model.dart';
 import '../../data/models/transaction_category_payload.dart';
-import '../../data/repositories/transaction_category_repository.dart';
-import '../providers/transaction_category_provider.dart';
+import '../providers/transaction_category_provider.dart'; // Для transactionCategoryRepositoryProvider
 
 class EditCategoryScreen extends ConsumerStatefulWidget {
   final String type; // 'expense' или 'income'
@@ -44,7 +43,6 @@ class _EditCategoryScreenState extends ConsumerState<EditCategoryScreen> {
       _nameController.text = widget.initialCategory!.name;
       _selectedIconName = widget.initialCategory!.icon;
     } else {
-      // Для нового элемента выбираем первую иконку по умолчанию
       _selectedIconName = kCupertinoIconMap.keys.isNotEmpty ? kCupertinoIconMap.keys.first : null;
     }
   }
@@ -102,7 +100,6 @@ class _EditCategoryScreenState extends ConsumerState<EditCategoryScreen> {
         final repository = ref.read(transactionCategoryRepositoryProvider);
 
         if (isEditing) {
-          // Логика обновления категории
           await repository.updateTransactionCategory(
             categoryId: widget.initialCategory!.id,
             teamId: teamId,
@@ -114,7 +111,6 @@ class _EditCategoryScreenState extends ConsumerState<EditCategoryScreen> {
             );
           }
         } else {
-          // Логика создания категории
           await repository.createTransactionCategory(payload: payload, teamId: teamId);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -123,10 +119,10 @@ class _EditCategoryScreenState extends ConsumerState<EditCategoryScreen> {
           }
         }
 
-        ref.invalidate(transactionCategoriesProvider(widget.type)); // Обновляем список
+        ref.invalidate(transactionCategoriesProvider(widget.type));
 
         if (mounted) {
-          Navigator.of(context).pop(); // Закрываем экран после сохранения
+          Navigator.of(context).pop();
         }
       } catch (e) {
         if (mounted) {
@@ -150,6 +146,66 @@ class _EditCategoryScreenState extends ConsumerState<EditCategoryScreen> {
     }
   }
 
+  // НОВЫЙ МЕТОД: Удаление категории
+  Future<void> _deleteCategory() async {
+    final teamId = ref.read(selectedTeamIdProvider);
+
+    if (teamId == null || !isEditing) {
+      return; // Нельзя удалить, если нет teamId или это не режим редактирования
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(LocaleKeys.confirmDeleteCategoryTitle.tr()),
+          content: Text(LocaleKeys.confirmDeleteCategoryMessage.tr(args: [widget.initialCategory!.name])),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(LocaleKeys.cancel.tr()),
+            ),
+            FilledButton( // Используем FilledButton для кнопки подтверждения
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(LocaleKeys.delete.tr()),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      try {
+        final repository = ref.read(transactionCategoryRepositoryProvider);
+        await repository.deleteTransactionCategory(
+          categoryId: widget.initialCategory!.id,
+          teamId: teamId,
+        );
+
+        ref.invalidate(transactionCategoriesProvider(widget.type)); // Обновляем список
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(LocaleKeys.categoryDeletedSuccessfully.tr())),
+          );
+          Navigator.of(context).pop(); // Возвращаемся после успешного удаления
+        }
+      } catch (e) {
+        if (mounted) {
+          String errorMessage = '${LocaleKeys.failedToDeleteCategory.tr()}: ${e.toString()}';
+          if (e is DioException) {
+            if (e.response != null && e.response!.data != null) {
+              errorMessage = '${LocaleKeys.failedToDeleteCategory.tr()}: ${e.response!.data.toString()}';
+            }
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,6 +217,13 @@ class _EditCategoryScreenState extends ConsumerState<EditCategoryScreen> {
               ? LocaleKeys.addExpenseCategory.tr()
               : LocaleKeys.addIncomeCategory.tr()),
         ),
+        actions: [
+          if (isEditing) // Показываем кнопку удаления только в режиме редактирования
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: _deleteCategory, // Вызываем метод удаления
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

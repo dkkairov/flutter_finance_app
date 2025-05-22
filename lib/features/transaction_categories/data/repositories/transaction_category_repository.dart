@@ -9,14 +9,13 @@ class TransactionCategoryRepository {
 
   TransactionCategoryRepository(this._dio);
 
-  // ИЗМЕНЕНО: Добавлен teamId в URL для fetchTransactionCategories
   Future<List<TransactionCategoryModel>> fetchTransactionCategories({
-    required String teamId, // <--- Теперь teamId обязателен
+    required String teamId,
     String? type,
   }) async {
     try {
       final response = await _dio.get(
-        '/api/teams/$teamId/transaction-categories', // <--- ИЗМЕНЕНО
+        '/api/teams/$teamId/transaction-categories',
         queryParameters: type != null ? {'type': type} : null,
       );
 
@@ -83,6 +82,32 @@ class TransactionCategoryRepository {
         throw Exception(e.response!.data['message'] ?? 'Validation failed.');
       }
       throw Exception(e.response?.data['message'] ?? 'Unknown error occurred while updating category.');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // НОВЫЙ МЕТОД: Удаление категории
+  Future<void> deleteTransactionCategory({
+    required String categoryId,
+    required String teamId,
+  }) async {
+    try {
+      final response = await _dio.delete(
+        '/api/teams/$teamId/transaction-categories/$categoryId', // URL для удаления
+      );
+
+      if (response.statusCode == 200) {
+        // Успешное удаление, ничего не возвращаем
+        return;
+      } else {
+        throw Exception('Failed to delete transaction category: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response?.data != null && e.response?.data['errors'] != null) {
+        throw Exception(e.response!.data['message'] ?? 'Validation failed.');
+      }
+      throw Exception(e.response?.data['message'] ?? 'Unknown error occurred while deleting category.');
     } catch (e) {
       rethrow;
     }
