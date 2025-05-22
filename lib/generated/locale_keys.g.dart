@@ -136,6 +136,12 @@ abstract class  LocaleKeys {
   static const categoryCreatedSuccessfully = 'categoryCreatedSuccessfully';
   static const noTeamSelectedError = 'noTeamSelectedError';
   static const addExpenseCategory = 'addExpenseCategory';
+  static const projectUpdatedSuccessfully = 'projectUpdatedSuccessfully';
+  static const projectCreatedSuccessfully = 'projectCreatedSuccessfully';
+  static const failedToUpdateProject = 'failedToUpdateProject';
+  static const failedToCreateProject = 'failedToCreateProject';
+  static const createProject = 'createProject';
+  static const errorLoadingProjects = 'errorLoadingProjects';
   static const test = 'test';
 
 }

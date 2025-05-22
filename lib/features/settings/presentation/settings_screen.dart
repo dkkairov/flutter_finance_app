@@ -221,9 +221,6 @@ class SettingsScreen extends ConsumerWidget {
     ];
 
     return Scaffold( // Добавлен Scaffold, так как CustomListViewSeparated обычно не является корневым виджетом экрана
-      appBar: AppBar(
-        title: Text(LocaleKeys.settings.tr()), // Добавлен заголовок экрана настроек
-      ),
       body: CustomListViewSeparated(
         items: settingsItems,
         itemBuilder: (context, item) {

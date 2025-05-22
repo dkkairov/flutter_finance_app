@@ -1,6 +1,7 @@
 // lib/features/projects/data/repositories/project_repository.dart
 import 'package:dio/dio.dart';
 import '../models/project_model.dart';
+import '../models/project_payload.dart'; // <--- Импортируем ProjectPayload
 
 class ProjectRepository {
   final Dio _dio;
@@ -28,6 +29,65 @@ class ProjectRepository {
       }
     } catch (e) {
       print('Unexpected error fetching projects: $e');
+      rethrow;
+    }
+  }
+
+  // НОВЫЙ МЕТОД: Создание проекта
+  Future<ProjectModel> createProject({
+    required String teamId,
+    required ProjectPayload payload,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/teams/$teamId/projects', // URL из ProjectController@store
+        data: payload.toJson(),
+      );
+
+      if (response.statusCode == 201) { // HTTP_CREATED
+        return ProjectModel.fromJson(response.data);
+      } else {
+        throw Exception('Failed to create project: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Dio error creating project: ${e.response?.statusCode} ${e.response?.data}');
+      // Пробрасываем ошибку дальше для обработки на UI
+      if (e.response?.data != null && e.response?.data['errors'] != null) {
+        // Если есть ошибки валидации от Laravel
+        throw Exception(e.response!.data['message'] ?? 'Validation failed.');
+      }
+      throw Exception(e.response?.data['message'] ?? 'Unknown error occurred while creating project.');
+    } catch (e) {
+      print('Unexpected error creating project: $e');
+      rethrow;
+    }
+  }
+
+  // Метод для обновления проекта (будет добавлен позже, если потребуется)
+  Future<ProjectModel> updateProject({
+    required String teamId,
+    required String projectId,
+    required ProjectPayload payload,
+  }) async {
+    try {
+      final response = await _dio.put(
+        '/api/teams/$teamId/projects/$projectId',
+        data: payload.toJson(),
+      );
+
+      if (response.statusCode == 200) {
+        return ProjectModel.fromJson(response.data);
+      } else {
+        throw Exception('Failed to update project: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Dio error updating project: ${e.response?.statusCode} ${e.response?.data}');
+      if (e.response?.data != null && e.response?.data['errors'] != null) {
+        throw Exception(e.response!.data['message'] ?? 'Validation failed.');
+      }
+      throw Exception(e.response?.data['message'] ?? 'Unknown error occurred while updating project.');
+    } catch (e) {
+      print('Unexpected error updating project: $e');
       rethrow;
     }
   }

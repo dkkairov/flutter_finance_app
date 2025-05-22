@@ -133,5 +133,11 @@
   "categoryCreatedSuccessfully": "Категория успешно создана",
   "noTeamSelectedError": "Не выбрана команда",
   "addExpenseCategory": "Добавить категорию расходов",
+  "projectUpdatedSuccessfully": "Проект успешно обновлён",
+  "projectCreatedSuccessfully": "Проект успешно создан",
+  "failedToUpdateProject": "Не удалось обновить проект",
+  "failedToCreateProject": "Не удалось создать проект",
+  "createProject": "Создать проект",
+  "errorLoadingProjects": "Ошибка загрузки проектов",
   "test": "Тест"
 }
