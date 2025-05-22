@@ -150,6 +150,10 @@ abstract class  LocaleKeys {
   static const delete = 'delete';
   static const categoryDeletedSuccessfully = 'categoryDeletedSuccessfully';
   static const failedToDeleteCategory = 'failedToDeleteCategory';
+  static const confirmDeleteProjectTitle = 'confirmDeleteProjectTitle';
+  static const confirmDeleteProjectMessage = 'confirmDeleteProjectMessage';
+  static const projectDeletedSuccessfully = 'projectDeletedSuccessfully';
+  static const failedToDeleteProject = 'failedToDeleteProject';
   static const test = 'test';
 
 }

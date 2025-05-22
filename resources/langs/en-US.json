@@ -147,5 +147,9 @@
   "delete": "Delete",
   "categoryDeletedSuccessfully": "Category deleted successfully!",
   "failedToDeleteCategory": "Failed to delete category",
+  "confirmDeleteProjectTitle": "Delete Project",
+  "confirmDeleteProjectMessage": "Are you sure you want to delete the project '{0}'? This action cannot be undone.",
+  "projectDeletedSuccessfully": "Project deleted successfully!",
+  "failedToDeleteProject": "Failed to delete project",
   "test": "Тест"
 }

@@ -1,7 +1,7 @@
 // lib/features/projects/data/repositories/project_repository.dart
 import 'package:dio/dio.dart';
 import '../models/project_model.dart';
-import '../models/project_payload.dart'; // <--- Импортируем ProjectPayload
+import '../models/project_payload.dart';
 
 class ProjectRepository {
   final Dio _dio;
@@ -33,7 +33,7 @@ class ProjectRepository {
     }
   }
 
-  // НОВЫЙ МЕТОД: Создание проекта
+  // МЕТОД: Создание проекта
   Future<ProjectModel> createProject({
     required String teamId,
     required ProjectPayload payload,
@@ -51,9 +51,7 @@ class ProjectRepository {
       }
     } on DioException catch (e) {
       print('Dio error creating project: ${e.response?.statusCode} ${e.response?.data}');
-      // Пробрасываем ошибку дальше для обработки на UI
       if (e.response?.data != null && e.response?.data['errors'] != null) {
-        // Если есть ошибки валидации от Laravel
         throw Exception(e.response!.data['message'] ?? 'Validation failed.');
       }
       throw Exception(e.response?.data['message'] ?? 'Unknown error occurred while creating project.');
@@ -63,7 +61,7 @@ class ProjectRepository {
     }
   }
 
-  // Метод для обновления проекта (будет добавлен позже, если потребуется)
+  // МЕТОД: Обновление проекта
   Future<ProjectModel> updateProject({
     required String teamId,
     required String projectId,
@@ -88,6 +86,33 @@ class ProjectRepository {
       throw Exception(e.response?.data['message'] ?? 'Unknown error occurred while updating project.');
     } catch (e) {
       print('Unexpected error updating project: $e');
+      rethrow;
+    }
+  }
+
+  // НОВЫЙ МЕТОД: Удаление проекта
+  Future<void> deleteProject({
+    required String teamId,
+    required String projectId,
+  }) async {
+    try {
+      final response = await _dio.delete(
+        '/api/teams/$teamId/projects/$projectId', // URL для удаления проекта
+      );
+
+      if (response.statusCode == 200) {
+        return; // Успешное удаление, ничего не возвращаем
+      } else {
+        throw Exception('Failed to delete project: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Dio error deleting project: ${e.response?.statusCode} ${e.response?.data}');
+      if (e.response?.data != null && e.response?.data['errors'] != null) {
+        throw Exception(e.response!.data['message'] ?? 'Validation failed.');
+      }
+      throw Exception(e.response?.data['message'] ?? 'Unknown error occurred while deleting project.');
+    } catch (e) {
+      print('Unexpected error deleting project: $e');
       rethrow;
     }
   }

@@ -1,10 +1,11 @@
 // lib/features/projects/presentation/screens/edit_project_screen.dart
 
+import 'package:dio/dio.dart'; // <--- Добавьте импорт DioException
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../generated/locale_keys.g.dart';
-import '../../../auth/presentation/providers/auth_providers.dart'; // Для selectedTeamIdProvider
+import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
 import '../../../common/widgets/custom_text_form_field.dart';
 import '../../data/models/project_model.dart';
@@ -12,7 +13,7 @@ import '../../data/models/project_payload.dart';
 import '../providers/project_providers.dart';
 
 class EditProjectScreen extends ConsumerStatefulWidget {
-  final ProjectModel? initialProject; // Если передается, значит редактируем существующий проект
+  final ProjectModel? initialProject;
 
   const EditProjectScreen({super.key, this.initialProject});
 
@@ -57,17 +58,15 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
         return;
       }
 
-      // ИЗМЕНЕНО: Добавлена передача teamId в ProjectPayload
       final payload = ProjectPayload(
         name: name,
         description: description,
-        teamId: teamId, // Передаем teamId в payload
+        teamId: teamId,
       );
 
       try {
         final repository = ref.read(projectRepositoryProvider);
         if (isEditing) {
-          // Логика обновления проекта
           await repository.updateProject(
             teamId: teamId,
             projectId: widget.initialProject!.id,
@@ -79,7 +78,6 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
             );
           }
         } else {
-          // Логика создания проекта
           await repository.createProject(teamId: teamId, payload: payload);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -88,7 +86,6 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
           }
         }
 
-        // Инвалидируем провайдер, чтобы UI обновился
         ref.invalidate(projectsProvider);
 
         if (mounted) {
@@ -99,6 +96,71 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
           String errorMessage = isEditing
               ? '${LocaleKeys.failedToUpdateProject.tr()}: ${e.toString()}'
               : '${LocaleKeys.failedToCreateProject.tr()}: ${e.toString()}';
+          if (e is DioException) { // <--- Проверяем на DioException
+            if (e.response != null && e.response!.data != null) {
+              errorMessage = '${isEditing ? LocaleKeys.failedToUpdateProject.tr() : LocaleKeys.failedToCreateProject.tr()}: ${e.response!.data.toString()}';
+            }
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
+      }
+    }
+  }
+
+  // НОВЫЙ МЕТОД: Удаление проекта
+  Future<void> _deleteProject() async {
+    final teamId = ref.read(selectedTeamIdProvider);
+
+    if (teamId == null || !isEditing) {
+      return; // Нельзя удалить, если нет teamId или это не режим редактирования
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(LocaleKeys.confirmDeleteProjectTitle.tr()), // Новый ключ локализации
+          content: Text(LocaleKeys.confirmDeleteProjectMessage.tr(args: [widget.initialProject!.name])), // Новый ключ
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(LocaleKeys.cancel.tr()),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(LocaleKeys.delete.tr()),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      try {
+        final repository = ref.read(projectRepositoryProvider);
+        await repository.deleteProject(
+          teamId: teamId,
+          projectId: widget.initialProject!.id,
+        );
+
+        ref.invalidate(projectsProvider); // Обновляем список проектов
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(LocaleKeys.projectDeletedSuccessfully.tr())), // Новый ключ
+          );
+          Navigator.of(context).pop(); // Возвращаемся после успешного удаления
+        }
+      } catch (e) {
+        if (mounted) {
+          String errorMessage = '${LocaleKeys.failedToDeleteProject.tr()}: ${e.toString()}'; // Новый ключ
+          if (e is DioException) {
+            if (e.response != null && e.response!.data != null) {
+              errorMessage = '${LocaleKeys.failedToDeleteProject.tr()}: ${e.response!.data.toString()}';
+            }
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(errorMessage)),
           );
@@ -112,6 +174,13 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? LocaleKeys.editProject.tr() : LocaleKeys.createProject.tr()),
+        actions: [
+          if (isEditing) // Показываем кнопку удаления только в режиме редактирования
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: _deleteProject, // Вызываем метод удаления
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
