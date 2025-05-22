@@ -142,6 +142,9 @@ abstract class  LocaleKeys {
   static const failedToCreateProject = 'failedToCreateProject';
   static const createProject = 'createProject';
   static const errorLoadingProjects = 'errorLoadingProjects';
+  static const editCategory = 'editCategory';
+  static const categoryUpdatedSuccessfully = 'categoryUpdatedSuccessfully';
+  static const failedToUpdateCategory = 'failedToUpdateCategory';
   static const test = 'test';
 
 }

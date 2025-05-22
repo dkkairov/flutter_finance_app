@@ -5,7 +5,7 @@ import '../../features/accounts/presentation/accounts_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/main_screen.dart';
-import '../../features/transaction_categories/presentation/transaction_categories_screen.dart';
+import '../../features/transaction_categories/presentation/screens/transaction_categories_screen.dart';
 import '../../features/transactions/presentation/screens/transaction_create_screen.dart';
 
 // Добавляем импорты, необходимые для AuthChecker логики

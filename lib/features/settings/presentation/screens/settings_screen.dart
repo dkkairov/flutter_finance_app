@@ -1,18 +1,18 @@
 // lib/features/settings/presentation/screens/settings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../generated/locale_keys.g.dart';
-import '../../../features/common/theme/custom_colors.dart';
-import '../../../features/common/widgets/custom_list_view/custom_list_item.dart';
-import '../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
-import '../../auth/presentation/providers/auth_providers.dart'; // Предполагаем, что performLogout там же
-import '../../common/widgets/custom_picker_fields/picker_item.dart';
-import '../../common/widgets/custom_show_modal_bottom_sheet.dart';
-import '../../currencies/data/models/currency_model.dart';
-import '../../currencies/presentation/providers/currency_providers.dart';
-import '../../projects/presentation/projects_screen.dart';
-import '../../teams/presentation/screens/teams_screen.dart';
-import '../../transaction_categories/presentation/transaction_categories_screen.dart';
+import '../../../../generated/locale_keys.g.dart';
+import '../../../common/theme/custom_colors.dart';
+import '../../../common/widgets/custom_list_view/custom_list_item.dart';
+import '../../../common/widgets/custom_list_view/custom_list_view_separated.dart';
+import '../../../auth/presentation/providers/auth_providers.dart'; // Предполагаем, что performLogout там же
+import '../../../common/widgets/custom_picker_fields/picker_item.dart';
+import '../../../common/widgets/custom_show_modal_bottom_sheet.dart';
+import '../../../currencies/data/models/currency_model.dart';
+import '../../../currencies/presentation/providers/currency_providers.dart';
+import '../../../projects/presentation/screens/projects_screen.dart';
+import '../../../teams/presentation/screens/teams_screen.dart';
+import '../../../transaction_categories/presentation/screens/transaction_categories_screen.dart';
 import 'delete_options_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 

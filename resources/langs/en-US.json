@@ -139,5 +139,8 @@
   "failedToCreateProject": "Не удалось создать проект",
   "createProject": "Создать проект",
   "errorLoadingProjects": "Ошибка загрузки проектов",
+  "editCategory": "Edit Category",
+  "categoryUpdatedSuccessfully": "Category updated successfully!",
+  "failedToUpdateCategory": "Failed to update category",
   "test": "Тест"
 }

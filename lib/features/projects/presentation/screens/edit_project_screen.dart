@@ -3,13 +3,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../generated/locale_keys.g.dart';
-import '../../auth/presentation/providers/auth_providers.dart'; // Для selectedTeamIdProvider
-import '../../common/widgets/custom_buttons/custom_primary_button.dart';
-import '../../common/widgets/custom_text_form_field.dart';
-import '../data/models/project_model.dart';
-import '../data/models/project_payload.dart';
-import '../presentation/providers/project_providers.dart';
+import '../../../../../generated/locale_keys.g.dart';
+import '../../../auth/presentation/providers/auth_providers.dart'; // Для selectedTeamIdProvider
+import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../../common/widgets/custom_text_form_field.dart';
+import '../../data/models/project_model.dart';
+import '../../data/models/project_payload.dart';
+import '../providers/project_providers.dart';
 
 class EditProjectScreen extends ConsumerStatefulWidget {
   final ProjectModel? initialProject; // Если передается, значит редактируем существующий проект

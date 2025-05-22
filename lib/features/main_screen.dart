@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_1/features/reports/presentation/reports_screen.dart';
-import 'package:flutter_app_1/features/settings/presentation/settings_screen.dart';
+import 'package:flutter_app_1/features/settings/presentation/screens/settings_screen.dart';
 import 'package:flutter_app_1/features/teams/presentation/providers/team_provider.dart';
 import 'package:flutter_app_1/features/teams/presentation/widgets/team_selector_bottom_sheet.dart';
 import 'package:flutter_app_1/features/transactions/presentation/screens/transaction_create_screen.dart';
