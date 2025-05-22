@@ -11,27 +11,15 @@ import '../../currencies/data/models/currency_model.dart';
 import '../../currencies/presentation/providers/currency_providers.dart';
 import '../../projects/presentation/projects_screen.dart';
 import '../../teams/presentation/screens/teams_screen.dart';
-import 'categories_screen.dart';
+import '../../transaction_categories/presentation/transaction_categories_screen.dart';
 import 'delete_options_screen.dart';
 import 'package:easy_localization/easy_localization.dart'; // Импорт easy_localization
 
 // --- Riverpod Providers ---
 final settingsProvider = Provider((ref) => SettingsNotifier());
-final themeModeProvider = StateProvider((ref) => ThemeMode.system);
-final themeModeControllerProvider = Provider((ref) => ThemeModeController(ref));
 final selectedLocaleProvider = StateProvider<Locale>((ref) => const Locale('ru', 'RU'));
 final selectedCurrencyProvider = StateProvider<CurrencyModel?>((ref) => null);
 
-
-class ThemeModeController {
-  final Ref ref;
-  ThemeModeController(this.ref);
-
-  Future<void> setTheme(ThemeMode mode) async {
-    ref.read(themeModeProvider.notifier).state = mode;
-    // TODO: Здесь в будущем будет логика сохранения темы
-  }
-}
 
 class SettingsNotifier {
   Future<void> navigateToExpenseCategories(BuildContext context) async {

@@ -1,33 +1,34 @@
+// lib/features/currencies/data/repositories/currency_repository.dart
+
 import 'package:dio/dio.dart';
 import '../models/currency_model.dart';
 
 class CurrencyRepository {
-  final Dio dio;
+  final Dio _dio;
 
-  CurrencyRepository(this.dio);
+  CurrencyRepository(this._dio);
 
-  Future<List<CurrencyModel>> fetchCurrencies({required String token}) async {
+  // ИЗМЕНИТЕ СИГНАТУРУ МЕТОДА:
+  Future<List<CurrencyModel>> fetchCurrencies() async { // <--- УДАЛЕН ПАРАМЕТР token
     try {
-      final response = await dio.get(
-        '/api/currencies',
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
-      );
-      try {
-        final List<CurrencyModel> currencies = (response.data as List)
-            .map((e) => CurrencyModel.fromJson(e)).toList();
-        return currencies;
-      } catch (e) {
-        print('Ошибка парсинга: $e. Ответ: ${response.data}');
-        throw Exception('Ошибка парсинга валют.');
+      final response = await _dio.get('/api/currencies'); // Токен добавляется через Interceptor
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => CurrencyModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load currencies: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      // Можно добавить разные типы обработки ошибок
-      throw Exception(
-        e.response?.data['message'] ??
-            'Не удалось загрузить валюты. Проверьте соединение или повторите попытку.',
-      );
+      if (e.response != null) {
+        print('Dio error fetching currencies: ${e.response?.statusCode} ${e.response?.data}');
+        throw Exception('Failed to load currencies: ${e.response?.data['message'] ?? 'Unknown error'}');
+      } else {
+        print('Dio error fetching currencies: ${e.message}');
+        throw Exception('Failed to load currencies: ${e.message}');
+      }
+    } catch (e) {
+      print('Unexpected error fetching currencies: $e');
+      rethrow;
     }
   }
 }

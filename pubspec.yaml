@@ -48,7 +48,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/features/projects/data/domain/project.freezed.dart
     - resources/langs/
 
   # To main resources to your application, main an resources section, like this:

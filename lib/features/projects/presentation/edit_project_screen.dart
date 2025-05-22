@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
 import '../../common/widgets/custom_text_form_field.dart';
-import '../data/domain/project.dart';
-import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
+import '../../../../generated/locale_keys.g.dart';
+import '../data/models/project_model.dart'; // Импорт LocaleKeys
 
 class EditProjectScreen extends ConsumerStatefulWidget {
-  final Project? initialProject;
+  final ProjectModel? initialProject;
 
   const EditProjectScreen({super.key, this.initialProject});
 
@@ -26,7 +26,7 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
     super.initState();
     if (widget.initialProject != null) {
       _nameController.text = widget.initialProject!.name;
-      _descriptionController.text = widget.initialProject!.description;
+      _descriptionController.text = widget.initialProject!.description ?? '';
     }
   }
 
