@@ -1,7 +1,7 @@
 // lib/core/routing/main_router.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // <--- НОВЫЙ ИМПОРТ
-import '../../features/accounts/presentation/accounts_screen.dart';
+import '../../features/accounts/presentation/screens/accounts_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/main_screen.dart';

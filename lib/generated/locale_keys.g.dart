@@ -178,6 +178,31 @@ abstract class  LocaleKeys {
   static const remove = 'remove';
   static const memberRemovedSuccessfully = 'memberRemovedSuccessfully';
   static const failedToRemoveMember = 'failedToRemoveMember';
+  static const account_created_successfully = 'account_created_successfully';
+  static const error_creating_account = 'error_creating_account';
+  static const create_new_account = 'create_new_account';
+  static const account_name = 'account_name';
+  static const account_name_required = 'account_name_required';
+  static const initial_balance = 'initial_balance';
+  static const initial_balance_required = 'initial_balance_required';
+  static const invalid_number_format = 'invalid_number_format';
+  static const no_currencies_available = 'no_currencies_available';
+  static const error_loading_currencies = 'error_loading_currencies';
+  static const currency_required = 'currency_required';
+  static const create_account_button = 'create_account_button';
+  static const edit_account = 'edit_account';
+  static const current_balance = 'current_balance';
+  static const balance_required = 'balance_required';
+  static const save_changes = 'save_changes';
+  static const delete_account = 'delete_account';
+  static const confirm_delete = 'confirm_delete';
+  static const delete_account_confirmation = 'delete_account_confirmation';
+  static const account_updated_successfully = 'account_updated_successfully';
+  static const error_updating_account = 'error_updating_account';
+  static const account_deleted_successfully = 'account_deleted_successfully';
+  static const error_deleting_account = 'error_deleting_account';
+  static const account_not_found_or_deleted = 'account_not_found_or_deleted';
+  static const no_accounts_yet = 'no_accounts_yet';
   static const test = 'test';
 
 }

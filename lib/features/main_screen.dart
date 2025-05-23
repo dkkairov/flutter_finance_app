@@ -9,7 +9,7 @@ import 'package:flutter_app_1/generated/locale_keys.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
-import 'accounts/presentation/accounts_screen.dart';
+import 'accounts/presentation/screens/accounts_screen.dart';
 import 'auth/presentation/providers/auth_providers.dart';
 import 'budget/presentation/budget_screen.dart';
 import 'common/theme/custom_colors.dart';

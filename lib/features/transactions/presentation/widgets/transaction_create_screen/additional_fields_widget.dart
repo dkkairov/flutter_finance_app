@@ -9,14 +9,11 @@ import '../../../../../generated/locale_keys.g.dart';
 import '../../providers/transaction_controller.dart';
 
 class AdditionalFieldsWidget extends ConsumerWidget {
-  // Принимаем список счетов
-  final List<Account> accounts; // accounts теперь приходят из TransactionCreateScreen
+  final List<Account> accounts;
 
   const AdditionalFieldsWidget({super.key, required this.accounts});
 
-  // Исходные данные для проектов (остаются здесь, так как используются только в этом виджете)
-  // В будущем их также нужно будет загружать по API
-  static final Map<String, String> _projectOptions = { // <--- ИЗМЕНЕНО НА String ID
+  static final Map<String, String> _projectOptions = {
     'project_1_uuid': 'Личные расходы',
     'project_5_uuid': 'Проект "Ремонт"',
     'project_10_uuid': 'Проект "Отпуск"',
@@ -43,19 +40,24 @@ class AdditionalFieldsWidget extends ConsumerWidget {
     // --- Подготовка данных для пикеров ---
 
     // Подготовка данных для пикера Счетов из переданного списка accounts
-    final List<PickerItem<String>> accountPickerItems = accounts // <--- PickerItem теперь с String ID
+    final List<PickerItem<String>> accountPickerItems = accounts
         .map((account) => PickerItem<String>(value: account.id, displayValue: account.name))
         .toList();
-    // Ищем текущее название счета в переданном списке accounts
+
     final String currentAccountDisplay = accounts
         .firstWhere(
           (account) => account.id == transactionState.accountId,
-      orElse: () => Account(id: '', name: LocaleKeys.notSelected.tr()), // <--- ID теперь пустая строка для заглушки
+      orElse: () => Account(
+        id: '',
+        name: LocaleKeys.notSelected.tr(),
+        teamId: '', // <--- ДОБАВЛЕНО
+        createdAt: DateTime(1970), // <--- ДОБАВЛЕНО (или другое осмысленное дефолтное значение)
+      ),
     ).name;
 
 
     // Подготовка данных для пикера Проектов
-    final List<PickerItem<String>> projectPickerItems = _projectOptions.entries // <--- PickerItem теперь с String ID
+    final List<PickerItem<String>> projectPickerItems = _projectOptions.entries
         .map((entry) => PickerItem<String>(value: entry.key, displayValue: entry.value))
         .toList();
     final String currentProjectDisplay = _projectOptions[transactionState.projectId] ?? LocaleKeys.notSelected.tr();
@@ -72,10 +74,9 @@ class AdditionalFieldsWidget extends ConsumerWidget {
       PickerItem(value: dayBeforeYesterday, displayValue: LocaleKeys.theDayBeforeYesterday.tr()),
     ];
 
-    // Убедимся, что transactionState.date инициализирована
-    final DateTime transactionDate = transactionState.date ?? DateTime.now(); // Если date может быть null
+    final DateTime transactionDate = transactionState.date ?? DateTime.now();
 
-    final currentSimpleDate = DateTime(transactionDate.year, transactionDate.day, transactionDate.month); // Исправлен порядок month/day
+    final currentSimpleDate = DateTime(transactionDate.year, transactionDate.month, transactionDate.day); // Исправлен порядок month/day
     String currentDateDisplay;
     if (currentSimpleDate == today) {
       currentDateDisplay = LocaleKeys.today.tr();
@@ -89,7 +90,7 @@ class AdditionalFieldsWidget extends ConsumerWidget {
 
     // --- Построение UI ---
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // Добавляем горизонтальный паддинг для Wrap
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Wrap(
         spacing: 8.0,
         runSpacing: 8.0,
@@ -101,14 +102,14 @@ class AdditionalFieldsWidget extends ConsumerWidget {
             currentValueDisplay: currentAccountDisplay,
             width: (MediaQuery.of(context).size.width / 3) - 16,
             onTap: () async {
-              final selected = await customShowModalBottomSheet<String>( // <--- customShowModalBottomSheet теперь с String ID
+              final selected = await customShowModalBottomSheet<String>(
                   context: context,
                   title: LocaleKeys.selectAccount.tr(),
                   items: accountPickerItems,
                   type: 'line'
               );
               if (selected != null) {
-                transactionCreateController.updateAccount(selected.value); // <--- ID теперь String
+                transactionCreateController.updateAccount(selected.value);
               }
             },
           ),
@@ -120,14 +121,14 @@ class AdditionalFieldsWidget extends ConsumerWidget {
             currentValueDisplay: currentProjectDisplay,
             width: (MediaQuery.of(context).size.width / 3) - 16,
             onTap: () async {
-              final selected = await customShowModalBottomSheet<String>( // <--- customShowModalBottomSheet теперь с String ID
+              final selected = await customShowModalBottomSheet<String>(
                   context: context,
                   title: LocaleKeys.selectProject.tr(),
                   items: projectPickerItems,
                   type: 'line'
               );
               if (selected != null) {
-                transactionCreateController.updateProject(selected.value); // <--- ID теперь String
+                transactionCreateController.updateProject(selected.value);
               }
             },
           ),
@@ -141,12 +142,11 @@ class AdditionalFieldsWidget extends ConsumerWidget {
             onTap: () async {
               final selectedDate = await showDatePicker(
                 context: context,
-                initialDate: transactionDate, // Используем дату из состояния контроллера
+                initialDate: transactionDate,
                 firstDate: DateTime(2000),
                 lastDate: DateTime(2100),
               );
               if (selectedDate != null) {
-                // Сохраняем время, если оно важно, или просто берем начало дня
                 final currentTime = TimeOfDay.fromDateTime(transactionDate);
                 final newDateTime = DateTime(
                   selectedDate.year,
@@ -159,14 +159,6 @@ class AdditionalFieldsWidget extends ConsumerWidget {
               }
             },
           ),
-
-          // Поле Комментарий (перенесем сюда, чтобы было в Wrap)
-          // Убираем InputDecoration, так как CustomSecondaryPickerField сам его оборачивает
-          // Но это не PickerField, это TextField. Поэтому нужно его стилизовать.
-          // Если это отдельный TextField, он должен быть вне Wrap или иметь ширину 100%.
-          // Или ты хочешь, чтобы он был как CustomSecondaryPickerField?
-          // Давай пока оставим его отдельно, как в твоем предыдущем варианте,
-          // но с горизонтальным паддингом.
         ],
       ),
     );
