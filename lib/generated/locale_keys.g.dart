@@ -154,6 +154,30 @@ abstract class  LocaleKeys {
   static const confirmDeleteProjectMessage = 'confirmDeleteProjectMessage';
   static const projectDeletedSuccessfully = 'projectDeletedSuccessfully';
   static const failedToDeleteProject = 'failedToDeleteProject';
+  static const teamCreatedSuccessfully = 'teamCreatedSuccessfully';
+  static const failedToCreateTeam = 'failedToCreateTeam';
+  static const teamDetails = 'teamDetails';
+  static const teamUpdatedSuccessfully = 'teamUpdatedSuccessfully';
+  static const failedToUpdateTeam = 'failedToUpdateTeam';
+  static const confirmDeleteTeamTitle = 'confirmDeleteTeamTitle';
+  static const confirmDeleteTeamMessage = 'confirmDeleteTeamMessage';
+  static const teamDeletedSuccessfully = 'teamDeletedSuccessfully';
+  static const failedToDeleteTeam = 'failedToDeleteTeam';
+  static const noChangesToSave = 'noChangesToSave';
+  static const teamMembers = 'teamMembers';
+  static const failedToLoadTeamMembers = 'failedToLoadTeamMembers';
+  static const noTeamMembers = 'noTeamMembers';
+  static const addTeamMember = 'addTeamMember';
+  static const memberEmail = 'memberEmail';
+  static const emailCannotBeEmpty = 'emailCannotBeEmpty';
+  static const invalidEmailFormat = 'invalidEmailFormat';
+  static const memberAddedSuccessfully = 'memberAddedSuccessfully';
+  static const failedToAddMember = 'failedToAddMember';
+  static const confirmRemoveMemberTitle = 'confirmRemoveMemberTitle';
+  static const confirmRemoveMemberMessage = 'confirmRemoveMemberMessage';
+  static const remove = 'remove';
+  static const memberRemovedSuccessfully = 'memberRemovedSuccessfully';
+  static const failedToRemoveMember = 'failedToRemoveMember';
   static const test = 'test';
 
 }

@@ -1,16 +1,16 @@
-// lib/features/transaction_categories/data/models/transaction_category_model.dart
+// lib/features/transactions/data/models/transaction_category_model.dart
 
 class TransactionCategoryModel {
   final String id;
   final String teamId;
   final String name;
-  final String icon;
-  final String type; // 'income' или 'expense'
+  final String icon; // Предполагается, что 'icon' - это строка. Убедитесь, что это так.
+  final String type; // Например, 'expense' или 'income'
   final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? deletedAt;
-  final String? updatedBy;
-  final DateTime syncedAt;
+  final DateTime? updatedAt;  // <--- СДЕЛАНО NULLABLE
+  final DateTime? deletedAt;  // <--- СДЕЛАНО NULLABLE
+  final String? updatedBy;    // <--- СДЕЛАНО NULLABLE
+  final DateTime? syncedAt;   // <--- СДЕЛАНО NULLABLE
 
   TransactionCategoryModel({
     required this.id,
@@ -19,43 +19,53 @@ class TransactionCategoryModel {
     required this.icon,
     required this.type,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
     this.deletedAt,
     this.updatedBy,
-    required this.syncedAt,
+    this.syncedAt,
   });
 
   factory TransactionCategoryModel.fromJson(Map<String, dynamic> json) {
-    print('DEBUG: Parsing category JSON: $json'); // <--- ДОБАВЬ ЭТО
-    try {
-      return TransactionCategoryModel(
-        id: json['id'] as String,
-        teamId: json['teamId'] as String,
-        name: json['name'] as String,
-        icon: json['icon'] as String,
-        type: json['type'] as String,
-        createdAt: DateTime.parse(json['createdAt']),
-        updatedAt: DateTime.parse(json['updatedAt']),
-        deletedAt: json['deletedAt'] != null ? DateTime.tryParse(json['deletedAt']) : null,
-        updatedBy: json['updatedBy'] as String?,
-        syncedAt: DateTime.parse(json['syncedAt']),
-      );
-    } catch (e) {
-      print('ERROR: Failed to parse TransactionCategoryModel: $e, JSON: $json'); // <--- И ЭТО
-      rethrow;
-    }
+    return TransactionCategoryModel(
+      id: json['id'] as String,
+      teamId: json['teamId'] as String,
+      name: json['name'] as String,
+      icon: json['icon'] as String,
+      type: json['type'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      // ОБРАБОТКА NULL ДЛЯ ПОЛЕЙ DateTime?
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt'] as String) : null,
+      deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt'] as String) : null,
+      syncedAt: json['syncedAt'] != null ? DateTime.parse(json['syncedAt'] as String) : null,
+      // ОБРАБОТКА NULL ДЛЯ ПОЛЯ String?
+      updatedBy: json['updatedBy'] as String?, // Использование 'as String?' позволяет присвоить null
+    );
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'teamId': teamId,
-    'name': name,
-    'icon': icon,
-    'type': type,
-    'createdAt': createdAt.toIso8601String(),
-    'updatedAt': updatedAt.toIso8601String(),
-    'deletedAt': deletedAt?.toIso8601String(),
-    'updatedBy': updatedBy,
-    'syncedAt': syncedAt.toIso8601String(),
-  };
+  // Если у вас есть метод copyWith, его тоже нужно обновить
+  TransactionCategoryModel copyWith({
+    String? id,
+    String? teamId,
+    String? name,
+    String? icon,
+    String? type,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+    String? updatedBy,
+    DateTime? syncedAt,
+  }) {
+    return TransactionCategoryModel(
+      id: id ?? this.id,
+      teamId: teamId ?? this.teamId,
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      type: type ?? this.type,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      updatedBy: updatedBy ?? this.updatedBy,
+      syncedAt: syncedAt ?? this.syncedAt,
+    );
+  }
 }

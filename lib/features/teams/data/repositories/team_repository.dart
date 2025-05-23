@@ -5,14 +5,13 @@ import '../models/team_model.dart';
 class TeamRepository {
   final Dio dio;
 
-  TeamRepository({required this.dio}); // <--- ИЗМЕНЕНО: Явное именованное требование
+  TeamRepository({required this.dio});
 
   Future<List<TeamModel>> fetchTeams() async {
     try {
-      final response = await dio.get('/api/teams'); // <--- Оставил /api/teams, если он верен
+      final response = await dio.get('/api/teams');
       print('TEAM API RESPONSE: ${response.data}');
       final data = response.data;
-      // Если ответ — массив, то парсим напрямую
       final List list = data is List ? data : (data['data'] ?? []);
       return list.map((json) => TeamModel.fromJson(json as Map<String, dynamic>)).toList();
     } on DioException catch (e) {
@@ -25,7 +24,7 @@ class TeamRepository {
           message = err;
         }
       }
-      throw Exception(message); // Перебрасываем ошибку для обработки выше
+      throw Exception(message);
     } catch (e) {
       throw Exception('Неизвестная ошибка при получении команд: $e');
     }
@@ -60,6 +59,26 @@ class TeamRepository {
       throw Exception(message);
     } catch (e) {
       throw Exception('Неизвестная ошибка при обновлении команды: $e');
+    }
+  }
+
+  // НОВЫЙ МЕТОД: Удаление команды
+  Future<void> deleteTeam(String id) async {
+    try {
+      final response = await dio.delete('/api/teams/$id');
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception('Failed to delete team: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      String message = 'Ошибка при удалении команды';
+      if (e.response != null && e.response?.data != null && e.response!.data is Map && e.response!.data['message'] != null) {
+        message = e.response!.data['message'].toString();
+      }
+      throw Exception(message);
+    } catch (e) {
+      throw Exception('Неизвестная ошибка при удалении команды: $e');
     }
   }
 }

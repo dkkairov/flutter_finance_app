@@ -13,7 +13,7 @@ class ProjectModel {
   @JsonKey(name: 'createdAt')
   final DateTime createdAt;
   @JsonKey(name: 'updatedAt')
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
   @JsonKey(name: 'deletedAt')
   final DateTime? deletedAt; // Добавлено, может быть null
   @JsonKey(name: 'updatedBy')
@@ -27,7 +27,7 @@ class ProjectModel {
     required this.name,
     this.description,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
     this.deletedAt, // Добавлено в конструктор
     this.updatedBy, // Добавлено в конструктор
     this.syncedAt, // Добавлено в конструктор

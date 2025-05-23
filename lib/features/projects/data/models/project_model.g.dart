@@ -12,7 +12,10 @@ ProjectModel _$ProjectModelFromJson(Map<String, dynamic> json) => ProjectModel(
   name: json['name'] as String,
   description: json['description'] as String?,
   createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  updatedAt:
+      json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
   deletedAt:
       json['deletedAt'] == null
           ? null
@@ -31,7 +34,7 @@ Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
       'name': instance.name,
       'description': instance.description,
       'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
       'deletedAt': instance.deletedAt?.toIso8601String(),
       'updatedBy': instance.updatedBy,
       'syncedAt': instance.syncedAt?.toIso8601String(),

@@ -1,10 +1,11 @@
-// lib/features/teams/features/screens/create_team_screen.dart
+// lib/features/teams/presentation/screens/create_team_screen.dart
 
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../../../features/common/widgets/custom_buttons/custom_primary_button.dart';
+import '../../../common/widgets/custom_buttons/custom_primary_button.dart';
 import '../../../common/widgets/custom_text_form_field.dart';
 import '../providers/team_provider.dart';
 
@@ -17,35 +18,43 @@ class CreateTeamScreen extends ConsumerStatefulWidget {
 
 class _CreateTeamScreenState extends ConsumerState<CreateTeamScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _teamNameController = TextEditingController();
-  bool _isLoading = false;
-  String? _error;
+  final _nameController = TextEditingController();
 
   @override
   void dispose() {
-    _teamNameController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
   Future<void> _createTeam() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
+    if (_formKey.currentState!.validate()) {
+      final name = _nameController.text.trim();
 
-    final teamName = _teamNameController.text.trim();
-    try {
-      final repo = ref.read(teamRepositoryProvider);
-      await repo.createTeam(teamName);
+      try {
+        final repository = ref.read(teamRepositoryProvider);
+        await repository.createTeam(name);
 
-      if (mounted) Navigator.pop(context, true); // Можно вернуть true, чтобы в списке команд обновиться
-    } catch (e) {
-      setState(() {
-        _error = 'Ошибка: $e';
-      });
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+        ref.invalidate(teamsProvider); // Обновляем список команд
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(LocaleKeys.teamCreatedSuccessfully.tr())),
+          );
+          Navigator.of(context).pop(); // Возвращаемся после успешного создания
+        }
+      } catch (e) {
+        if (mounted) {
+          String errorMessage = '${LocaleKeys.failedToCreateTeam.tr()}: ${e.toString()}';
+          if (e is DioException) {
+            if (e.response != null && e.response!.data != null) {
+              errorMessage = '${LocaleKeys.failedToCreateTeam.tr()}: ${e.response!.data['message'] ?? 'Unknown error'}';
+            }
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
+      }
     }
   }
 
@@ -55,27 +64,21 @@ class _CreateTeamScreenState extends ConsumerState<CreateTeamScreen> {
       appBar: AppBar(
         title: Text(LocaleKeys.createTeam.tr()),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (_error != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text(_error!, style: const TextStyle(color: Colors.red)),
-                ),
               CustomTextFormField(
                 labelText: LocaleKeys.teamName.tr(),
-                controller: _teamNameController,
-                validator: (value) => value?.trim().isEmpty == true ? LocaleKeys.teamNameCannotBeEmpty.tr() : null,
+                controller: _nameController,
+                validator: (value) =>
+                value?.trim().isEmpty == true ? LocaleKeys.teamNameCannotBeEmpty.tr() : null,
               ),
               const SizedBox(height: 24),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : CustomPrimaryButton(
+              CustomPrimaryButton(
                 text: LocaleKeys.create.tr(),
                 onPressed: _createTeam,
               ),

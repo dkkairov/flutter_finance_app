@@ -2,14 +2,15 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_1/features/teams/presentation/screens/show_team_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../common/widgets/custom_floating_action_button.dart';
 import '../../../../features/common/widgets/custom_list_view/custom_list_item.dart';
 import '../../../../features/common/widgets/custom_list_view/custom_list_view_separated.dart';
 import '../providers/team_provider.dart';
-import 'create_team_screen.dart';
+import 'create_team_screen.dart'; // <--- НОВЫЙ ИМПОРТ
+import 'edit_team_screen.dart';   // <--- НОВЫЙ ИМПОРТ (заменяет ShowTeamScreen)
+
 
 // --- Экран списка команд ---
 class TeamsScreen extends ConsumerWidget {
@@ -28,8 +29,7 @@ class TeamsScreen extends ConsumerWidget {
         error: (err, _) => Center(child: Text('Ошибка: $err')),
         data: (teams) {
           if (teams.isEmpty) {
-            return Center(child: Text('Нет команд'));
-            // Можно заменить на локализацию: LocaleKeys.noTeamsFound.tr()
+            return Center(child: Text(LocaleKeys.noTeamsFound.tr())); // Используем локализацию
           }
           return CustomListViewSeparated(
             items: teams,
@@ -41,7 +41,8 @@ class TeamsScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ShowTeamScreen(team: team),
+                      // <--- ИЗМЕНЕНО: Навигация на EditTeamScreen
+                      builder: (context) => EditTeamScreen(team: team),
                     ),
                   );
                 },
