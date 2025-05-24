@@ -22,7 +22,6 @@ abstract class  LocaleKeys {
   static const email = 'email';
   static const password = 'password';
   static const register = 'register';
-  static const transaction = 'transaction';
   static const transactions = 'transactions';
   static const categories = 'categories';
   static const project = 'project';
@@ -34,7 +33,6 @@ abstract class  LocaleKeys {
   static const accounts = 'accounts';
   static const budget = 'budget';
   static const add = 'add';
-  static const balance = 'balance';
   static const totalBudgetForAMonth = 'totalBudgetForAMonth';
   static const expense = 'expense';
   static const expenses = 'expenses';
@@ -203,12 +201,14 @@ abstract class  LocaleKeys {
   static const error_deleting_account = 'error_deleting_account';
   static const account_not_found_or_deleted = 'account_not_found_or_deleted';
   static const no_accounts_yet = 'no_accounts_yet';
-  static const no_data_for_this_period = 'no_data_for_this_period';
-  static const error_loading_report = 'error_loading_report';
   static const error_loading_transactions = 'error_loading_transactions';
   static const no_transactions_in_category = 'no_transactions_in_category';
   static const select_project = 'select_project';
+  static const no_data_for_this_period = 'no_data_for_this_period';
+  static const transaction = 'transaction';
+  static const error_loading_report = 'error_loading_report';
   static const no_project = 'no_project';
+  static const balance = 'balance';
   static const test = 'test';
 
 }

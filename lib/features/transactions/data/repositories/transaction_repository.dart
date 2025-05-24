@@ -5,9 +5,10 @@ import 'package:easy_localization/easy_localization.dart'; // Понадобит
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/dio_provider.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
-import '../../../transactions/data/models/transaction_model.dart';
 import '../../../transactions/data/models/transaction_payload.dart';
 import '../../../transactions/data/models/transfer_payload.dart';
+import '../models/transaction_model.dart';
+// import '../../reports/data/models/filtered_transactions_list_params.dart'; // Этот импорт больше не нужен здесь, т.к. fetchTransactions принимает примитивы
 
 class TransactionRepository {
   final Dio _dio;
@@ -75,15 +76,21 @@ class TransactionRepository {
     }
   }
 
-  // Метод для получения всех транзакций (остается без изменений)
+  // МЕТОД ИЗМЕНЕН: fetchTransactions теперь может принимать projectId
   Future<List<TransactionModel>> fetchTransactions({
-    required String teamId,
+    // teamId больше не нужен как отдельный параметр, так как он берется из _ref
     String? accountId,
     String? categoryId, // Название параметра для бэкенда может быть 'transaction_category_id'
+    String? projectId,  // <--- ДОБАВЛЕН НОВЫЙ ПАРАМЕТР
     String? transactionType,
     DateTime? startDate,
     DateTime? endDate,
   }) async {
+    final teamId = _ref.read(selectedTeamIdProvider); // <--- ПОЛУЧАЕМ teamId ЗДЕСЬ
+    if (teamId == null) {
+      throw Exception('Team ID is not selected. Cannot fetch transactions.');
+    }
+
     try {
       final queryParameters = <String, dynamic>{};
       if (accountId != null) {
@@ -91,6 +98,9 @@ class TransactionRepository {
       }
       if (categoryId != null) {
         queryParameters['transaction_category_id'] = categoryId; // Или 'category_id' в зависимости от API
+      }
+      if (projectId != null) { // <--- ДОБАВЛЕНА ЛОГИКА ДЛЯ projectId
+        queryParameters['project_id'] = projectId;
       }
       if (transactionType != null) {
         queryParameters['transaction_type'] = transactionType;
@@ -124,7 +134,8 @@ class TransactionRepository {
     }
   }
 
-  // НОВЫЙ МЕТОД: getTransactionsByCategory (для ошибки "The method 'getTransactionsByCategory' isn't defined")
+// МЕТОД УДАЛЕН: getTransactionsByCategory теперь избыточен, используем fetchTransactions напрямую
+/*
   Future<List<TransactionModel>> getTransactionsByCategory({
     required String categoryId,
     required String type, // 'expense' или 'income'
@@ -139,7 +150,7 @@ class TransactionRepository {
 
     // Переиспользуем существующий метод fetchTransactions
     return fetchTransactions(
-      teamId: teamId,
+      teamId: teamId, // teamId теперь не нужен здесь, он внутри fetchTransactions
       categoryId: categoryId,
       transactionType: type,
       startDate: startDate,
@@ -147,6 +158,7 @@ class TransactionRepository {
       accountId: accountId,
     );
   }
+  */
 }
 
 // Провайдер для TransactionRepository (ОН ПРАВИЛЬНЫЙ, ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ)

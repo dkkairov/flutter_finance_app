@@ -9,7 +9,7 @@ import '../../../../generated/locale_keys.g.dart';
 import '../../common/theme/custom_colors.dart';
 import '../../common/theme/custom_text_styles.dart';
 import '../domain/models/category_report_params.dart';
-import 'category_transaction_list_screen.dart';
+import 'filtered_transaction_list_screen.dart';
 import '../domain/models/category_report_item_model.dart'; // <--- ДОБАВЛЕНО
 import '../presentation/providers/report_providers.dart'; // <--- ДОБАВЛЕНО
 
@@ -105,12 +105,14 @@ class _CategoryReportScreenState extends ConsumerState<CategoryReportScreen> { /
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryTransactionListScreen(
-          categoryId: category.categoryId,
-          categoryName: category.categoryName ?? '',
+        builder: (context) => FilteredTransactionListScreen( // <--- ИСПОЛЬЗУЕМ НОВОЕ НАЗВАНИЕ
+          categoryId: category.categoryId, // Передаем categoryId
+          title: category.categoryName ?? LocaleKeys.transactions.tr(), // Используем categoryName как заголовок
           transactionType: _selectedReportType == ReportType.expenses ? 'expense' : 'income',
           startDate: _startDate,
           endDate: _endDate,
+          // accountId: null, // Если accountId опционален
+          // projectId: null, // Убедитесь, что projectId не передается, если это категория
         ),
       ),
     );

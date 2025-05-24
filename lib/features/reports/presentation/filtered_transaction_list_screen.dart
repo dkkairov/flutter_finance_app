@@ -1,4 +1,4 @@
-// lib/features/reports/presentation/category_transaction_list_screen.dart
+// lib/features/reports/presentation/filtered_transaction_list_screen.dart
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -8,48 +8,49 @@ import '../../common/theme/custom_colors.dart';
 import '../../common/theme/custom_text_styles.dart';
 import '../../common/widgets/custom_divider.dart';
 import '../../transactions/presentation/widgets/transaction_list_widget.dart';
-import '../domain/models/category_transactions_list_params.dart';
-import '../presentation/providers/report_providers.dart'; // Оставьте этот импорт
+import '../domain/models/filtered_transactions_list_params.dart';
+import '../presentation/providers/report_providers.dart'; // Обновленный импорт
 
-
-// Экран списка транзакций по категории
-class CategoryTransactionListScreen extends ConsumerWidget {
-  final String categoryId;
-  final String categoryName;
+// Экран списка транзакций по категории или проекту (универсальный)
+class FilteredTransactionListScreen extends ConsumerWidget {
+  final String? categoryId;
+  final String? projectId;
+  final String title;
   final String transactionType;
   final DateTime startDate;
   final DateTime endDate;
   final String? accountId;
 
-  const CategoryTransactionListScreen({
+  const FilteredTransactionListScreen({
     super.key,
-    required this.categoryId,
-    required this.categoryName,
+    this.categoryId,
+    this.projectId,
+    required this.title,
     required this.transactionType,
     required this.startDate,
     required this.endDate,
     this.accountId,
-  });
+  }) : assert(categoryId != null || projectId != null, 'Either categoryId or projectId must be provided for filtering.');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final params = CategoryTransactionsListParams(
       categoryId: categoryId,
+      projectId: projectId,
       transactionType: transactionType,
       startDate: startDate,
       endDate: endDate,
       accountId: accountId,
     );
 
-    // Watch провайдер для получения списка транзакций по категории
-    // ИЗМЕНЕНО: Ожидаем List<TransactionModel>
-    // ИЗМЕНЕНИЕ ЗДЕСЬ: УБЕРИТЕ 'ReportProviders.'
-    final transactionsAsyncValue = ref.watch(categoryTransactionsListProvider(params)); // <--- ВОТ ЭТО ИЗМЕНЕНИЕ
+    // Watch провайдер для получения списка транзакций
+    // ИСПРАВЛЕНО: используем правильное имя провайдера - filteredTransactionsListProvider
+    final transactionsAsyncValue = ref.watch(filteredTransactionsListProvider(params));
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          categoryName,
+          title,
           style: CustomTextStyles.normalMedium.copyWith(
             fontWeight: FontWeight.bold,
             color: CustomColors.onPrimary,
@@ -75,8 +76,9 @@ class CategoryTransactionListScreen extends ConsumerWidget {
                   error: (err, stack) => Text('${LocaleKeys.total.tr()}: Error'),
                 ),
                 const SizedBox(height: 4),
+                // TODO: Рассчитывать эту строку динамически из итогов за день (если нужно)
                 Text(
-                  '20 april (-5 000 ${LocaleKeys.tenge_short.tr()})', // TODO: Рассчитывать эту строку динамически из итогов за день
+                  '20 april (-5 000 ${LocaleKeys.tenge_short.tr()})',
                   style: CustomTextStyles.normalSmall.copyWith(color: CustomColors.mainGrey),
                 ),
               ],
@@ -89,10 +91,9 @@ class CategoryTransactionListScreen extends ConsumerWidget {
               data: (transactions) {
                 if (transactions.isEmpty) {
                   return Center(
-                    child: Text(LocaleKeys.no_transactions_in_category.tr()),
+                    child: Text(LocaleKeys.no_transactions_in_category.tr()), // TODO: Можно сделать универсальнее "Нет транзакций"
                   );
                 }
-                // ИЗМЕНЕНО: Передаем List<TransactionModel> в TransactionListWidget
                 return TransactionListWidget(transactions: transactions);
               },
               loading: () => const Center(child: CircularProgressIndicator()),
