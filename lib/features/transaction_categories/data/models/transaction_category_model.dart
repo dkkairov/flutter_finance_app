@@ -26,6 +26,7 @@ class TransactionCategoryModel {
   });
 
   factory TransactionCategoryModel.fromJson(Map<String, dynamic> json) {
+    print('--- Parsing TransactionCategoryModel JSON: $json'); // <--- ДОБАВЬТЕ ЭТО
     return TransactionCategoryModel(
       id: json['id'] as String,
       teamId: json['teamId'] as String,

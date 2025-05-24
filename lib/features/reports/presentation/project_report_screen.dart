@@ -1,32 +1,31 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// Убедитесь, что пути к темам правильные
-import 'package:intl/intl.dart'; // Потребуется для форматирования даты
-import 'package:fl_chart/fl_chart.dart'; // Импорт fl_chart
-import '../../../../generated/locale_keys.g.dart'; // Импорт LocaleKeys
+import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../../../../generated/locale_keys.g.dart';
 
-// TODO: Импортировать экран списка транзакций по категории (заглушку)
-import '../../../features/common/theme/custom_colors.dart';
-import '../../../features/common/theme/custom_text_styles.dart';
+import '../../common/theme/custom_colors.dart';
+import '../../common/theme/custom_text_styles.dart';
 import 'category_transaction_list_screen.dart'; // Убедитесь, что путь правильный
 
 
-// !!! Enum для выбора типа отчета (Расходы/Доходы)
 enum ReportType {
-  expenses, // Расходы
-  income,   // Доходы
+  expenses,
+  income,
 }
 
 
-// !!! ЗАГЛУШКА: Модель данных для категории в отчете (остается без изменений)
+// ИЗМЕНЕНО: Добавлено поле 'id' для категории отчета
 class _ReportCategory {
+  final String id; // <--- ДОБАВЛЕНО: Уникальный ID категории
   final String name;
   final Color color;
   final int transactionCount;
   final num totalAmount;
 
   _ReportCategory({
+    required this.id, // <--- ОБЯЗАТЕЛЬНОЕ ПОЛЕ
     required this.name,
     required this.color,
     required this.transactionCount,
@@ -34,28 +33,26 @@ class _ReportCategory {
   });
 }
 
-// !!! ЗАГЛУШКА: Данные отчета по категориям (остаются без изменений)
+// ИЗМЕНЕНО: Обновлены заглушечные данные с добавлением ID
 final List<_ReportCategory> _dummyExpenseCategories = [
-  _ReportCategory(name: 'Products', color: Colors.red.shade400, transactionCount: 15, totalAmount: -12000),
-  _ReportCategory(name: 'Transport', color: Colors.blue.shade400, transactionCount: 8, totalAmount: -5000),
-  _ReportCategory(name: 'Cafe & Restaurants', color: Colors.green.shade400, transactionCount: 10, totalAmount: -8000),
-  _ReportCategory(name: 'Entertainments', color: Colors.purple.shade400, transactionCount: 5, totalAmount: -6000),
-  _ReportCategory(name: 'Health', color: Colors.orange.shade400, transactionCount: 3, totalAmount: -3000),
-  _ReportCategory(name: 'Other', color: Colors.grey.shade400, transactionCount: 7, totalAmount: -4000),
+  _ReportCategory(id: 'cat-exp-001', name: 'Products', color: Colors.red.shade400, transactionCount: 15, totalAmount: -12000),
+  _ReportCategory(id: 'cat-exp-002', name: 'Transport', color: Colors.blue.shade400, transactionCount: 8, totalAmount: -5000),
+  _ReportCategory(id: 'cat-exp-003', name: 'Cafe & Restaurants', color: Colors.green.shade400, transactionCount: 10, totalAmount: -8000),
+  _ReportCategory(id: 'cat-exp-004', name: 'Entertainments', color: Colors.purple.shade400, transactionCount: 5, totalAmount: -6000),
+  _ReportCategory(id: 'cat-exp-005', name: 'Health', color: Colors.orange.shade400, transactionCount: 3, totalAmount: -3000),
+  _ReportCategory(id: 'cat-exp-006', name: 'Other', color: Colors.grey.shade400, transactionCount: 7, totalAmount: -4000),
 ];
 
 final List<_ReportCategory> _dummyIncomeCategories = [
-  _ReportCategory(name: 'Salary', color: Colors.teal.shade400, transactionCount: 1, totalAmount: 150000),
-  _ReportCategory(name: 'Gifts', color: Colors.pink.shade400, transactionCount: 2, totalAmount: 10000),
-  _ReportCategory(name: 'Other Income', color: Colors.brown.shade400, transactionCount: 3, totalAmount: 5000),
+  _ReportCategory(id: 'cat-inc-001', name: 'Salary', color: Colors.teal.shade400, transactionCount: 1, totalAmount: 150000),
+  _ReportCategory(id: 'cat-inc-002', name: 'Gifts', color: Colors.pink.shade400, transactionCount: 2, totalAmount: 10000),
+  _ReportCategory(id: 'cat-inc-003', name: 'Other Income', color: Colors.brown.shade400, transactionCount: 3, totalAmount: 5000),
 ];
 
 final num _dummyTotalExpenses = _dummyExpenseCategories.fold(0.0, (sum, cat) => sum + cat.totalAmount.abs());
 final num _dummyTotalIncome = _dummyIncomeCategories.fold(0.0, (sum, cat) => sum + cat.totalAmount);
 
 
-// Экран Отчета по Категориям (соответствует среднему экрану на скриншоте)
-// StatefulWidget для управления выбором типа отчета и даты
 class ProjectReportScreen extends StatefulWidget {
   const ProjectReportScreen({super.key});
 
@@ -64,23 +61,19 @@ class ProjectReportScreen extends StatefulWidget {
 }
 
 class _ProjectReportScreenState extends State<ProjectReportScreen> {
-  // !!! Переменная состояния для выбранного типа отчета (используем Enum)
-  ReportType _selectedReportType = ReportType.expenses; // По умолчанию - Расходы
+  ReportType _selectedReportType = ReportType.expenses;
 
-  // Переменные состояния для выбранного диапазона дат (остаются без изменений)
   late DateTime _startDate;
   late DateTime _endDate;
 
   @override
   void initState() {
     super.initState();
-    // Инициализация диапазона дат (остается без изменений)
     final now = DateTime.now();
     _startDate = DateTime(now.year, now.month, 1);
     _endDate = DateTime(now.year, now.month + 1, 0);
   }
 
-  // Функция показа пикера диапазона дат (остается без изменений)
   Future<void> _selectDateRange(BuildContext context) async {
     final picked = await showDateRangePicker(
       context: context,
@@ -100,33 +93,34 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
     }
   }
 
-  // Функция навигации на экран списка транзакций по выбранной категории (остается без изменений)
+  // ИЗМЕНЕНО: Передаем все необходимые аргументы в CategoryTransactionListScreen
   void _navigateToCategoryTransactions(BuildContext context, _ReportCategory category) {
-    // TODO: Передать сюда диапазон дат, тип отчета и другие нужные данные
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryTransactionListScreen(), // Передаем название категории (заглушка)
-        // TODO: Передавать categoryId, startDate, endDate, selectedReportType и т.д.
+        builder: (context) => CategoryTransactionListScreen(
+          categoryId: category.id, // <--- ПЕРЕДАНО
+          categoryName: category.name, // <--- ПЕРЕДАНО
+          transactionType: _selectedReportType == ReportType.expenses ? 'expense' : 'income', // <--- ПЕРЕДАНО
+          startDate: _startDate, // <--- ПЕРЕДАНО
+          endDate: _endDate, // <--- ПЕРЕДАНО
+          // accountId: null, // Опционально, если нужно фильтровать по счету
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // !!! Определяем, какие данные использовать в зависимости от _selectedReportType
     List<_ReportCategory> currentCategories =
     _selectedReportType == ReportType.expenses
-        ? _dummyExpenseCategories.toList() // Создаем копию, чтобы не изменять оригинал
-        : _dummyIncomeCategories.toList(); // Создаем копию
+        ? _dummyExpenseCategories.toList()
+        : _dummyIncomeCategories.toList();
 
-    // !!! Сортируем список по убыванию totalAmount
     currentCategories.sort((a, b) {
-      // Для расходов (отрицательные значения) сортируем по абсолютному значению
       if (_selectedReportType == ReportType.expenses) {
         return b.totalAmount.abs().compareTo(a.totalAmount.abs());
       } else {
-        // Для доходов (положительные значения) сортируем по обычному убыванию
         return b.totalAmount.compareTo(a.totalAmount);
       }
     });
@@ -135,27 +129,24 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
         ? _dummyTotalExpenses
         : _dummyTotalIncome;
 
-    // Форматируем выбранный диапазон дат для отображения в AppBar и строке даты (остается без изменений)
     final DateFormat formatter = DateFormat('dd.MM.yy');
     final String formattedDateRange = '${formatter.format(_startDate)} - ${formatter.format(_endDate)}';
 
-    // !!! Создаем Map для children CupertinoSlidingSegmentedControl
     final Map<ReportType, Widget> segmentChildren = {
       ReportType.expenses: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Text(
-          LocaleKeys.expense.tr(), // Текст как на скриншоте -> LocaleKeys.expense
+          LocaleKeys.expense.tr(),
         ),
       ),
       ReportType.income: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Text(
-          LocaleKeys.income.tr(), // Текст как на скриншоте -> LocaleKeys.income
+          LocaleKeys.income.tr(),
         ),
       ),
     };
 
-    // !!! Создаем данные для кольцевой диаграммы
     List<PieChartSectionData> _generateChartData() {
       return currentCategories.asMap().entries.map((entry) {
         final index = entry.key;
@@ -178,9 +169,8 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        // Заголовок AppBar - выбранный диапазон дат (остается без изменений)
         title: Text(
-          LocaleKeys.reportByCategories.tr(), // "Report by category" -> LocaleKeys.reportByCategories
+          LocaleKeys.reportByCategories.tr(),
           style: CustomTextStyles.normalMedium.copyWith(
             fontWeight: FontWeight.bold,
             color: CustomColors.onPrimary,
@@ -192,11 +182,11 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
           Container(
             padding: const EdgeInsets.all(10.0),
             child: CupertinoSlidingSegmentedControl<ReportType>(
-              children: segmentChildren, // Map сегментов
+              children: segmentChildren,
               backgroundColor: CustomColors.mainLightGrey,
               thumbColor: CustomColors.mainWhite,
-              groupValue: _selectedReportType, // Текущий выбранный сегмент
-              onValueChanged: (ReportType? newValue) { // Обработчик изменения
+              groupValue: _selectedReportType,
+              onValueChanged: (ReportType? newValue) {
                 if (newValue != null) {
                   setState(() {
                     _selectedReportType = newValue;
@@ -208,7 +198,6 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
             ),
           ),
 
-          // Селектор диапазона дат (Нажимаемая строка) (остается без изменений)
           InkWell(
             onTap: () => _selectDateRange(context),
             borderRadius: BorderRadius.circular(8.0),
@@ -236,7 +225,6 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
             ),
           ),
 
-          // Секция с кольцевой диаграммой
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
@@ -252,16 +240,15 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                       sections: _generateChartData(),
                     ),
                   ),
-                  // Текст по центру диаграммы (общая сумма)
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _selectedReportType == ReportType.expenses ? '${LocaleKeys.totalExpenses.tr()}:' : '${LocaleKeys.totalIncome.tr()}:', // Метка суммы зависит от выбора -> LocaleKeys.totalExpenses/totalIncome
+                        _selectedReportType == ReportType.expenses ? '${LocaleKeys.totalExpenses.tr()}:' : '${LocaleKeys.totalIncome.tr()}:',
                         style: CustomTextStyles.normalSmall.copyWith(color: CustomColors.mainGrey),
                       ),
                       Text(
-                        '${totalAmount.toStringAsFixed(0)} ${LocaleKeys.tenge_short.tr()}', // Общая сумма зависит от выбора + валюта
+                        '${totalAmount.toStringAsFixed(0)} ${LocaleKeys.tenge_short.tr()}',
                         style: CustomTextStyles.normalMedium.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -271,7 +258,6 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
             ),
           ),
 
-          // Секция со списком категорий (остается без изменений, кроме комментариев)
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
@@ -294,48 +280,37 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                     },
                     child: Stack(
                       children: [
-                        // Фоновая заливка, занимающая всю высоту Stack
                         Positioned.fill(
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: FractionallySizedBox(
                               widthFactor: fillWidthFactor,
-                              heightFactor: 1.0, // Занимаем всю высоту
+                              heightFactor: 1.0,
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
                                   color: category.color.withOpacity(0.3),
-                                  // gradient: LinearGradient(...),
                                 ),
                               ),
                             ),
                           ),
                         ),
 
-                        // Основной контент элемента списка
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                           child: Row(
                             children: [
-                              // Container(
-                              //   width: 16,
-                              //   height: 16,
-                              //   decoration: BoxDecoration(
-                              //     shape: BoxShape.circle,
-                              //     color: category.color,
-                              //   ),
-                              // ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      category.name.tr(), // Локализуем название категории
+                                      category.name.tr(),
                                       style: CustomTextStyles.normalMedium,
                                     ),
                                     Text(
-                                      '${category.transactionCount} ${LocaleKeys.transaction.plural(category.transactionCount)}', // Локализация слова "transaction"
+                                      '${category.transactionCount} ${LocaleKeys.transaction.plural(category.transactionCount)}',
                                       style: CustomTextStyles.normalSmall.copyWith(color: CustomColors.mainGrey),
                                     ),
                                   ],

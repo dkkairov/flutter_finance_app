@@ -1,19 +1,21 @@
 // lib/features/transactions/data/repositories/transaction_repository.dart
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart'; // Понадобится для DateFormat
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/dio_provider.dart'; // Предполагается, что у вас есть dio_provider
-import '../../../auth/presentation/providers/auth_providers.dart'; // Для selectedTeamIdProvider
-import '../models/transaction_payload.dart';
-import '../models/transfer_payload.dart';
+import '../../../../core/network/dio_provider.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../../transactions/data/models/transaction_model.dart';
+import '../../../transactions/data/models/transaction_payload.dart';
+import '../../../transactions/data/models/transfer_payload.dart';
 
 class TransactionRepository {
   final Dio _dio;
-  final Ref _ref; // Используем Ref для чтения других провайдеров, например teamId
+  final Ref _ref;
 
   TransactionRepository(this._dio, this._ref);
 
-  // Метод для создания расхода или дохода
+  // Метод для создания расхода или дохода (остается без изменений)
   Future<void> createTransaction(TransactionPayload payload) async {
     final teamId = _ref.read(selectedTeamIdProvider);
     if (teamId == null) {
@@ -31,11 +33,9 @@ class TransactionRepository {
         throw Exception('Failed to create transaction: ${response.statusCode} ${response.data}');
       }
     } on DioException catch (e) {
-      // Обработка ошибок Dio
       print('Dio error creating transaction: ${e.message}');
       print('Response data: ${e.response?.data}');
       if (e.response != null && e.response!.statusCode == 422) {
-        // Ошибки валидации
         throw Exception('Validation error: ${e.response!.data['message']} - ${e.response!.data['errors']}');
       }
       throw Exception('Failed to create transaction: ${e.message}');
@@ -45,7 +45,7 @@ class TransactionRepository {
     }
   }
 
-  // Метод для создания перевода
+  // Метод для создания перевода (остается без изменений)
   Future<void> createTransfer(TransferPayload payload) async {
     final teamId = _ref.read(selectedTeamIdProvider);
     if (teamId == null) {
@@ -54,7 +54,7 @@ class TransactionRepository {
 
     try {
       final response = await _dio.post(
-        '/api/teams/$teamId/transfers', // Эндпоинт для переводов
+        '/api/teams/$teamId/transfers',
         data: payload.toJson(),
       );
       if (response.statusCode == 201) {
@@ -63,11 +63,9 @@ class TransactionRepository {
         throw Exception('Failed to create transfer: ${response.statusCode} ${response.data}');
       }
     } on DioException catch (e) {
-      // Обработка ошибок Dio
       print('Dio error creating transfer: ${e.message}');
       print('Response data: ${e.response?.data}');
       if (e.response != null && e.response!.statusCode == 422) {
-        // Ошибки валидации
         throw Exception('Validation error: ${e.response!.data['message']} - ${e.response!.data['errors']}');
       }
       throw Exception('Failed to create transfer: ${e.message}');
@@ -76,10 +74,83 @@ class TransactionRepository {
       rethrow;
     }
   }
+
+  // Метод для получения всех транзакций (остается без изменений)
+  Future<List<TransactionModel>> fetchTransactions({
+    required String teamId,
+    String? accountId,
+    String? categoryId, // Название параметра для бэкенда может быть 'transaction_category_id'
+    String? transactionType,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      final queryParameters = <String, dynamic>{};
+      if (accountId != null) {
+        queryParameters['account_id'] = accountId;
+      }
+      if (categoryId != null) {
+        queryParameters['transaction_category_id'] = categoryId; // Или 'category_id' в зависимости от API
+      }
+      if (transactionType != null) {
+        queryParameters['transaction_type'] = transactionType;
+      }
+      if (startDate != null) {
+        queryParameters['start_date'] = DateFormat('yyyy-MM-dd').format(startDate);
+      }
+      if (endDate != null) {
+        queryParameters['end_date'] = DateFormat('yyyy-MM-dd').format(endDate);
+      }
+
+      final response = await _dio.get(
+        '/api/teams/$teamId/transactions',
+        queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => TransactionModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load transactions: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw Exception('Failed to load transactions: ${e.response?.data['message'] ?? 'Unknown error'}');
+      } else {
+        throw Exception('Failed to load transactions: ${e.message}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // НОВЫЙ МЕТОД: getTransactionsByCategory (для ошибки "The method 'getTransactionsByCategory' isn't defined")
+  Future<List<TransactionModel>> getTransactionsByCategory({
+    required String categoryId,
+    required String type, // 'expense' или 'income'
+    required DateTime startDate,
+    required DateTime endDate,
+    String? accountId,
+  }) async {
+    final teamId = _ref.read(selectedTeamIdProvider);
+    if (teamId == null) {
+      throw Exception('Team ID is not selected. Cannot fetch category transactions.');
+    }
+
+    // Переиспользуем существующий метод fetchTransactions
+    return fetchTransactions(
+      teamId: teamId,
+      categoryId: categoryId,
+      transactionType: type,
+      startDate: startDate,
+      endDate: endDate,
+      accountId: accountId,
+    );
+  }
 }
 
-// Провайдер для TransactionRepository
+// Провайдер для TransactionRepository (ОН ПРАВИЛЬНЫЙ, ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ)
 final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
-  final dio = ref.watch(dioProvider); // Используем Dio из dioProvider
+  final dio = ref.watch(dioProvider);
   return TransactionRepository(dio, ref);
 });

@@ -203,6 +203,12 @@ abstract class  LocaleKeys {
   static const error_deleting_account = 'error_deleting_account';
   static const account_not_found_or_deleted = 'account_not_found_or_deleted';
   static const no_accounts_yet = 'no_accounts_yet';
+  static const no_data_for_this_period = 'no_data_for_this_period';
+  static const error_loading_report = 'error_loading_report';
+  static const error_loading_transactions = 'error_loading_transactions';
+  static const no_transactions_in_category = 'no_transactions_in_category';
+  static const select_project = 'select_project';
+  static const no_project = 'no_project';
   static const test = 'test';
 
 }

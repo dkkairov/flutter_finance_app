@@ -200,5 +200,11 @@
   "error_deleting_account": "Error deleting account",
   "account_not_found_or_deleted": "Account not found or was deleted.",
   "no_accounts_yet": "No accounts yet",
+  "no_data_for_this_period": "No data for this period",
+  "error_loading_report": "Error loading report",
+  "error_loading_transactions": "Error loading transactions",
+  "no_transactions_in_category": "No transactions in this category",
+  "select_project": "Select Project",
+  "no_project": "No project",
   "test": "Тест"
 }

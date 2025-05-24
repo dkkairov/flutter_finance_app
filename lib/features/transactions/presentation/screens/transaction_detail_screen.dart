@@ -8,23 +8,21 @@ import '../../../common/widgets/custom_picker_fields/custom_primary_picker_field
 import '../../../common/widgets/custom_picker_fields/picker_item.dart';
 import '../../../common/widgets/custom_show_modal_bottom_sheet.dart';
 import '../../../common/widgets/custom_text_form_field.dart';
-import '../widgets/transaction_list_widget.dart';
+// import '../widgets/transaction_list_widget.dart'; // Этот импорт, скорее всего, не нужен здесь
 
-// !!! ИМПОРТИРУЕМ ОБЩУЮ МОДЕЛЬ ТРАНЗАКЦИИ (ЗАГЛУШКА), которую мы создали ранее
-// Убедитесь, что путь правильный.
-
-
+// !!! ИМПОРТИРУЕМ ОБЩУЮ МОДЕЛЬ ТРАНЗАКЦИИ
+import '../../data/models/transaction_model.dart'; // <--- ДОБАВЛЕНО
+import '../../data/models/transaction_payload.dart'; // <--- ДОБАВЛЕНО (для сохранения)
 
 // !!! Удаляем локальные заглушки моделей транзакций из этого файла
-// class _DummyAccountTransaction { ... }
-// final Map<String, List<_DummyAccountTransaction>> _currentAccountTransactions = { ... }
+// class _DummyAccountTransaction { ... } // УДАЛИТЕ эту строку
+// final Map<String, List<_DummyAccountTransaction>> _currentAccountTransactions = { ... } // УДАЛИТЕ эту строку
 
 
-// Экран деталей транзакции (С РЕДАКТИРУЕМЫМИ ПОЛЯМИ - ЗАГЛУШКА UI)
-// !!! Превращаем из StatelessWidget в StatefulWidget
+// Экран деталей транзакции (С РЕДАКТИРУЕМЫМИ ПОЛЯМИ)
 class TransactionDetailScreen extends StatefulWidget {
-  // Принимает объект транзакции (типа DummyTransaction)
-  final DummyAccountTransaction transaction;
+  // Принимает объект транзакции (теперь типа TransactionModel)
+  final TransactionModel transaction; // <--- ИЗМЕНЕНО: Используем TransactionModel
 
   const TransactionDetailScreen({super.key, required this.transaction});
 
@@ -33,37 +31,40 @@ class TransactionDetailScreen extends StatefulWidget {
 }
 
 class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
-  // !!! Переменные состояния для хранения редактируемых значений полей
-  // Используем TextEditingController для полей ввода текста (Amount, Comment)
   late TextEditingController _amountController;
   late TextEditingController _commentController;
 
-  // Для полей, которые выбираются (Категория, Счет, Дата), храним выбранные значения
-  late String _selectedCategoryName; // Пока храним только имя категории
-  late String _selectedAccountName; // Пока храним только имя счета
-  late String _selectedProjectName; // Пока храним только имя проекта
-  late DateTime _selectedDate; // Храним выбранную дату
+  late String _selectedCategoryName;
+  late String _selectedAccountName;
+  late String _selectedProjectName;
+  late DateTime _selectedDate;
+
+  // Дополнительно можно хранить ID для отправки на бэкенд
+  String? _selectedCategoryId;
+  String? _selectedAccountId;
+  String? _selectedProjectId;
+
 
   @override
   void initState() {
     super.initState();
     // !!! Инициализация переменных состояния и контроллеров
-    // Берем начальные значения из объекта transaction, переданного в виджет
-    _amountController = TextEditingController(text: widget.transaction.amount.toStringAsFixed(0)); // Инициализируем с текущей суммой
-    // TODO: Если в DummyTransaction появится поле comment, инициализировать оттуда
-    _commentController = TextEditingController(text: ''); // Пока заглушка комментария
+    // Берем начальные значения из объекта transaction (TransactionModel)
+    _amountController = TextEditingController(text: widget.transaction.amount.toStringAsFixed(0));
+    _commentController = TextEditingController(text: widget.transaction.description ?? ''); // Инициализируем с описанием
 
-    _selectedCategoryName = widget.transaction.categoryName; // Инициализируем с текущей категорией
-    // TODO: Использовать реальное название счета или объект Account, если будет доступен
-    _selectedAccountName = 'Счет Kaspi bank'; // Пока заглушка
+    // Инициализируем из вложенных объектов (если они есть)
+    _selectedCategoryName = widget.transaction.category?.name ?? LocaleKeys.selectCategory.tr();
+    _selectedAccountId = widget.transaction.accountId; // Храним ID
+    _selectedAccountName = widget.transaction.account?.name ?? LocaleKeys.selectAccount.tr();
+    _selectedProjectId = widget.transaction.projectId; // Храним ID
+    _selectedProjectName = widget.transaction.project?.name ?? LocaleKeys.no_project.tr(); // Если нет проекта
 
-    // TODO: Использовать реальную дату транзакции, если она появится в DummyTransaction
-    _selectedDate = DateTime.now(); // Пока заглушка текущей даты
+    _selectedDate = widget.transaction.date; // Используем реальную дату транзакции
   }
 
   @override
   void dispose() {
-    // !!! Важно: Освобождаем контроллеры, когда виджет удаляется, чтобы избежать утечек памяти
     _amountController.dispose();
     _commentController.dispose();
     super.dispose();
@@ -72,17 +73,15 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
 
   // Функция показа пикера даты при нажатии на поле "Дата"
   Future<void> _selectDate(BuildContext context) async {
-    // Показываем стандартный пикер даты
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate, // Изначально выбранная дата
-      firstDate: DateTime(2000), // Самая ранняя доступная дата
-      lastDate: DateTime(2101), // Самая поздняя доступная дата
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
-    // Если дата выбрана (picked не null) и она отличается от текущей выбранной даты
     if (picked != null && picked != _selectedDate) {
       setState(() {
-        _selectedDate = picked; // Обновляем выбранную дату и перестраиваем виджет
+        _selectedDate = picked;
       });
     }
   }
@@ -90,80 +89,110 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
   // TODO: Реализовать функцию сохранения изменений при нажатии кнопки "Save"
   void _saveTransaction() {
     // !!! Собираем текущие значения из контроллеров и переменных состояния
-    final editedAmount = num.tryParse(_amountController.text) ?? widget.transaction.amount; // Парсим сумму, используем старую, если не удалось
-    final editedComment = _commentController.text;
-    final editedCategory = _selectedCategoryName;
-    final editedAccount = _selectedAccountName; // TODO: Использовать реальный ID/объект счета
+    final editedAmount = num.tryParse(_amountController.text) ?? widget.transaction.amount;
+    final editedDescription = _commentController.text;
+
+    // Для отправки на бэкенд используем ID
+    final editedCategoryId = _selectedCategoryId ?? widget.transaction.transactionCategoryId;
+    final editedAccountId = _selectedAccountId ?? widget.transaction.accountId;
+    final editedProjectId = _selectedProjectId ?? widget.transaction.projectId;
     final editedDate = _selectedDate;
 
     print('Сохранение транзакции ID: ${widget.transaction.id}');
     print('Отредактированная Сумма: $editedAmount');
-    print('Отредактированная Категория: $editedCategory');
-    print('Отредактированный Счет: $editedAccount');
+    print('Отредактированная Категория ID: $editedCategoryId');
+    print('Отредактированный Счет ID: $editedAccountId');
+    print('Отредактированный Проект ID: $editedProjectId');
     print('Отредактированная Дата: $editedDate');
-    print('Отредактированный Комментарий: $editedComment');
+    print('Отредактированный Комментарий: $editedDescription');
+
+    // !!! Создаем TransactionPayload для отправки данных на бэкенд
+    final updatedPayload = TransactionPayload(
+      // Поскольку это UPDATE, вам нужно передать ID существующей транзакции
+      // Но TransactionPayload не имеет поля ID, так как оно для создания.
+      // Для обновления обычно используется метод PUT/PATCH на /api/transactions/{id}
+      // Таким образом, вам нужно будет передать widget.transaction.id в метод репозитория.
+      transactionType: widget.transaction.transactionType, // Тип транзакции, скорее всего, не меняется
+      transactionCategoryId: editedCategoryId,
+      amount: editedAmount.toDouble(), // Приводим к double
+      accountId: editedAccountId,
+      projectId: editedProjectId,
+      description: editedDescription.isEmpty ? null : editedDescription, // Если пусто, отправляем null
+      date: editedDate,
+    );
 
     // TODO: Здесь должна быть логика вызова сервиса/репозитория/провайдера для обновления транзакции в базе данных.
-    // Передайте собранные редактированные данные.
+    // Пример (вам понадобится TransactionRepository и, возможно, Riverpod):
+    // ref.read(transactionRepositoryProvider).updateTransaction(
+    //   teamId: 'your_team_id', // Получить teamId из провайдера
+    //   transactionId: widget.transaction.id,
+    //   payload: updatedPayload,
+    // );
 
     // Navigator.pop(context); // Обычно после успешного сохранения возвращаются назад
   }
 
   @override
   Widget build(BuildContext context) {
-    // !!! Форматируем выбранную дату для отображения в поле "Дата"
     final formattedDate = '${_selectedDate.day.toString().padLeft(2, '0')}.${_selectedDate.month.toString().padLeft(2, '0')}.${_selectedDate.year}';
-    final List<PickerItem<num>> transactionCategories = [
-      PickerItem(value: 1, displayValue: 'Category 1'),
-      PickerItem(value: 2, displayValue: 'Category 2'),
-      PickerItem(value: 3, displayValue: 'Category 3'),
+
+    // TODO: Замените эти заглушки реальными данными из провайдеров/репозиториев
+    final List<PickerItem<String>> transactionCategories = [
+      PickerItem(value: 'cat-exp-001', displayValue: 'Products'),
+      PickerItem(value: 'cat-exp-002', displayValue: 'Transport'),
+      PickerItem(value: 'cat-inc-001', displayValue: 'Salary'),
+      // ... другие категории
     ];
 
-    final List<PickerItem<int>> accountPickerItems = [
-      PickerItem(value: 1, displayValue: 'Account 1'),
-      PickerItem(value: 2, displayValue: 'Account 2'),
-      PickerItem(value: 3, displayValue: 'Account 3'),
-    ]; // Заглушка для списка счетов
+    final List<PickerItem<String>> accountPickerItems = [
+      PickerItem(value: 'acc-001', displayValue: 'Kaspi Bank'),
+      PickerItem(value: 'acc-002', displayValue: 'Halyk Bank'),
+      // ... другие счета
+    ];
+
+    final List<PickerItem<String>> projectPickerItems = [
+      PickerItem(value: 'proj-001', displayValue: 'Work Project A'),
+      PickerItem(value: 'proj-002', displayValue: 'Personal Project B'),
+      PickerItem(value: 'no-project', displayValue: LocaleKeys.no_project.tr()), // Для выбора "без проекта"
+    ];
+
+
     return Scaffold(
       appBar: AppBar(
-        // Кнопка "назад" автоматически добавляется
         title: Text(
-          LocaleKeys.transaction.tr(), // Заголовок как на скриншоте
+          LocaleKeys.transaction.tr(),
           style: CustomTextStyles.normalMedium.copyWith(
             fontWeight: FontWeight.bold,
             color: CustomColors.onPrimary,
           ),
         ),
         actions: [
-          // Иконка корзины для удаления
           IconButton(
             icon: const Icon(Icons.delete_outline, color: CustomColors.onPrimary),
             onPressed: () {
-              // TODO: Реализовать действие удаления транзакции
               print('Удалить транзакцию ID: ${widget.transaction.id}');
+              // TODO: Реализовать логику удаления транзакции через репозиторий/провайдер
             },
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0), // Общие отступы для содержимого body
-        child: ListView( // Используем ListView, чтобы форма была прокручиваемой, если не помещается на экране
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
           children: [
-            // !!! Поле для Суммы (TextFormField)
             CustomTextFormField(
               labelText: LocaleKeys.amount.tr(),
-              controller: _amountController, // Привязываем контроллер
-              keyboardType: const TextInputType.numberWithOptions(decimal: true), // Клавиатура для чисел с десятичной точкой
-              suffixText: '\$', // Символ валюты как суффикс (пример)
+              controller: _amountController,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              suffixText: widget.transaction.account?.currencySymbol ?? LocaleKeys.tenge_short.tr(), // Используем символ валюты из счета
             ),
-            const SizedBox(height: 16), // Отступ между полями
+            const SizedBox(height: 16),
 
             CustomPrimaryPickerField(
-              icon: Icons.category, // Иконка для поля "Категория"
-              currentValueDisplay: _selectedCategoryName, // Отображаем выбранную категорию
+              icon: Icons.category,
+              currentValueDisplay: _selectedCategoryName,
               onTap: () async {
-                // Вызываем функцию выбора категории
-                final selected = await customShowModalBottomSheet(
+                final selected = await customShowModalBottomSheet<String>( // Укажите тип value для PickerItem
                     context: context,
                     title: LocaleKeys.selectCategory.tr(),
                     items: transactionCategories,
@@ -171,7 +200,8 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                 );
                 if (selected != null) {
                   setState(() {
-                    _selectedCategoryName = selected.displayValue; // Обновляем выбранную категорию
+                    _selectedCategoryId = selected.value; // Сохраняем ID категории
+                    _selectedCategoryName = selected.displayValue; // Обновляем отображаемое имя
                   });
                 }
               },
@@ -179,10 +209,10 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
             ),
             const SizedBox(height: 16),
             CustomPrimaryPickerField(
-              icon: Icons.wallet, // Иконка для поля "Счет"
-              currentValueDisplay: _selectedAccountName, // Отображаем выбранный счет
+              icon: Icons.wallet,
+              currentValueDisplay: _selectedAccountName,
               onTap: () async {
-                final selected = await customShowModalBottomSheet(
+                final selected = await customShowModalBottomSheet<String>( // Укажите тип value для PickerItem
                   context: context,
                   title: LocaleKeys.selectAccount.tr(),
                   items: accountPickerItems,
@@ -190,7 +220,8 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                 );
                 if (selected != null) {
                   setState(() {
-                    _selectedAccountName = selected.displayValue; // Обновляем выбранный счет
+                    _selectedAccountId = selected.value; // Сохраняем ID счета
+                    _selectedAccountName = selected.displayValue; // Обновляем отображаемое имя
                   });
                 }
               },
@@ -198,48 +229,56 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
             ),
             const SizedBox(height: 16),
             CustomPrimaryPickerField(
-              icon: Icons.calendar_today, // Иконка для поля "Дата"
-              currentValueDisplay: '${LocaleKeys.today.tr()} ($formattedDate)',
+              icon: Icons.business_center, // Иконка для поля "Проект"
+              currentValueDisplay: _selectedProjectName,
+              onTap: () async {
+                final selected = await customShowModalBottomSheet<String>( // Укажите тип value для PickerItem
+                  context: context,
+                  title: LocaleKeys.select_project.tr(), // TODO: Добавить LocaleKeys.select_project
+                  items: projectPickerItems,
+                  type: 'line',
+                );
+                if (selected != null) {
+                  setState(() {
+                    _selectedProjectId = selected.value == 'no-project' ? null : selected.value; // Сохраняем ID проекта (null если "без проекта")
+                    _selectedProjectName = selected.displayValue; // Обновляем отображаемое имя
+                  });
+                }
+              },
+              context: context,
+            ),
+            const SizedBox(height: 16),
+            CustomPrimaryPickerField(
+              icon: Icons.calendar_today,
+              currentValueDisplay: '${LocaleKeys.today.tr()} (${DateFormat('dd.MM.yyyy').format(_selectedDate)})', // Форматируем дату для отображения
               onTap: () => _selectDate(context),
               context: context,
             ),
-            // _TappableFormRow(
-            //   label: 'Date',
-            //   value: 'Today ($formattedDate)', // Отображаем выбранную дату
-            //   onTap: () => _selectDate(context), // При нажатии вызываем пикер даты
-            // ),
-            // Разделителя после даты на скриншоте нет
 
-            // !!! Поле для Комментария (TextFormField)
             const SizedBox(height: 16),
             TextFormField(
-              controller: _commentController, // Привязываем контроллер
-              maxLines: 3, // Позволяем вводить несколько строк
+              controller: _commentController,
+              maxLines: 3,
               decoration: InputDecoration(
-                labelText: LocaleKeys.addComment.tr(), // Метка поля
-                fillColor: CustomColors.mainLightGrey, filled: true, // Пример декорации
+                labelText: LocaleKeys.addComment.tr(),
+                fillColor: CustomColors.mainLightGrey, filled: true,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none // Убираем границу
-                ), // Пример границы
-                contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0), // Пример padding
+                    borderSide: BorderSide.none
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
               ),
-              // style: AppTextStyles.normalMedium, // Стиль текста ввода
-              // TODO: Возможно, добавить onChanged, если нужно сразу реагировать на ввод
             ),
 
-            // TODO: Добавить секцию "Add Photo"
+            const SizedBox(height: 32),
 
-            const SizedBox(height: 32), // Отступ перед кнопкой сохранения
-
-            // !!! Кнопка "Save"
-            Center( // Центрируем кнопку
+            Center(
               child: CustomPrimaryButton(
-                onPressed: _saveTransaction, // При нажатии вызываем функцию сохранения
+                onPressed: _saveTransaction,
                 text: LocaleKeys.save.tr(),
               ),
             ),
-            const SizedBox(height: 32), // Отступ внизу
+            const SizedBox(height: 32),
 
           ],
         ),
