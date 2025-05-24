@@ -1,17 +1,14 @@
-// lib/features/transactions/data/models/transaction_model.dart
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:intl/intl.dart';
 
 part 'transaction_model.g.dart';
 
-// Если вы также получаете детали категории
+// Категория транзакции
 @JsonSerializable()
 class TransactionCategoryModel {
   final String id;
   final String name;
   final String? icon;
-  @JsonKey(name: 'category_type')
   final String categoryType; // 'income' or 'expense'
 
   TransactionCategoryModel({
@@ -25,15 +22,13 @@ class TransactionCategoryModel {
   Map<String, dynamic> toJson() => _$TransactionCategoryModelToJson(this);
 }
 
-// Если вы также получаете детали счета (включая валюту)
+// Счёт
 @JsonSerializable()
 class AccountModel {
   final String id;
   final String name;
   final double balance;
-  @JsonKey(name: 'currency_code')
   final String currencyCode;
-  @JsonKey(name: 'currency_symbol')
   final String currencySymbol;
 
   AccountModel({
@@ -48,7 +43,7 @@ class AccountModel {
   Map<String, dynamic> toJson() => _$AccountModelToJson(this);
 }
 
-// Если вы также получаете детали проекта
+// Проект
 @JsonSerializable()
 class ProjectModel {
   final String id;
@@ -63,42 +58,31 @@ class ProjectModel {
   Map<String, dynamic> toJson() => _$ProjectModelToJson(this);
 }
 
-
+// Транзакция
 @JsonSerializable()
 class TransactionModel {
-  final String id; // Из бэкенда
-  @JsonKey(name: 'user_id')
-  final String userId; // Из бэкенда
-  @JsonKey(name: 'transaction_type')
+  final String id;
+  final String userId;
   final String transactionType;
-  @JsonKey(name: 'transaction_category_id')
   final String transactionCategoryId;
   final double amount;
-  @JsonKey(name: 'account_id')
   final String accountId;
-  @JsonKey(name: 'project_id')
   final String? projectId;
   final String? description;
 
-  // Дата и время в формате ISO 8601
   @JsonKey(fromJson: _dateTimeFromJson, toJson: _dateTimeToJson)
   final DateTime date;
-
-  @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson, toJson: _dateTimeToJson)
+  @JsonKey(fromJson: _dateTimeFromJson, toJson: _dateTimeToJson)
   final DateTime createdAt;
-  @JsonKey(name: 'updated_at', fromJson: _nullableDateTimeFromJson, toJson: _nullableDateTimeToJson)
+  @JsonKey(fromJson: _nullableDateTimeFromJson, toJson: _nullableDateTimeToJson)
   final DateTime? updatedAt;
-  @JsonKey(name: 'deleted_at', fromJson: _nullableDateTimeFromJson, toJson: _nullableDateTimeToJson)
+  @JsonKey(fromJson: _nullableDateTimeFromJson, toJson: _nullableDateTimeToJson)
   final DateTime? deletedAt;
 
-  // Вложенные объекты для отображения
-  @JsonKey(name: 'transaction_category') // Название, как возвращается в Laravel Resource
+  // Вложенные объекты (nullable, если API их не возвращает)
   final TransactionCategoryModel? category;
-  @JsonKey(name: 'account') // Название, как возвращается в Laravel Resource
   final AccountModel? account;
-  @JsonKey(name: 'project') // Название, как возвращается в Laravel Resource
   final ProjectModel? project;
-
 
   TransactionModel({
     required this.id,
@@ -119,17 +103,14 @@ class TransactionModel {
   });
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
-    print('Parsing TransactionModel from JSON: $json'); // <--- ДОБАВЬТЕ ЭТО
+    print('Parsing TransactionModel from JSON: $json');
     return _$TransactionModelFromJson(json);
   }
   Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
 
   static DateTime _dateTimeFromJson(dynamic date) {
-    if (date is String) {
-      return DateTime.parse(date);
-    } else if (date is DateTime) {
-      return date;
-    }
+    if (date is String) return DateTime.parse(date);
+    if (date is DateTime) return date;
     throw FormatException('Invalid date format: $date');
   }
 
